@@ -1,0 +1,12 @@
+{
+    "runtime": {
+        "majorVersion": "8"
+    },
+    "command": "java -jar bbhelper-server-0.1.jar",
+    "release": {
+        "build": "2016-04-11",
+        "commit": "0.1-beta",
+        "version": "0.1-beta"
+    },
+    "notes": "Beehive Booking Helper Server"
+}
