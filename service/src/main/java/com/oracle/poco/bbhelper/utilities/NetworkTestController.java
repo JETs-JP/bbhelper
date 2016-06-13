@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.server.utilities;
+package com.oracle.poco.bbhelper.utilities;
 
 import java.io.IOException;
 import java.net.InetAddress;

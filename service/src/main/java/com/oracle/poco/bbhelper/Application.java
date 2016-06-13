@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.server;
+package com.oracle.poco.bbhelper;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.server;
+package com.oracle.poco.bbhelper;
 
 import java.io.IOException;
 import java.io.InputStream;
