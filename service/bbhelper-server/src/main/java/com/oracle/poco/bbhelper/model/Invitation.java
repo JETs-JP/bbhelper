@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 import java.time.ZonedDateTime;
 

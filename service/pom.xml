@@ -17,14 +17,19 @@
     </parent>
 
     <modules>
-        <module>bbhelper-agent</module>
-        <module>bbhelper-core</module>
         <module>bbhelper-server</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>charlier-shoe.github.io</id>
+            <url>http://charlier-shoe.github.io/mvn-repo/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -45,6 +50,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jp.gr.java_conf.hhayakawa_jp</groupId>
+            <artifactId>beehive4j</artifactId>
+            <version>0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.oracle.poco.bbhelper.core.Invitation;
+import com.oracle.poco.bbhelper.model.Invitation;
 
 /**
  * 

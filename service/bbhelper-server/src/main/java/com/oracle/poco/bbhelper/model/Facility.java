@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 public class Facility {
 
@@ -10,7 +10,8 @@ public class Facility {
 
     public Facility() {}
     
-    public Facility(String wall, String door, String projector, String phone, String whiteboard) {
+    public Facility(String wall, String door, String projector, String phone,
+            String whiteboard) {
         super();
         this.wall = wall;
         this.door = door;

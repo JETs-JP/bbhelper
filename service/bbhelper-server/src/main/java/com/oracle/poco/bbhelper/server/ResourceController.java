@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.core.BookableResource;
-import com.oracle.poco.bbhelper.core.ConflictedInvitations;
-import com.oracle.poco.bbhelper.core.Invitation;
+import com.oracle.poco.bbhelper.model.Resource;
+import com.oracle.poco.bbhelper.model.InvitationsInRange;
+import com.oracle.poco.bbhelper.model.Invitation;
 
 /**
  * 
@@ -25,7 +25,7 @@ import com.oracle.poco.bbhelper.core.Invitation;
 @RestController
 @RequestMapping("/resources")
 @CrossOrigin()
-public class BookableResourceController {
+public class ResourceController {
 
     /**
      * 予約された会議を含む、各会議室の情報を返却します。
@@ -37,7 +37,7 @@ public class BookableResourceController {
      */
     @RequestMapping(value = "/invitations/list",
                     method = RequestMethod.GET)
-    public ConflictedInvitations listInvitations(
+    public InvitationsInRange listInvitations(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -45,10 +45,10 @@ public class BookableResourceController {
         LoggerManager.getLogger().info("/resources/invitations/list");
         Collection<Invitation> invitations = InvitationCache.
                 getInstance().listConflictedInvitaitons(fromdate, todate);
-        Collection<BookableResource> resources = BookableResourceCache.
+        Collection<Resource> resources = ResourceCache.
                 getInstance().getAllResources();
         // TODO ロジックの見直し
-        for (BookableResource resource : resources) {
+        for (Resource resource : resources) {
             String rid_r = resource.getResource_id();
             for (Invitation invitaion : invitations) {
                 String rid_i = invitaion.getResource_id();
@@ -57,7 +57,7 @@ public class BookableResourceController {
                 }
             }
         }
-        return new ConflictedInvitations(fromdate, todate, resources);
+        return new InvitationsInRange(fromdate, todate, resources);
     }
 
     /**
@@ -67,9 +67,9 @@ public class BookableResourceController {
      */
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
-    public Collection<BookableResource> listAllBookableResources() {
+    public Collection<Resource> listAllBookableResources() {
         LoggerManager.getLogger().info("/resources/list");
-        return BookableResourceCache.getInstance().getAllResources();
+        return ResourceCache.getInstance().getAllResources();
     }
 
     /**
@@ -80,10 +80,10 @@ public class BookableResourceController {
      */
     @RequestMapping(value = "/{resource_id}",
                     method = RequestMethod.GET)
-    public BookableResource getBookableResource(
+    public Resource getBookableResource(
             @PathVariable("resource_id") String resource_id) {
         LoggerManager.getLogger().info("resources/" + resource_id);
-        return BookableResourceCache.getInstance().get(resource_id);
+        return ResourceCache.getInstance().get(resource_id);
     }
 
     /**

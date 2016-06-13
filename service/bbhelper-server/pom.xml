@@ -13,15 +13,6 @@
         <version>0.1</version>
     </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.oracle.poco</groupId>
-            <artifactId>bbhelper-core</artifactId>
-            <version>0.1</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.core.Invitation;
+import com.oracle.poco.bbhelper.model.Invitation;
 
 @RestController
 @RequestMapping("/invitations")

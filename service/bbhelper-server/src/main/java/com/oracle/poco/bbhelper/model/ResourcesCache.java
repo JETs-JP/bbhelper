@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,26 +11,26 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 // TODO: 本当はこういう機能は、Beehiveから取得すべき
-public class BookableResourceLoader {
+public class ResourcesCache {
 
     private static final String FILE_PATH_RESOURCES = "resources.json";
     
-    private static BookableResourceLoader instance = null;
+    private static ResourcesCache instance = null;
 
-    private Map<String, BookableResource> cache =
-            new HashMap<String, BookableResource>();
+    private Map<String, Resource> cache =
+            new HashMap<String, Resource>();
 
     // uninstanciable
-    private BookableResourceLoader() {}
+    private ResourcesCache() {}
 
-    public static BookableResourceLoader getInstance() {
+    public static ResourcesCache getInstance() {
         if (instance == null) {
-            instance = new BookableResourceLoader();
+            instance = new ResourcesCache();
         }
         return instance;
     }
 
-    public Map<String, BookableResource> getBookableResources()
+    public Map<String, Resource> getBookableResources()
             throws JsonParseException, IOException {
         if (cache.isEmpty()) {
             loadBookableResources();
@@ -42,10 +42,10 @@ public class BookableResourceLoader {
             throws JsonParseException, IOException {
         InputStream in = this.getClass().getClassLoader().
                 getResourceAsStream(FILE_PATH_RESOURCES);
-        List<BookableResource> list = new ObjectMapper().readValue(
-                in, new TypeReference<List<BookableResource>>() {
+        List<Resource> list = new ObjectMapper().readValue(
+                in, new TypeReference<List<Resource>>() {
         });
-        for (BookableResource br : list) {
+        for (Resource br : list) {
             cache.put(br.getResource_id(), br);
         }
     }

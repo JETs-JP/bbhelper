@@ -1,16 +1,16 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
-public class ConflictedInvitations {
+public class InvitationsInRange {
 
     ZonedDateTime fromdate;
     ZonedDateTime todate;
-    Collection<BookableResource> resources;
+    Collection<Resource> resources;
 
-    public ConflictedInvitations(ZonedDateTime fromdate, ZonedDateTime todate,
-            Collection<BookableResource> resources) {
+    public InvitationsInRange(ZonedDateTime fromdate, ZonedDateTime todate,
+            Collection<Resource> resources) {
         super();
         this.fromdate = fromdate;
         this.todate = todate;
@@ -25,7 +25,7 @@ public class ConflictedInvitations {
         return todate;
     }
 
-    public Collection<BookableResource> getResources() {
+    public Collection<Resource> getResources() {
         return resources;
     }
 

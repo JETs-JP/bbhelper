@@ -1,9 +1,9 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BookableResource {
+public final class Resource {
 
     private String name;
     private String resource_id;
@@ -14,11 +14,11 @@ public final class BookableResource {
     private Facility facility;
     private List<Invitation> invitations = new ArrayList<Invitation>();
 
-    public BookableResource() {
+    public Resource() {
         super();
     }
 
-    public BookableResource(String name, String resource_id, String calendar_id,
+    public Resource(String name, String resource_id, String calendar_id,
             String location, int capacity, String link, Facility facility,
             List<Invitation> invitations) {
         super();
@@ -32,11 +32,11 @@ public final class BookableResource {
         this.invitations = invitations;
     }
 
-    public static BookableResource deepClone(BookableResource origin) {
+    public static Resource deepClone(Resource origin) {
         if (origin == null) {
             return null;
         }
-        return new BookableResource(
+        return new Resource(
                 ((origin.getName() != null) ? origin.getName() : null),
                 ((origin.getResource_id() != null) ? origin.getResource_id() : null),
                 ((origin.getCalendar_id() != null) ? origin.getCalendar_id() : null),

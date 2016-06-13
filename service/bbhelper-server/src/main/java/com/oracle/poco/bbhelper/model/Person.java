@@ -1,13 +1,11 @@
-package com.oracle.poco.bbhelper.core;
+package com.oracle.poco.bbhelper.model;
 
 public class Person {
 
     private String name;
     private String address;
     // TODO: linkを埋める仕組みを実装する
-    private String link =
-            "https://people.us.oracle.com/pls/oracle/"
-            + "f?p=8000:2:::::PERSON_ID:243488629813781";
+    private String link;
 
     public Person() {
         super();
@@ -17,6 +15,7 @@ public class Person {
         super();
         this.name = name;
         this.address = address;
+        this.link = link;
     }
 
     public String getName() {
