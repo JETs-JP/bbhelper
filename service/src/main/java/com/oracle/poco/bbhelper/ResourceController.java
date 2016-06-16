@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.model.Resource;
+import com.oracle.poco.bbhelper.utilities.LoggerManager;
 import com.oracle.poco.bbhelper.model.InvitationsInRange;
 import com.oracle.poco.bbhelper.model.Invitation;
 

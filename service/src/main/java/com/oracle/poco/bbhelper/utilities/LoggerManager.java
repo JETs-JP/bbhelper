@@ -1,4 +1,4 @@
-package com.oracle.poco.bbhelper;
+package com.oracle.poco.bbhelper.utilities;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

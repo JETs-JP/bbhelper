@@ -9,7 +9,7 @@ public class Facility {
     private String whiteboard;
 
     public Facility() {}
-    
+
     public Facility(String wall, String door, String projector, String phone,
             String whiteboard) {
         super();
