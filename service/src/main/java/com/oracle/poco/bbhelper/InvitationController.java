@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,7 +17,6 @@ import com.oracle.poco.bbhelper.model.Invitation;
 
 @RestController
 @RequestMapping("/invitations")
-@CrossOrigin()
 public class InvitationController {
 
     @RequestMapping(method = RequestMethod.POST)
