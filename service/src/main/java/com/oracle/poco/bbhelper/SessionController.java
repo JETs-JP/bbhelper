@@ -20,8 +20,8 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
 
 @RestController
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("/session")
+public class SessionController {
 
     private static final String HEADER_KEY_BBH_AUTHORIZED_SESSION =
             "BBH-Authorized-Session";
