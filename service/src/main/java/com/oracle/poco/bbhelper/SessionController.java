@@ -2,10 +2,7 @@ package com.oracle.poco.bbhelper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeeClientException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 
 @RestController
 @RequestMapping("/session")
 public class SessionController {
-
-    private static final String HEADER_KEY_BBH_AUTHORIZED_SESSION =
-            "BBH-Authorized-Session";
-
-    private Map<String, BeehiveContext> sessionPool =
-            new HashMap<String, BeehiveContext>();
 
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
@@ -37,12 +28,12 @@ public class SessionController {
             URL host = new URL("https://stbeehive.oracle.com/");
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
-            String session_id = RandomStringUtils.randomAlphanumeric(32);
-            sessionPool.put(session_id, context);
+            String session_id = SessionPool.getInstance().put(context);
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
+            headers.add(
+                    SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
-        } catch (MalformedURLException | BeeClientException e) {
+        } catch (MalformedURLException | Beehive4jException e) {
             LoggerManager.getLogger().severe("EXCEPTION: " + e.getMessage());
             Throwable t = e.getCause();
             if (t != null) {
