@@ -1,19 +1,18 @@
 package com.oracle.poco.bbhelper;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.RandomStringUtils;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 
 class SessionPool {
 
     static final String HEADER_KEY_BBH_AUTHORIZED_SESSION =
             "BBH-Authorized-Session";
 
-    private final Map<String, BeehiveContext> pool =
-            new ConcurrentHashMap<String, BeehiveContext>();
+    private final Map<String, TimeoutManagedContext> pool =
+            new ConcurrentHashMap<String, TimeoutManagedContext>();
 
     private static SessionPool instance = null;
 
@@ -32,7 +31,7 @@ class SessionPool {
         return pool.keySet().contains(session_id);
     }
 
-    String put(BeehiveContext context) {
+    String put(TimeoutManagedContext context) {
         // TODO same client and user.
         refreshPool();
         String session_id;
@@ -43,13 +42,17 @@ class SessionPool {
         return session_id;
     }
 
-    BeehiveContext get(String session_id) {
+    TimeoutManagedContext get(String session_id) {
         refreshPool();
         return pool.get(session_id);
     }
 
     private void refreshPool() {
-        // expire timeouted sessions.
+        for (Entry<String, TimeoutManagedContext> entry : pool.entrySet()) {
+            if (!entry.getValue().isActive()) {
+                pool.remove(entry.getKey());
+            }
+        }
     }
 
 }

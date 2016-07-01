@@ -28,7 +28,8 @@ public class SessionController {
             URL host = new URL("https://stbeehive.oracle.com/");
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
-            String session_id = SessionPool.getInstance().put(context);
+            String session_id = SessionPool.getInstance().put(
+                    new TimeoutManagedContext(context));
             HttpHeaders headers = new HttpHeaders();
             headers.add(
                     SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
