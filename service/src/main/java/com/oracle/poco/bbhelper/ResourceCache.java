@@ -70,6 +70,14 @@ class ResourceCache {
         }
         return ResourceWithInvitationsInRange.deepClone(origin);
     }
+
+    // TODO キャシュするようにしてパフォーマンスを改善する
+    Set<String> getAllCalendarIds () {
+        Set<String> retval = new HashSet<String>(cache.size());
+        cache.values().stream().parallel().forEach(r -> {
+            retval.add(r.getCalendar_id());}
+        );
+        return retval;
     }
 
 }
