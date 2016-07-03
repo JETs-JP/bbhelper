@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.model.Resource;
+import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
-import com.oracle.poco.bbhelper.model.InvitationsInRange;
+import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 /**
@@ -36,7 +36,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/invitations/list",
                     method = RequestMethod.GET)
-    public InvitationsInRange listInvitations(
+    public ResourcesWithInvitationsInRange listInvitations(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
@@ -44,10 +44,10 @@ public class ResourceController {
         LoggerManager.getLogger().info("/resources/invitations/list");
         Collection<Invitation> invitations = InvitationCache.
                 getInstance().listConflictedInvitaitons(fromdate, todate);
-        Collection<Resource> resources = ResourceCache.
+        Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
                 getInstance().getAllResources();
         // TODO ロジックの見直し
-        for (Resource resource : resources) {
+        for (ResourceWithInvitationsInRange resource : resources) {
             String rid_r = resource.getResource_id();
             for (Invitation invitaion : invitations) {
                 String rid_i = invitaion.getResource_id();
@@ -56,7 +56,7 @@ public class ResourceController {
                 }
             }
         }
-        return new InvitationsInRange(fromdate, todate, resources);
+        return new ResourcesWithInvitationsInRange(fromdate, todate, resources);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
-    public Collection<Resource> listAllBookableResources() {
+    public Collection<ResourceWithInvitationsInRange> listAllBookableResources() {
         LoggerManager.getLogger().info("/resources/list");
         return ResourceCache.getInstance().getAllResources();
     }
@@ -79,7 +79,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/{resource_id}",
                     method = RequestMethod.GET)
-    public Resource getBookableResource(
+    public ResourceWithInvitationsInRange getBookableResource(
             @PathVariable("resource_id") String resource_id) {
         LoggerManager.getLogger().info("resources/" + resource_id);
         return ResourceCache.getInstance().get(resource_id);

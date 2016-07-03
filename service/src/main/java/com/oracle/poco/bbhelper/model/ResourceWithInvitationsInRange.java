@@ -3,7 +3,7 @@ package com.oracle.poco.bbhelper.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Resource {
+public final class ResourceWithInvitationsInRange {
 
     private String name;
     private String resource_id;
@@ -14,13 +14,13 @@ public final class Resource {
     private Facility facility;
     private List<Invitation> invitations = new ArrayList<Invitation>();
 
-    public Resource() {
+    public ResourceWithInvitationsInRange() {
         super();
     }
 
-    public Resource(String name, String resource_id, String calendar_id,
-            String location, int capacity, String link, Facility facility,
-            List<Invitation> invitations) {
+    public ResourceWithInvitationsInRange(String name, String resource_id,
+            String calendar_id, String location, int capacity, String link,
+            Facility facility, List<Invitation> invitations) {
         super();
         this.name = name;
         this.resource_id = resource_id;
@@ -32,11 +32,12 @@ public final class Resource {
         this.invitations = invitations;
     }
 
-    public static Resource deepClone(Resource origin) {
+    public static ResourceWithInvitationsInRange deepClone(
+            ResourceWithInvitationsInRange origin) {
         if (origin == null) {
             return null;
         }
-        return new Resource(
+        return new ResourceWithInvitationsInRange(
                 ((origin.getName() != null) ? origin.getName() : null),
                 ((origin.getResource_id() != null) ? origin.getResource_id() : null),
                 ((origin.getCalendar_id() != null) ? origin.getCalendar_id() : null),

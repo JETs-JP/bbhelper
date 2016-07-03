@@ -5,20 +5,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oracle.poco.bbhelper.model.Resource;
+import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
 
 class ResourceCache {
 
     private static final String FILE_PATH_RESOURCES = "resources.json";
 
-    private Map<String, Resource> cache =
-            new HashMap<String, Resource>();
+    private Map<String, ResourceWithInvitationsInRange> cache =
+            new HashMap<String, ResourceWithInvitationsInRange>();
 
     private static ResourceCache instance = null;
 
@@ -38,10 +40,10 @@ class ResourceCache {
         try {
             InputStream in = this.getClass().getClassLoader().
                     getResourceAsStream(FILE_PATH_RESOURCES);
-            List<Resource> list = new ObjectMapper().readValue(
-                    in, new TypeReference<List<Resource>>() {
+            List<ResourceWithInvitationsInRange> list = new ObjectMapper().readValue(
+                    in, new TypeReference<List<ResourceWithInvitationsInRange>>() {
             });
-            for (Resource br : list) {
+            for (ResourceWithInvitationsInRange br : list) {
                 cache.put(br.getResource_id(), br);
             }
         } catch (IOException e) {
@@ -52,21 +54,22 @@ class ResourceCache {
         }
     }
 
-    Collection<Resource> getAllResources() {
-        List<Resource> retval = new ArrayList<Resource>();
-        for (Resource resource : cache.values()) {
-            retval.add(Resource.deepClone(resource));
+    Collection<ResourceWithInvitationsInRange> getAllResources() {
+        List<ResourceWithInvitationsInRange> retval = new ArrayList<ResourceWithInvitationsInRange>();
+        for (ResourceWithInvitationsInRange resource : cache.values()) {
+            retval.add(ResourceWithInvitationsInRange.deepClone(resource));
         }
         return retval;
     }
 
-    Resource get(String resource_id) {
+    ResourceWithInvitationsInRange get(String resource_id) {
         // null check不要。reource_idがnullならnullを返す
-        Resource origin = cache.get(resource_id);
+        ResourceWithInvitationsInRange origin = cache.get(resource_id);
         if (origin == null) {
             return null;
         }
-        return Resource.deepClone(origin);
+        return ResourceWithInvitationsInRange.deepClone(origin);
+    }
     }
 
 }
