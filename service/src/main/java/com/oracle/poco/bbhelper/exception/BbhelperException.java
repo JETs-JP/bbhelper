@@ -17,7 +17,8 @@ public class BbhelperException extends Exception {
 
     public ErrorDescription getErrorDescription() {
         return description;
-    } 
+    }
+
     /**
      * Serial Version UID.
      */

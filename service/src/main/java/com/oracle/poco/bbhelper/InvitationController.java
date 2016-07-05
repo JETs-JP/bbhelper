@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
+import com.oracle.poco.bbhelper.utilities.LoggerManager;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
@@ -62,7 +65,8 @@ public class InvitationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime end) {
+            ZonedDateTime end,
+            HttpServletResponse httpResponse) {
         TimeoutManagedContext context =
                 SessionPool.getInstance().get(session_id);
         List<String> invitation_ids = new ArrayList<String>();
@@ -84,14 +88,21 @@ public class InvitationController {
                         }
                     }
                 }
-            } catch (BbhelperException | Beehive4jException e) {
-                // TODO Auto-generated catch block
+            } catch (BbhelperException e) {
                 System.out.println(e.getMessage());
+                LoggerManager.getLogger().severe(e.getMessage());
+                httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (Beehive4jException e) {
+                // TODO Auto-generated catch block
             }
         });
+        if (httpResponse.getStatus() ==
+                HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            return null;
+        }
 
         if (invitation_ids.size() == 0) {
-            // TODO 
+            return null;
         }
 
         List<BeeId> beeIds = new ArrayList<BeeId>();
