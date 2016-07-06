@@ -94,6 +94,7 @@ public class InvitationController {
                 httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (Beehive4jException e) {
                 // TODO Auto-generated catch block
+                System.out.println(e.getMessage());
             }
         });
         if (httpResponse.getStatus() ==
@@ -102,6 +103,7 @@ public class InvitationController {
         }
 
         if (invitation_ids.size() == 0) {
+            httpResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             return null;
         }
 
@@ -116,13 +118,18 @@ public class InvitationController {
                     BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
             invoker.setRequestPayload(beeIdList);
             response = invoker.invoke();
-        } catch (BbhelperException | Beehive4jException e) {
-                // TODO Auto-generated catch block
+        } catch (BbhelperException e) {
+            System.out.println(e.getMessage());
+            LoggerManager.getLogger().severe(e.getMessage());
+            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (Beehive4jException e) {
+            // TODO Auto-generated catch block
             System.out.println(e.getMessage());
         }
         BeehiveResponse body = response.getBody();
         if (body == null) {
-           // TODO error handling 
+            httpResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            return null;
         }
         return parseInvtReadBatchResult(body.getJson());
     }
