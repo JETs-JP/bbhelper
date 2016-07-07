@@ -93,8 +93,9 @@ public class InvitationController {
                 LoggerManager.getLogger().severe(e.getMessage());
                 httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (Beehive4jException e) {
-                // TODO Auto-generated catch block
                 System.out.println(e.getMessage());
+                LoggerManager.getLogger().severe(e.getMessage());
+                httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         });
         if (httpResponse.getStatus() ==
@@ -123,8 +124,9 @@ public class InvitationController {
             LoggerManager.getLogger().severe(e.getMessage());
             httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         } catch (Beehive4jException e) {
-            // TODO Auto-generated catch block
             System.out.println(e.getMessage());
+            LoggerManager.getLogger().severe(e.getMessage());
+            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         BeehiveResponse body = response.getBody();
         if (body == null) {

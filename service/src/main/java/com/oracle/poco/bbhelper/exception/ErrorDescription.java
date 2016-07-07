@@ -2,6 +2,7 @@ package com.oracle.poco.bbhelper.exception;
 
 public enum ErrorDescription {
     SESSION_EXPIRED(1, "session expired."),
+    BEEHIVE4J_FAULT(2, "an exception raised from beehive4j."),
     ;
 
     private static final String CODE_HEADER = "BBHELPER-ERROR-";
