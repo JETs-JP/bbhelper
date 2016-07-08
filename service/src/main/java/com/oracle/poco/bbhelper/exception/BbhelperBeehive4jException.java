@@ -1,8 +1,11 @@
 package com.oracle.poco.bbhelper.exception;
 
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+
 public class BbhelperBeehive4jException extends BbhelperException {
 
-    public BbhelperBeehive4jException(ErrorDescription description, Throwable cause) {
+    public BbhelperBeehive4jException(
+            ErrorDescription description, Beehive4jException cause) {
         super(description, cause);
         // TODO Auto-generated constructor stub
     }
