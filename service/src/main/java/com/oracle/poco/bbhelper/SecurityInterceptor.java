@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
+
 class SecurityInterceptor extends HandlerInterceptorAdapter {
 
     @Override
@@ -14,8 +17,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
                 request.getHeader(SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0 || 
                 !SessionPool.getInstance().isAuthorizedSession(session_id)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
+            throw new BbhelperUnauthorizedException(ErrorDescription.UNAUTORIZED);
         }
         return true;
     }

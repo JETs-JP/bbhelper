@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
@@ -29,6 +32,7 @@ import com.oracle.poco.bbhelper.utilities.LoggerManager;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
@@ -66,11 +70,12 @@ public class InvitationController {
             ZonedDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime end,
-            HttpServletResponse httpResponse) {
+            HttpServletResponse httpResponse) throws BbhelperException {
         TimeoutManagedContext context =
                 SessionPool.getInstance().get(session_id);
-        List<String> invitation_ids = new ArrayList<String>();
         Set<String> calendar_ids = ResourceCache.getInstance().getAllCalendarIds();
+        List<String> invitation_ids = new ArrayList<String>();
+        List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
         calendar_ids.stream().parallel().forEach(c -> {
             CalendarRange range =
                     new CalendarRange(new BeeId(c, null), start, end);
@@ -91,16 +96,22 @@ public class InvitationController {
             } catch (BbhelperException e) {
                 System.out.println(e.getMessage());
                 LoggerManager.getLogger().severe(e.getMessage());
-                httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            } catch (Beehive4jException e) {
+                bbhe.add(e);
+            } catch (BeehiveApiFaultException e) {
                 System.out.println(e.getMessage());
                 LoggerManager.getLogger().severe(e.getMessage());
-                httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                    bbhe.add(new BbhelperUnauthorizedException(
+                            ErrorDescription.UNAUTORIZED, e));
+                } else {
+                    bbhe.add(new BbhelperBeehive4jException(
+                            ErrorDescription.BEEHIVE4J_FAULT, e));
+                }
+
             }
         });
-        if (httpResponse.getStatus() ==
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
-            return null;
+        if (bbhe.size() > 0) { 
+            throw bbhe.get(0);
         }
 
         if (invitation_ids.size() == 0) {

@@ -1,5 +1,6 @@
 package com.oracle.poco.bbhelper;
 
+import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jContextExpiredException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
@@ -31,7 +32,8 @@ public class TimeoutManagedContext {
     public <T extends BeehiveInvoker<?>> T getInvoker(Class<T> InvokerType) 
         throws BbhelperException {
         if (!isActive()) {
-            throw new BbhelperException(ErrorDescription.SESSION_EXPIRED);
+            throw new BbhelperBeehive4jContextExpiredException(
+                    ErrorDescription.BEEHIVE4J_CONTEXT_EXPIRED);
         }
         update();
         return context.getInvoker(InvokerType);

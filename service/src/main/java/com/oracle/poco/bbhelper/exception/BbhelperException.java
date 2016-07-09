@@ -1,8 +1,8 @@
 package com.oracle.poco.bbhelper.exception;
 
-public class BbhelperException extends Exception {
+public abstract class BbhelperException extends Exception {
 
-    private final ErrorDescription description;
+    protected ErrorDescription description;
 
     public BbhelperException(ErrorDescription description) {
         super(description.getFullDescription());
