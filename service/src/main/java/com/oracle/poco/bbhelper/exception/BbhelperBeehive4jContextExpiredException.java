@@ -14,7 +14,11 @@ public class BbhelperBeehive4jContextExpiredException extends BbhelperException 
 
     public BbhelperBeehive4jContextExpiredException(ErrorDescription description) {
         super(description);
-        // TODO Auto-generated constructor stub
     }
+
+    /**
+     * Serial Version UID.
+     */
+    private static final long serialVersionUID = 4125151079485047204L;
 
 }

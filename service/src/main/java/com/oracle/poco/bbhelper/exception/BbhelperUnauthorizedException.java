@@ -13,7 +13,11 @@ public class BbhelperUnauthorizedException extends BbhelperException {
 
     public BbhelperUnauthorizedException(ErrorDescription description) {
         super(description);
-        // TODO Auto-generated constructor stub
     }
+
+    /**
+     * Serial Version UID.
+     */
+    private static final long serialVersionUID = 9122523362727570400L;
 
 }
