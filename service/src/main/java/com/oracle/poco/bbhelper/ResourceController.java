@@ -1,10 +1,13 @@
 package com.oracle.poco.bbhelper;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
+
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+
 import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
+import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 /**
@@ -33,17 +41,31 @@ public class ResourceController {
      * @param fromdate
      * @param todate
      * @return 予約された会議を含む、各会議室の情報
+     * @throws BbhelperException 
      */
     @RequestMapping(value = "/invitations/list",
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange listInvitations(
+            @RequestHeader(SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION)
+            String session_id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime todate) {
+            ZonedDateTime todate) throws BbhelperException {
         LoggerManager.getLogger().info("/resources/invitations/list");
-        Collection<Invitation> invitations = InvitationCache.
-                getInstance().listConflictedInvitaitons(fromdate, todate);
+        TimeoutManagedContext context =
+                SessionPool.getInstance().get(session_id);
+        try {
+            URL host = new URL("https://stbeehive.oracle.com/");
+            BeehiveContext bc = BeehiveContext.getBeehiveContext(
+                    host, "hiroshi.hayakawa@oracle.com", "Mail&Simsa1");
+            context = new TimeoutManagedContext(bc);
+        } catch (MalformedURLException | Beehive4jException e) {
+            e.printStackTrace();
+            return null;
+        }
+        Collection<Invitation> invitations = InvitationUtils.
+                listConflictedInvitaitons(fromdate, todate, context);
         Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
                 getInstance().getAllResources();
         // TODO ロジックの見直し

@@ -1,17 +1,11 @@
 package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,24 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
-import com.oracle.poco.bbhelper.model.Person;
-import com.oracle.poco.bbhelper.utilities.LoggerManager;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
 
 @RestController
 @RequestMapping("/invitations")
@@ -69,124 +47,10 @@ public class InvitationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime end,
-            HttpServletResponse httpResponse) throws BbhelperException {
+            ZonedDateTime end) throws BbhelperException {
         TimeoutManagedContext context =
                 SessionPool.getInstance().get(session_id);
-        Set<String> calendar_ids = ResourceCache.getInstance().getAllCalendarIds();
-        List<String> invitation_ids = new ArrayList<String>();
-        List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
-        calendar_ids.stream().parallel().forEach(c -> {
-            CalendarRange range =
-                    new CalendarRange(new BeeId(c, null), start, end);
-            try {
-                InvtListByRangeInvoker invoker = context.getInvoker(
-                        BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
-                invoker.setRequestPayload(range);
-                ResponseEntity<BeehiveResponse> response = invoker.invoke();
-                BeehiveResponse body = response.getBody();
-                if (body != null) {
-                    Iterable<JsonNode> elements = body.getJson().get("elements");
-                    if (elements != null) {
-                        for (JsonNode element : elements) {
-                            invitation_ids.add(getNodeAsText(element, "collabId", "id"));
-                        }
-                    }
-                }
-            } catch (BbhelperException e) {
-                System.out.println(e.getMessage());
-                LoggerManager.getLogger().severe(e.getMessage());
-                bbhe.add(e);
-            } catch (BeehiveApiFaultException e) {
-                System.out.println(e.getMessage());
-                LoggerManager.getLogger().severe(e.getMessage());
-                if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                    bbhe.add(new BbhelperUnauthorizedException(
-                            ErrorDescription.UNAUTORIZED, e));
-                } else {
-                    bbhe.add(new BbhelperBeehive4jException(
-                            ErrorDescription.BEEHIVE4J_FAULT, e));
-                }
-
-            }
-        });
-        if (bbhe.size() > 0) { 
-            throw bbhe.get(0);
-        }
-
-        if (invitation_ids.size() == 0) {
-            httpResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            return null;
-        }
-
-        List<BeeId> beeIds = new ArrayList<BeeId>();
-        invitation_ids.stream().parallel().forEach(i -> {
-            beeIds.add(new BeeId(i, null));
-        });
-        BeeIdList beeIdList = new BeeIdList(beeIds);
-        ResponseEntity<BeehiveResponse> response = null;
-        try {
-            InvtReadBatchInvoker invoker = context.getInvoker(
-                    BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
-            invoker.setRequestPayload(beeIdList);
-            response = invoker.invoke();
-        } catch (BbhelperException e) {
-            System.out.println(e.getMessage());
-            LoggerManager.getLogger().severe(e.getMessage());
-            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } catch (Beehive4jException e) {
-            System.out.println(e.getMessage());
-            LoggerManager.getLogger().severe(e.getMessage());
-            httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        BeehiveResponse body = response.getBody();
-        if (body == null) {
-            httpResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
-            return null;
-        }
-        return parseInvtReadBatchResult(body.getJson());
-    }
-
-    private static List<Invitation> parseInvtReadBatchResult(JsonNode node) {
-        Iterable<JsonNode> elements = node.get("elements");
-        if (elements == null) {
-            return null;
-        }
-        List<Invitation> retval = new ArrayList<Invitation>();
-        for (JsonNode element : elements) {
-            Person organizer = new Person(
-                    getNodeAsText(element, "organizer", "name"),
-                    getNodeAsText(element, "organizer", "address"),
-                    null);
-            Invitation invitation = new Invitation(
-                    element.get("name").asText(),
-                    element.get("collabId").get("id").asText(),
-                    element.get("invitee").get("participant").get("collabId").get("id").asText(),
-                    organizer,
-                    ZonedDateTime.parse(
-                            element.get("start").asText(),
-                            DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                    ZonedDateTime.parse(
-                            element.get("end").asText(),
-                            DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            retval.add(invitation);
-        }
-        return retval;
-    }
-
-    private static String getNodeAsText(JsonNode node, String... names) {
-        if (node == null) {
-            throw new NullPointerException();
-        }
-        if (names.length == 0) {
-            return node.asText();
-        }
-        for (String name : names) {
-            if ((node = node.get(name)) == null) {
-                return null;
-            }
-        }
-        return node.asText();
+        return InvitationUtils.listConflictedInvitaitons(start, end, context);
     }
 
 }
