@@ -1,7 +1,5 @@
 package com.oracle.poco.bbhelper;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
@@ -15,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 import com.oracle.poco.bbhelper.utilities.LoggerManager;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 
 import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -54,16 +49,7 @@ public class ResourceController {
             ZonedDateTime todate) throws BbhelperException {
         LoggerManager.getLogger().info("/resources/invitations/list");
         TimeoutManagedContext context =
-                SessionPool.getInstance().get(session_id);
-        try {
-            URL host = new URL("https://stbeehive.oracle.com/");
-            BeehiveContext bc = BeehiveContext.getBeehiveContext(
-                    host, "hiroshi.hayakawa@oracle.com", "Mail&Simsa1");
-            context = new TimeoutManagedContext(bc);
-        } catch (MalformedURLException | Beehive4jException e) {
-            e.printStackTrace();
-            return null;
-        }
+               SessionPool.getInstance().get(session_id);
         Collection<Invitation> invitations = InvitationUtils.
                 listConflictedInvitaitons(fromdate, todate, context);
         Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
