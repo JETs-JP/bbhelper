@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
-import com.oracle.poco.bbhelper.utilities.LoggerManager;
+import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
 
 import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -47,7 +47,6 @@ public class ResourceController {
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate) throws BbhelperException {
-        LoggerManager.getLogger().info("/resources/invitations/list");
         TimeoutManagedContext context =
                SessionPool.getInstance().get(session_id);
         Collection<Invitation> invitations = InvitationUtils.
@@ -75,7 +74,6 @@ public class ResourceController {
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
     public Collection<ResourceWithInvitationsInRange> listAllBookableResources() {
-        LoggerManager.getLogger().info("/resources/list");
         return ResourceCache.getInstance().getAllResources();
     }
 
@@ -89,7 +87,6 @@ public class ResourceController {
                     method = RequestMethod.GET)
     public ResourceWithInvitationsInRange getBookableResource(
             @PathVariable("resource_id") String resource_id) {
-        LoggerManager.getLogger().info("resources/" + resource_id);
         return ResourceCache.getInstance().get(resource_id);
     }
 

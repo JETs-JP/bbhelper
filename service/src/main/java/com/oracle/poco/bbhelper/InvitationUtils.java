@@ -17,7 +17,7 @@ import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
-import com.oracle.poco.bbhelper.utilities.LoggerManager;
+import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
@@ -55,11 +55,11 @@ public class InvitationUtils {
                 }
             } catch (BbhelperException e) {
                 System.out.println(e.getMessage());
-                LoggerManager.getLogger().severe(e.getMessage());
+                BbhelperLogger.getInstance().log(e);
                 bbhe.add(e);
             } catch (BeehiveApiFaultException e) {
                 System.out.println(e.getMessage());
-                LoggerManager.getLogger().severe(e.getMessage());
+                BbhelperLogger.getInstance().log(e);
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
                             ErrorDescription.UNAUTORIZED, e));
@@ -92,11 +92,11 @@ public class InvitationUtils {
             response = invoker.invoke();
         } catch (BbhelperException e) {
             System.out.println(e.getMessage());
-            LoggerManager.getLogger().severe(e.getMessage());
+            BbhelperLogger.getInstance().log(e);
             throw e;
         } catch (BeehiveApiFaultException e) {
             System.out.println(e.getMessage());
-            LoggerManager.getLogger().severe(e.getMessage());
+            BbhelperLogger.getInstance().log(e);
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 throw new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e);

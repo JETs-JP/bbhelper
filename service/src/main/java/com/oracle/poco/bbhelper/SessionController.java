@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.utilities.LoggerManager;
+import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
@@ -35,10 +35,10 @@ public class SessionController {
                     SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
         } catch (MalformedURLException | Beehive4jException e) {
-            LoggerManager.getLogger().severe("EXCEPTION: " + e.getMessage());
+            BbhelperLogger.getInstance().log(e);
             Throwable t = e.getCause();
             if (t != null) {
-                LoggerManager.getLogger().severe("CAUSE: " + t.getMessage());
+                BbhelperLogger.getInstance().log(t);
             }
             return new ResponseEntity<String>(
                     null, null, HttpStatus.INTERNAL_SERVER_ERROR);
