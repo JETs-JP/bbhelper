@@ -35,10 +35,10 @@ public class SessionController {
                     SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
         } catch (MalformedURLException | Beehive4jException e) {
-            BbhelperLogger.getInstance().log(e);
+            BbhelperLogger.getInstance().logThrowable(e);
             Throwable t = e.getCause();
             if (t != null) {
-                BbhelperLogger.getInstance().log(t);
+                BbhelperLogger.getInstance().logThrowable(t);
             }
             return new ResponseEntity<String>(
                     null, null, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -47,8 +47,7 @@ class ResourceCache {
                 cache.put(br.getResource_id(), br);
             }
         } catch (IOException e) {
-            BbhelperLogger.getInstance().log("failed to load bookable resources data.");
-            e.printStackTrace();
+            BbhelperLogger.getInstance().severe("failed to load bookable resources data.");
             System.exit(1);
         }
     }

@@ -55,11 +55,11 @@ public class InvitationUtils {
                 }
             } catch (BbhelperException e) {
                 System.out.println(e.getMessage());
-                BbhelperLogger.getInstance().log(e);
+                BbhelperLogger.getInstance().logThrowable(e);
                 bbhe.add(e);
             } catch (BeehiveApiFaultException e) {
                 System.out.println(e.getMessage());
-                BbhelperLogger.getInstance().log(e);
+                BbhelperLogger.getInstance().logThrowable(e);
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
                             ErrorDescription.UNAUTORIZED, e));
@@ -92,11 +92,11 @@ public class InvitationUtils {
             response = invoker.invoke();
         } catch (BbhelperException e) {
             System.out.println(e.getMessage());
-            BbhelperLogger.getInstance().log(e);
+            BbhelperLogger.getInstance().logThrowable(e);
             throw e;
         } catch (BeehiveApiFaultException e) {
             System.out.println(e.getMessage());
-            BbhelperLogger.getInstance().log(e);
+            BbhelperLogger.getInstance().logThrowable(e);
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 throw new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e);

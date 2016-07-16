@@ -1,17 +1,16 @@
 package com.oracle.poco.bbhelper.utilities;
 
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * このアプリケーションのために構成されたロガーを提供するためのユーティリティ・クラスです
+ * このアプリケーションのために構成されたロガーを提供するためのユーティリティ・
+ * クラスです。
  *
- * このアプリケーションで実装されるログ出力は、すべて本クラスから取得したロガーを使用することを想定しています。
+ * このアプリケーションで実装されるログ出力は、すべて本クラスを使用することを
+ * 想定しています。
  *
- * @author hiroshi.hayakawa@oracle.com
- *
- */
-/**
  * @author hhayakaw
  *
  */
@@ -93,23 +92,35 @@ public class BbhelperLogger {
     /**
      * @param t
      */
-    public void log(Throwable t) {
+    public void logThrowable(Throwable t) {
         if (t == null) {
             // do nothing.
             return;
         }
         logger.severe(t.getMessage());
+        // デバッグログは出力先を分ける
+        logger.warning(getStrackTraceString(t));
     }
 
     /**
      * @param message
      */
-    public void log(String message) {
+    public void severe(String message) {
         if (message == null || message.length() == 0) {
             // do nothing.
             return;
         }
         logger.severe(message);
+    }
+
+    private String getStrackTraceString(Throwable t) {
+        StackTraceElement[] elements = t.getStackTrace();
+        StringBuffer buf = new StringBuffer();
+        Arrays.stream(elements).forEach(e -> {
+            buf.append(e.toString());
+            buf.append("\n");
+            });
+        return buf.toString();
     }
 
 }
