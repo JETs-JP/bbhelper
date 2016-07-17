@@ -1,7 +1,11 @@
 package com.oracle.poco.bbhelper.utilities;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -17,20 +21,17 @@ import java.util.logging.Logger;
 public class BbhelperLogger {
 
     /**
+     * ロガーのプロパティファイルのパス
+     */
+    private static final String FILE_PATH_LOGGING_PROPERTIES =
+            "logging.properties";
+    /**
      * ロガーの名前。このアプリケーションでは、この名前意外のロガーは持たない
      */
     private static final String LOGGER_NAME =
-            "com.oracle.bbhelper.server.logger";
+            "com.oracle.bbhelper.logger";
     /**
-     * デフォルトのログレベル
-     */
-    private static final Level LOG_LEVEL_DEFAULT = Level.CONFIG;
-    /**
-     * ログレベルを指定する環境変数のキー名
-     */
-    private static final String KEY_ENV_LOG_LEVEL = "EMV_LOG_LEVEL";
-    /**
-     * ロガーはコンポジションで保持
+     * ロガー本体はコンポジションで保持
      */
     private Logger logger;
     /**
@@ -44,11 +45,19 @@ public class BbhelperLogger {
     }
 
     private void initInternal() {
-        logger = Logger.getLogger(LOGGER_NAME);
-        Level level = loadLogLevel();
-        logger.setLevel(level);
-        logger.log(Level.INFO, "logger is initialized. log level is \"{0}\".",
-                level.toString());
+        final InputStream in = this.getClass().getClassLoader().
+                getResourceAsStream(FILE_PATH_LOGGING_PROPERTIES);
+        if (in == null) {
+            throw new IllegalStateException("Failed to load logging.properties.");
+        }
+        try {
+            LogManager.getLogManager().readConfiguration(in);
+            logger = Logger.getLogger(LOGGER_NAME);
+            logger.addHandler(new FileHandler());
+            logger.addHandler(new AccessLogFileHandler());
+        } catch (SecurityException | IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     /**
@@ -64,42 +73,14 @@ public class BbhelperLogger {
     }
 
     /**
-     * 環境変数に設定されたログレベルを返却します。設定されていないか、無効な値
-     * の場合はデフォルト値を返します。
-     *
-     * 本メソッドは、結果をキャッシュしません。環境変数を変更した後に本メソッド
-     * を実行すると、現時点（変更後）の値が取得されます。
-     *
-     * @return 環境変数に指定されたログレベル
+     * @param message
      */
-    private Level loadLogLevel() {
-        String envValue = System.getenv(KEY_ENV_LOG_LEVEL);
-        if (envValue == null || envValue.length() == 0) {
-            return LOG_LEVEL_DEFAULT;
-        }
-        Level level = null;
-        try {
-            level = Level.parse(envValue);
-            if (level == null) {
-                return LOG_LEVEL_DEFAULT;
-            }
-        } catch (IllegalArgumentException e) {
-            return LOG_LEVEL_DEFAULT;
-        }
-        return level;
-    }
-
-    /**
-     * @param t
-     */
-    public void logThrowable(Throwable t) {
-        if (t == null) {
+    public void info(String message) {
+        if (message == null || message.length() == 0) {
             // do nothing.
             return;
         }
-        logger.severe(t.getMessage());
-        // デバッグログは出力先を分ける
-        logger.warning(getStrackTraceString(t));
+        logger.info(message);
     }
 
     /**
@@ -111,6 +92,20 @@ public class BbhelperLogger {
             return;
         }
         logger.severe(message);
+    }
+
+    /**
+     * @param t
+     */
+    public void logThrowable(Throwable t) {
+        if (t == null) {
+            // do nothing.
+            return;
+        }
+        // TODO メッセージをパラメータで受け取る
+        logger.log(Level.SEVERE, "ERROR", t);
+        // デバッグログは出力先を分ける
+        logger.warning(getStrackTraceString(t));
     }
 
     private String getStrackTraceString(Throwable t) {
