@@ -15,9 +15,9 @@ import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
-import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
@@ -54,12 +54,9 @@ public class InvitationUtils {
                     }
                 }
             } catch (BbhelperException e) {
-                System.out.println(e.getMessage());
-                BbhelperLogger.getInstance().logThrowable(e);
+                BbhelperLogger.getInstance().logBbhelperException(e);
                 bbhe.add(e);
             } catch (BeehiveApiFaultException e) {
-                System.out.println(e.getMessage());
-                BbhelperLogger.getInstance().logThrowable(e);
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
                             ErrorDescription.UNAUTORIZED, e));
@@ -91,19 +88,19 @@ public class InvitationUtils {
             invoker.setRequestPayload(beeIdList);
             response = invoker.invoke();
         } catch (BbhelperException e) {
-            System.out.println(e.getMessage());
-            BbhelperLogger.getInstance().logThrowable(e);
+            BbhelperLogger.getInstance().logBbhelperException(e);
             throw e;
         } catch (BeehiveApiFaultException e) {
-            System.out.println(e.getMessage());
-            BbhelperLogger.getInstance().logThrowable(e);
+            BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                throw new BbhelperUnauthorizedException(
+                be = new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e);
             } else {
-                throw new BbhelperBeehive4jException(
+                be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e);
             }
+            BbhelperLogger.getInstance().logBbhelperException(be);
+            throw be;
         }
         BeehiveResponse body = response.getBody();
         if (body == null) {

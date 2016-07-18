@@ -7,7 +7,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 class SecurityInterceptor extends HandlerInterceptorAdapter {
 

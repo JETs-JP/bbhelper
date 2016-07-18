@@ -12,8 +12,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
-import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
 
 class ResourceCache {
 

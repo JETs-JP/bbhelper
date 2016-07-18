@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.utilities.BbhelperLogger;
+import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
@@ -25,6 +27,7 @@ public class SessionController {
     public ResponseEntity<String> login(
             @RequestHeader("Authorization") String basicAuthHeader) {
         try {
+            // TODO 起動時に読み込むコンフィグレーションとしてまとめておく
             URL host = new URL("https://stbeehive.oracle.com/");
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
@@ -34,12 +37,13 @@ public class SessionController {
             headers.add(
                     SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
-        } catch (MalformedURLException | Beehive4jException e) {
-            BbhelperLogger.getInstance().logThrowable(e);
-            Throwable t = e.getCause();
-            if (t != null) {
-                BbhelperLogger.getInstance().logThrowable(t);
-            }
+        } catch (MalformedURLException e) {
+            // do nothing.
+            return null;
+        } catch (Beehive4jException e) {
+            BbhelperBeehive4jException be = new BbhelperBeehive4jException(
+                    ErrorDescription.BEEHIVE4J_FAULT, e);
+            BbhelperLogger.getInstance().logBbhelperException(be);
             return new ResponseEntity<String>(
                     null, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
