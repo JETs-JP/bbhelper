@@ -99,14 +99,14 @@ public class BbhelperLogger {
     }
 
     /**
-     * @param message
+     * @param sessionId
      */
-    public void request(String message) {
+    public void request(String sessionId) {
         // TODO: implement
-        if (message == null || message.length() == 0) {
+        if (sessionId == null || sessionId.length() == 0) {
             return;
         }
-        AccessLogger.info(message);
+        AccessLogger.info(sessionId);
     }
 
     /**
@@ -149,7 +149,7 @@ public class BbhelperLogger {
         if (e == null) {
             return;
         }
-        logThrowable(e.getErrorDescription().getMessage(), e);
+        logThrowable(e.getErrorDescription().getFullDescription(), e);
     }
 
     /**
@@ -162,6 +162,17 @@ public class BbhelperLogger {
         }
         SystemLogger.severe(message);
         DebugLogger.log(Level.SEVERE, message, t);
+    }
+
+    /**
+     * @param message
+     */
+    public void debug(String message) {
+        if (message == null || message.length() == 0) {
+            // do nothing.
+            return;
+        }
+        DebugLogger.fine(message);
     }
 
 //    private String getStrackTraceString(Throwable t) {

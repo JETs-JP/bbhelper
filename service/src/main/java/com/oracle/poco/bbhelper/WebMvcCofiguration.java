@@ -9,6 +9,7 @@ class WebMvcCofiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AccessLogInterceptor());
         registry.addInterceptor(new SecurityInterceptor())
                 .excludePathPatterns("/session/**");
     }
