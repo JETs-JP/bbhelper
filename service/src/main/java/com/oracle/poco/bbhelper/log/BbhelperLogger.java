@@ -1,5 +1,6 @@
 package com.oracle.poco.bbhelper.log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.ConsoleHandler;
@@ -64,7 +65,14 @@ public class BbhelperLogger {
     }
 
     private void initInternal() {
-        // TODO Logの出力先フォルダを作成する
+        // TODO この初期化処理は、起動時に行なわれるようにすべき
+        File logdir = new File("logs");
+        if (!logdir.exists() || !logdir.isDirectory()) {
+            if (!logdir.mkdir()) {
+                System.out.println("ERROR! : Can't make log directory.");
+                System.exit(1);
+            }
+        }
         final InputStream in = this.getClass().getClassLoader().
                 getResourceAsStream(FILE_PATH_LOGGING_PROPERTIES);
         if (in == null) {
