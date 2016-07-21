@@ -49,4 +49,15 @@ public class SessionController {
         }
     }
 
+    /**
+     * シンプルな文字列を返却します。サーバーの稼働を確認する目的で設けられたAPIです。
+     * 
+     * @return 文字列 "I'm working..."
+     */
+    @RequestMapping(value = "/ping",
+                    method = RequestMethod.GET)
+    public String ping() {
+        return "I'm working...";
+    }
+
 }
