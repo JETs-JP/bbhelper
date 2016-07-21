@@ -51,16 +51,15 @@ public class ResourceController {
                 listConflictedInvitaitons(fromdate, todate, context);
         Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
                 getInstance().getAllResources();
-        // TODO ロジックの見直し
-        for (ResourceWithInvitationsInRange resource : resources) {
-            String rid_r = resource.getResource_id();
+        resources.stream().parallel().forEach(e -> {
+            String rid_r = e.getResource_id();
             for (Invitation invitaion : invitations) {
                 String rid_i = invitaion.getResource_id();
-                if (rid_i != null && rid_i.equals(rid_r)) {
-                    resource.getInvitations().add(invitaion);
+                if (rid_r.equals(rid_i)) {
+                    e.getInvitations().add(invitaion);
                 }
             }
-        }
+        });
         return new ResourcesWithInvitationsInRange(fromdate, todate, resources);
     }
 
