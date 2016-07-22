@@ -55,7 +55,7 @@ public class BbhelperLogger {
      */
     private Logger DebugLogger;
     /**
-     * 
+     * このアプリケーション唯一のロガー
      */
     private static BbhelperLogger instance = null;
 
@@ -64,8 +64,28 @@ public class BbhelperLogger {
         initInternal();
     }
 
+    /**
+     * 初期化
+     */
+    public static void initialize() {
+        if (instance == null) {
+            instance = new BbhelperLogger();
+        }
+    }
+
+    /**
+     * ロガーを取得します。
+     *
+     * @return ロガー
+     */
+    public static BbhelperLogger getInstance() {
+        if (instance == null) {
+            instance = new BbhelperLogger();
+        }
+        return instance;
+    }
+
     private void initInternal() {
-        // TODO この初期化処理は、起動時に行なわれるようにすべき
         File logdir = new File("logs");
         if (!logdir.exists() || !logdir.isDirectory()) {
             if (!logdir.mkdir()) {
@@ -92,18 +112,6 @@ public class BbhelperLogger {
         } catch (SecurityException | IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    /**
-     * ロガーを取得します。
-     *
-     * @return ロガー
-     */
-    public static BbhelperLogger getInstance() {
-        if (instance == null) {
-            instance = new BbhelperLogger();
-        }
-        return instance;
     }
 
     /**
