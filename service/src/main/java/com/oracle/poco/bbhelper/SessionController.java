@@ -3,6 +3,7 @@ package com.oracle.poco.bbhelper;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,15 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 @RequestMapping("/session")
 public class SessionController {
 
+    @Autowired
+    private Configurations config;
+
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(
             @RequestHeader("Authorization") String basicAuthHeader) {
         try {
-            // TODO 起動時に読み込むコンフィグレーションとしてまとめておく
-            URL host = new URL("https://stbeehive.oracle.com/");
+            URL host = new URL(config.getBeehiveUrl());
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
             String session_id = SessionPool.getInstance().put(
