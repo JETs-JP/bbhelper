@@ -8,6 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.oracle.poco.bbhelper.Constants;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 
 /**
@@ -117,23 +120,27 @@ public class BbhelperLogger {
     /**
      * @param sessionId
      */
-    public void request(String sessionId) {
-        // TODO: implement
-        if (sessionId == null || sessionId.length() == 0) {
+    public void request(HttpServletRequest request) {
+        if (request == null) {
+            // TODO 何らかのログを残してこのメソッドを終了する
             return;
         }
-        AccessLogger.info(sessionId);
+        // TODO requestから欲しい情報を取得して記録しておく
+        AccessLogger.info("REQUEST: " + (String)request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_REQUEST_ID));
     }
 
     /**
      * @param message
      */
-    public void response(String message) {
-        // TODO: implement
-        if (message == null || message.length() == 0) {
+    public void response(HttpServletRequest request) {
+        if (request == null) {
+            // TODO 何らかのログを残してこのメソッドを終了する
             return;
         }
-        AccessLogger.info(message);
+        // TODO requestから欲しい情報を取得して記録しておく
+        AccessLogger.info("RESPONSE: " + (String)request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_REQUEST_ID));
     }
 
     /**
@@ -190,15 +197,5 @@ public class BbhelperLogger {
         }
         DebugLogger.fine(message);
     }
-
-//    private String getStrackTraceString(Throwable t) {
-//        StackTraceElement[] elements = t.getStackTrace();
-//        StringBuffer buf = new StringBuffer();
-//        Arrays.stream(elements).forEach(e -> {
-//            buf.append(e.toString());
-//            buf.append("\n");
-//            });
-//        return buf.toString();
-//    }
 
 }
