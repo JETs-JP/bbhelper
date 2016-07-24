@@ -8,9 +8,6 @@ import org.apache.commons.lang.RandomStringUtils;
 
 class SessionPool {
 
-    static final String HEADER_KEY_BBH_AUTHORIZED_SESSION =
-            "BBH-Authorized-Session";
-
     private final Map<String, TimeoutManagedContext> pool =
             new ConcurrentHashMap<String, TimeoutManagedContext>();
 

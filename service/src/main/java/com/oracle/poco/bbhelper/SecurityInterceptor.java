@@ -17,7 +17,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
             HttpServletResponse response, Object handler) throws Exception {
         BbhelperLogger.getInstance().debug("SecurityInterceptor#preHandle()");
         String session_id =
-                request.getHeader(SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION);
+                request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0 || 
                 !SessionPool.getInstance().isAuthorizedSession(session_id)) {
             BbhelperException e = new BbhelperUnauthorizedException(

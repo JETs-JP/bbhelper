@@ -38,7 +38,7 @@ public class SessionController {
                     new TimeoutManagedContext(context));
             HttpHeaders headers = new HttpHeaders();
             headers.add(
-                    SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
+                    Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
         } catch (MalformedURLException e) {
             // do nothing.

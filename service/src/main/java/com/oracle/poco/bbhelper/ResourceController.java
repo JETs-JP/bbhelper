@@ -39,7 +39,7 @@ public class ResourceController {
     @RequestMapping(value = "/invitations/list",
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange listInvitations(
-            @RequestHeader(SessionPool.HEADER_KEY_BBH_AUTHORIZED_SESSION)
+            @RequestHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION)
             String session_id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,
