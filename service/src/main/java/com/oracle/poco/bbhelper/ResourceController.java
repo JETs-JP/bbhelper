@@ -3,18 +3,19 @@ package com.oracle.poco.bbhelper;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
-import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.model.Invitation;
+import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
+import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 
 /**
  * 
@@ -39,14 +40,13 @@ public class ResourceController {
     @RequestMapping(value = "/invitations/list",
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange listInvitations(
-            @RequestHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION)
-            String session_id,
+            HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate) throws BbhelperException {
-        TimeoutManagedContext context =
-               SessionPool.getInstance().get(session_id);
+        TimeoutManagedContext context = (TimeoutManagedContext) request.
+                getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
         Collection<Invitation> invitations = InvitationUtils.
                 listConflictedInvitaitons(fromdate, todate, context);
         Collection<ResourceWithInvitationsInRange> resources = ResourceCache.

@@ -12,20 +12,32 @@ import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 class SecurityInterceptor extends HandlerInterceptorAdapter {
 
+    /**
+     * 
+     * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
+     */
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
-        BbhelperLogger.getInstance().debug("SecurityInterceptor#preHandle()");
         String session_id =
                 request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
-        if (session_id == null || session_id.length() == 0 || 
-                !SessionPool.getInstance().isAuthorizedSession(session_id)) {
-            BbhelperException e = new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTORIZED);
-            BbhelperLogger.getInstance().logBbhelperException(e);
-            throw e;
+        if (session_id == null || session_id.length() == 0) {
+            throwUnauthorizedException();
         }
+        TimeoutManagedContext context = SessionPool.getInstance().get(session_id);
+        if (context == null) {
+            throwUnauthorizedException();
+        }
+        request.setAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT, 
+                SessionPool.getInstance().get(session_id));
         return true;
+    }
+
+    private void throwUnauthorizedException() throws BbhelperException {
+        BbhelperException e = new BbhelperUnauthorizedException(
+                ErrorDescription.UNAUTORIZED);
+        BbhelperLogger.getInstance().logBbhelperException(e);
+        throw e;
     }
 
 }

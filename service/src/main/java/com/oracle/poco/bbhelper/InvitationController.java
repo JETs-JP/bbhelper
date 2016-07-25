@@ -4,10 +4,11 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,14 +43,13 @@ public class InvitationController {
                     method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Collection<Invitation> listConflictedInvitaitons(
-            @RequestHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION)
-            String session_id,
+            HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime end) throws BbhelperException {
-        TimeoutManagedContext context =
-                SessionPool.getInstance().get(session_id);
+        TimeoutManagedContext context = (TimeoutManagedContext) request.
+                getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
         return InvitationUtils.listConflictedInvitaitons(start, end, context);
     }
 
