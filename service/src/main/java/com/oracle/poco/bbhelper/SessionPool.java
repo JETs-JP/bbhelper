@@ -23,11 +23,6 @@ class SessionPool {
         return instance;
     }
 
-    boolean isAuthorizedSession(String session_id) {
-        refreshPool();
-        return pool.keySet().contains(session_id);
-    }
-
     String put(TimeoutManagedContext context) {
         // TODO same client and user.
         refreshPool();

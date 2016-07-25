@@ -9,6 +9,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveInvoker;
 
 public class TimeoutManagedContext {
 
+    // TODO タイムアウト値はapplication.propertiesで設定できるようにする
     public static final long TIMEOUT = 1000 * 60 * 60; //1hour
 
     private long lastUsed;

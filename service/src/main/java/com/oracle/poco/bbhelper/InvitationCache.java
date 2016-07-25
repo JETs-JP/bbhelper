@@ -91,14 +91,4 @@ class InvitationCache {
         return retval;
     }
 
-//    List<Invitation> listUnperpetuatedInvitaions() {
-//        List<Invitation> retval = new ArrayList<Invitation>();
-//        for (Invitation invitation : cache) {
-//            if (invitation.getInvitation_id() == null) {
-//                retval.add(invitation);
-//            }
-//        }
-//        return retval;
-//    }
-
 }
