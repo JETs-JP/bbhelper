@@ -15,15 +15,14 @@ import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
@@ -54,7 +53,6 @@ public class InvitationUtils {
                     }
                 }
             } catch (BbhelperException e) {
-                BbhelperLogger.getInstance().logBbhelperException(e);
                 bbhe.add(e);
             } catch (BeehiveApiFaultException e) {
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
@@ -87,9 +85,6 @@ public class InvitationUtils {
                     BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
             invoker.setRequestPayload(beeIdList);
             response = invoker.invoke();
-        } catch (BbhelperException e) {
-            BbhelperLogger.getInstance().logBbhelperException(e);
-            throw e;
         } catch (BeehiveApiFaultException e) {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
@@ -99,7 +94,6 @@ public class InvitationUtils {
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e);
             }
-            BbhelperLogger.getInstance().logBbhelperException(be);
             throw be;
         }
         BeehiveResponse body = response.getBody();

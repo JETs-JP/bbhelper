@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 @RestController
@@ -50,7 +51,15 @@ public class InvitationController {
             ZonedDateTime end) throws BbhelperException {
         TimeoutManagedContext context = (TimeoutManagedContext) request.
                 getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-        return InvitationUtils.listConflictedInvitaitons(start, end, context);
+        Collection<Invitation> retval = null;
+        try {
+            retval = InvitationUtils.listConflictedInvitaitons(
+                    start, end, context);
+        } catch (BbhelperException e) {
+            BbhelperLogger.getInstance().logBbhelperException(request, e);
+            throw e;
+        }
+        return retval;
     }
 
 }

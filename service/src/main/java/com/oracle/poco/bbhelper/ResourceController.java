@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
@@ -47,8 +48,15 @@ public class ResourceController {
             ZonedDateTime todate) throws BbhelperException {
         TimeoutManagedContext context = (TimeoutManagedContext) request.
                 getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-        Collection<Invitation> invitations = InvitationUtils.
-                listConflictedInvitaitons(fromdate, todate, context);
+        final Collection<Invitation> invitations;
+        try {
+            invitations = InvitationUtils.listConflictedInvitaitons(
+                    fromdate, todate, context);
+        } catch (BbhelperException e) {
+            BbhelperLogger.getInstance().logBbhelperException(request, e);
+            throw e;
+        }
+
         Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
                 getInstance().getAllResources();
         resources.stream().parallel().forEach(e -> {
