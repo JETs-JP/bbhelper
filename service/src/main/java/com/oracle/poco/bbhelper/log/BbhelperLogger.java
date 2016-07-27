@@ -166,25 +166,29 @@ public class BbhelperLogger {
     }
 
     /**
+     * @param reqest
      * @param e
      */
-    public void logBbhelperException(BbhelperException e) {
+    public void logBbhelperException(
+            HttpServletRequest request, BbhelperException e) {
         if (e == null) {
             return;
         }
-        logThrowable(e.getErrorDescription().getFullDescription(), e);
+        logThrowable(request, e.getErrorDescription().getFullDescription(), e);
     }
 
     /**
      * @param t
      */
-    public void logThrowable(String message, Throwable t) {
+    private void logThrowable(
+            HttpServletRequest request, String message, Throwable t) {
         if (t == null) {
             // do nothing.
             return;
         }
-        SystemLogger.severe(message);
-        DebugLogger.log(Level.SEVERE, message, t);
+        String logMessage = getBaseMessage(request, message).toString();
+        SystemLogger.severe(logMessage);
+        DebugLogger.log(Level.SEVERE, logMessage, t);
     }
 
     /**
@@ -196,6 +200,21 @@ public class BbhelperLogger {
             return;
         }
         DebugLogger.fine(message);
+    }
+
+    private StringBuilder getBaseMessage(
+            HttpServletRequest request, String message) {
+        String request_id;
+        if (request == null) {
+            request_id = "N/A";
+        }
+        request_id = (String)request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_REQUEST_ID);
+        StringBuilder builder = new StringBuilder();
+        builder.append("REQUEST_ID: ").append(request_id).append(",");
+        builder.append("REQUEST_URL: ").append(request.getRequestURL()).append(",");
+        builder.append("MESSAGE: ").append(message);
+        return builder;
     }
 
 }

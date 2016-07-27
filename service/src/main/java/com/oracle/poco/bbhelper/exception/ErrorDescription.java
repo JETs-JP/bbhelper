@@ -2,8 +2,9 @@ package com.oracle.poco.bbhelper.exception;
 
 public enum ErrorDescription {
     UNAUTORIZED(1, "unauthorized."),
-    BEEHIVE4J_CONTEXT_EXPIRED(2, "beehive4j context is expired."),
-    BEEHIVE4J_FAULT(3, "some exception raised from beehive4j."),
+    BAD_REQUEST(2, "bad request."),
+    BEEHIVE4J_CONTEXT_EXPIRED(3, "beehive4j context is expired."),
+    BEEHIVE4J_FAULT(4, "some exception raised from beehive4j."),
     ;
 
     private static final String CODE_HEADER = "BBHELPER-ERROR-";

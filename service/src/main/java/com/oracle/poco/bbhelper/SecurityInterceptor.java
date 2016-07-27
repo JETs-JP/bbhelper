@@ -22,21 +22,22 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
         String session_id =
                 request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0) {
-            throwUnauthorizedException();
+            throwUnauthorizedException(request);
         }
         TimeoutManagedContext context = SessionPool.getInstance().get(session_id);
         if (context == null) {
-            throwUnauthorizedException();
+            throwUnauthorizedException(request);
         }
         request.setAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT, 
                 SessionPool.getInstance().get(session_id));
         return true;
     }
 
-    private void throwUnauthorizedException() throws BbhelperException {
+    private void throwUnauthorizedException(HttpServletRequest request)
+            throws BbhelperException {
         BbhelperException e = new BbhelperUnauthorizedException(
                 ErrorDescription.UNAUTORIZED);
-        BbhelperLogger.getInstance().logBbhelperException(e);
+        BbhelperLogger.getInstance().logBbhelperException(request, e);
         throw e;
     }
 
