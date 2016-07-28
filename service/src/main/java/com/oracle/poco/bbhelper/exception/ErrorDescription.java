@@ -3,8 +3,10 @@ package com.oracle.poco.bbhelper.exception;
 public enum ErrorDescription {
     UNAUTORIZED(1, "unauthorized."),
     BAD_REQUEST(2, "bad request."),
-    BEEHIVE4J_CONTEXT_EXPIRED(3, "beehive4j context is expired."),
-    BEEHIVE4J_FAULT(4, "some exception raised from beehive4j."),
+    FAILED_TO_LOG(3, "failed to log."),
+    FAILET_TO_LOAD_RESOURCES(4, "failed to load resources data."),
+    BEEHIVE4J_CONTEXT_EXPIRED(5, "beehive4j context is expired."),
+    BEEHIVE4J_FAULT(6, "some exception raised from beehive4j."),
     ;
 
     private static final String CODE_HEADER = "BBHELPER-ERROR-";

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.oracle.poco.bbhelper.Constants;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 /**
  * このアプリケーションのために構成されたロガーを提供するためのユーティリティ・
@@ -155,14 +156,28 @@ public class BbhelperLogger {
     }
 
     /**
-     * @param message
+     * @param request
+     * @param description
      */
-    public void severe(String message) {
-        if (message == null || message.length() == 0) {
+    public void severe(HttpServletRequest request, ErrorDescription description) {
+        if (description == null) {
             // do nothing.
             return;
         }
+        String message = getBaseMessage(
+                request, description.getFullDescription()).toString();
         SystemLogger.severe(message);
+    }
+
+    /**
+     * @param description
+     */
+    public void severe(ErrorDescription description) {
+        if (description == null) {
+            // do nothing.
+            return;
+        }
+        SystemLogger.severe(description.getFullDescription());
     }
 
     /**
@@ -211,6 +226,7 @@ public class BbhelperLogger {
         request_id = (String)request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_REQUEST_ID);
         StringBuilder builder = new StringBuilder();
+        // TODO requestがNullの時のケアが足りてない
         builder.append("REQUEST_ID: ").append(request_id).append(",");
         builder.append("REQUEST_URL: ").append(request.getRequestURL()).append(",");
         builder.append("MESSAGE: ").append(message);

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 
@@ -47,7 +48,8 @@ class ResourceCache {
                 cache.put(br.getResource_id(), br);
             }
         } catch (IOException e) {
-            BbhelperLogger.getInstance().severe("failed to load bookable resources data.");
+            BbhelperLogger.getInstance().severe(
+                    ErrorDescription.FAILET_TO_LOAD_RESOURCES);
             System.exit(1);
         }
     }
