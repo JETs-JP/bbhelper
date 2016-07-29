@@ -11,8 +11,15 @@ public class Application {
     public static void main(String args[]) {
         BbhelperLogger.initialize();
         ResourceCache.initialize();
+        // TODO ここでbeehiveとの接続をチェックしておきたい
         SpringApplication.run(Application.class);
-        // TODO 起動、停止ログ
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                BbhelperLogger.getInstance().info("shutdown.");
+            }
+        });
+        BbhelperLogger.getInstance().info("started.");
     }
 
 }
