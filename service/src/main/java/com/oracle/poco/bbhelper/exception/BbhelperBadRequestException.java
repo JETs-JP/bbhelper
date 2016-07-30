@@ -15,4 +15,9 @@ public class BbhelperBadRequestException extends BbhelperException {
         super(description);
     }
 
+    /**
+     * Serial Version UID.
+     */
+    private static final long serialVersionUID = -6506483242163916907L;
+
 }
