@@ -3,6 +3,7 @@ package com.oracle.poco.bbhelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -12,8 +13,10 @@ import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 class SecurityInterceptor extends HandlerInterceptorAdapter {
 
+    @Autowired
+    private BbhelperLogger logger;
+
     /**
-     * 
      * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
      */
     @Override
@@ -37,7 +40,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
             throws BbhelperException {
         BbhelperException e = new BbhelperUnauthorizedException(
                 ErrorDescription.UNAUTORIZED);
-        BbhelperLogger.getInstance().logBbhelperException(request, e);
+        logger.logBbhelperException(request, e);
         throw e;
     }
 

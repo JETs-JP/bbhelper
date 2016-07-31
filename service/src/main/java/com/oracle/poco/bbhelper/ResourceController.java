@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,9 @@ import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
+
+    @Autowired
+    private BbhelperLogger logger;
 
     /**
      * 予約された会議を含む、各会議室の情報を返却します。
@@ -53,7 +57,7 @@ public class ResourceController {
             invitations = InvitationUtils.listConflictedInvitaitons(
                     fromdate, todate, context);
         } catch (BbhelperException e) {
-            BbhelperLogger.getInstance().logBbhelperException(request, e);
+            logger.logBbhelperException(request, e);
             throw e;
         }
 

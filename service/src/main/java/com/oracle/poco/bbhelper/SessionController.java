@@ -29,6 +29,9 @@ public class SessionController {
     @Autowired
     private Configurations config;
 
+    @Autowired
+    private BbhelperLogger logger;
+
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(HttpServletRequest request)
@@ -37,7 +40,7 @@ public class SessionController {
         if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
             BbhelperException be =
                     new BbhelperBadRequestException(ErrorDescription.BAD_REQUEST);
-            BbhelperLogger.getInstance().logBbhelperException(request, be);
+            logger.logBbhelperException(request, be);
             throw be;
         }
 
@@ -57,7 +60,7 @@ public class SessionController {
         } catch (Beehive4jException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e);
-            BbhelperLogger.getInstance().logBbhelperException(request, be);
+            logger.logBbhelperException(request, be);
             throw be;
         }
     }
@@ -70,6 +73,7 @@ public class SessionController {
     @RequestMapping(value = "/ping",
                     method = RequestMethod.GET)
     public String ping() {
+        logger.info("/ping.");
         return "I'm working...";
     }
 

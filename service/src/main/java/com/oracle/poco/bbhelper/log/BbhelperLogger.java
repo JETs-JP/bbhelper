@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
+
 import com.oracle.poco.bbhelper.Constants;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
@@ -24,6 +26,7 @@ import com.oracle.poco.bbhelper.exception.ErrorDescription;
  * @author hhayakaw
  *
  */
+@Component
 public class BbhelperLogger {
 
     /**
@@ -58,35 +61,10 @@ public class BbhelperLogger {
      * ロガー本体: デバッグログ
      */
     private Logger DebugLogger;
-    /**
-     * このアプリケーション唯一のロガー
-     */
-    private static BbhelperLogger instance = null;
 
     // uninstanciable
     private BbhelperLogger() {
         initInternal();
-    }
-
-    /**
-     * 初期化
-     */
-    public static void initialize() {
-        if (instance == null) {
-            instance = new BbhelperLogger();
-        }
-    }
-
-    /**
-     * ロガーを取得します。
-     *
-     * @return ロガー
-     */
-    public static BbhelperLogger getInstance() {
-        if (instance == null) {
-            instance = new BbhelperLogger();
-        }
-        return instance;
     }
 
     private void initInternal() {

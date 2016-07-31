@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
@@ -17,6 +19,9 @@ import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
 
 class ResourceCache {
+
+    @Autowired
+    private BbhelperLogger logger;
 
     private static final String FILE_PATH_RESOURCES = "resources.json";
 
@@ -48,8 +53,7 @@ class ResourceCache {
                 cache.put(br.getResource_id(), br);
             }
         } catch (IOException e) {
-            BbhelperLogger.getInstance().severe(
-                    ErrorDescription.FAILET_TO_LOAD_RESOURCES);
+            logger.severe(ErrorDescription.FAILET_TO_LOAD_RESOURCES);
             System.exit(1);
         }
     }

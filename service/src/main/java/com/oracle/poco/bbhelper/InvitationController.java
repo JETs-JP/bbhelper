@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,9 @@ import com.oracle.poco.bbhelper.model.Invitation;
 @RestController
 @RequestMapping("/invitations")
 public class InvitationController {
+
+    @Autowired
+    BbhelperLogger logger;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,7 +60,7 @@ public class InvitationController {
             retval = InvitationUtils.listConflictedInvitaitons(
                     start, end, context);
         } catch (BbhelperException e) {
-            BbhelperLogger.getInstance().logBbhelperException(request, e);
+            logger.logBbhelperException(request, e);
             throw e;
         }
         return retval;
