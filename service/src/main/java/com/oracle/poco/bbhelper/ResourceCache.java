@@ -23,7 +23,7 @@ class ResourceCache {
     @Autowired
     private BbhelperLogger logger;
 
-    private static final String FILE_PATH_RESOURCES = "resources.json";
+    private static final String FILE_PATH_RESOURCES_WORK = "resources_work.json";
 
     private Map<String, ResourceWithInvitationsInRange> cache =
             new HashMap<String, ResourceWithInvitationsInRange>();
@@ -45,7 +45,7 @@ class ResourceCache {
     private void loadBookableResources() {
         try {
             InputStream in = this.getClass().getClassLoader().
-                    getResourceAsStream(FILE_PATH_RESOURCES);
+                    getResourceAsStream(FILE_PATH_RESOURCES_WORK);
             List<ResourceWithInvitationsInRange> list = new ObjectMapper().readValue(
                     in, new TypeReference<List<ResourceWithInvitationsInRange>>() {
             });
