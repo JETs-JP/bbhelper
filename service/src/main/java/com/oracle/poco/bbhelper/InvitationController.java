@@ -52,13 +52,15 @@ public class InvitationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime end) throws BbhelperException {
+            ZonedDateTime end,
+            @RequestParam String floorCategory) throws BbhelperException {
         TimeoutManagedContext context = (TimeoutManagedContext) request.
                 getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
         Collection<Invitation> retval = null;
         try {
-            retval = InvitationUtils.listConflictedInvitaitons(
-                    start, end, context);
+            // TODO floorCategoryをパラメータから直接取りたい
+            retval = InvitationUtils.listConflictedInvitaitons(start, end,
+                    ResourceFloorCategory.fromLabel(floorCategory), context);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
