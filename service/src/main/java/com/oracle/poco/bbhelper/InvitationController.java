@@ -60,7 +60,7 @@ public class InvitationController {
         try {
             // TODO floorCategoryをパラメータから直接取りたい
             retval = InvitationUtils.listConflictedInvitaitons(start, end,
-                    ResourceFloorCategory.fromLabel(floorCategory), context);
+                    FloorCategory.fromLabel(floorCategory), context);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;

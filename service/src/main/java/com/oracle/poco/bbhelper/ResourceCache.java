@@ -25,8 +25,8 @@ class ResourceCache {
 
     private static final String FILE_PATH_RESOURCES_WORK = "resources_work.json";
 
-    private Map<String, ResourceWithInvitationsInRange> cache =
-            new HashMap<String, ResourceWithInvitationsInRange>();
+    private Map<FloorCategory, Map<String, ResourceWithInvitationsInRange>> cache =
+            new HashMap<FloorCategory, Map<String, ResourceWithInvitationsInRange>>();
 
     private static ResourceCache instance = null;
 
@@ -44,13 +44,17 @@ class ResourceCache {
 
     private void loadBookableResources() {
         try {
-            InputStream in = this.getClass().getClassLoader().
-                    getResourceAsStream(FILE_PATH_RESOURCES_WORK);
-            List<ResourceWithInvitationsInRange> list = new ObjectMapper().readValue(
-                    in, new TypeReference<List<ResourceWithInvitationsInRange>>() {
-            });
-            for (ResourceWithInvitationsInRange br : list) {
-                cache.put(br.getResource_id(), br);
+            for (FloorCategory category : FloorCategory.values()) {
+                InputStream in = this.getClass().getClassLoader().
+                    getResourceAsStream(category.getJsonResource());
+                List<ResourceWithInvitationsInRange> list = new ObjectMapper().
+                        readValue(in, new TypeReference<List<ResourceWithInvitationsInRange>>() {});
+                Map<String, ResourceWithInvitationsInRange> cache =
+                        new HashMap<String, ResourceWithInvitationsInRange>();
+                for (ResourceWithInvitationsInRange br : list) {
+                    cache.put(br.getResource_id(), br);
+                }
+                this.cache.put(category, cache);
             }
         } catch (IOException e) {
             logger.severe(ErrorDescription.FAILET_TO_LOAD_RESOURCES);
@@ -59,7 +63,8 @@ class ResourceCache {
     }
 
     Collection<ResourceWithInvitationsInRange> getAllResources() {
-        List<ResourceWithInvitationsInRange> retval = new ArrayList<ResourceWithInvitationsInRange>();
+        List<ResourceWithInvitationsInRange> retval =
+                new ArrayList<ResourceWithInvitationsInRange>();
         for (ResourceWithInvitationsInRange resource : cache.values()) {
             retval.add(ResourceWithInvitationsInRange.deepClone(resource));
         }
@@ -77,6 +82,14 @@ class ResourceCache {
 
     // TODO キャシュするようにしてパフォーマンスを改善する
     Set<String> getAllCalendarIds () {
+        Set<String> retval = new HashSet<String>(cache.size());
+        cache.values().stream().parallel().forEach(r -> {
+            retval.add(r.getCalendar_id());}
+        );
+        return retval;
+    }
+
+    Set<String> getCalendarIds(FloorCategory floorCategory) {
         Set<String> retval = new HashSet<String>(cache.size());
         cache.values().stream().parallel().forEach(r -> {
             retval.add(r.getCalendar_id());}

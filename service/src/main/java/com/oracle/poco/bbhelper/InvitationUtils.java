@@ -31,7 +31,7 @@ public class InvitationUtils {
 
     static Collection<Invitation> listConflictedInvitaitons(
             ZonedDateTime start, ZonedDateTime end,
-            ResourceFloorCategory floorCategory,
+            FloorCategory floorCategory,
             TimeoutManagedContext context) throws BbhelperException {
         Set<String> calendar_ids = ResourceCache.getInstance().getAllCalendarIds();
         List<String> invitation_ids = new ArrayList<String>();

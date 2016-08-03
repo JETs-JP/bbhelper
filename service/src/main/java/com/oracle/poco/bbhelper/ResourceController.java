@@ -58,7 +58,7 @@ public class ResourceController {
             // TODO floorCategoryをパラメータから直接取りたい
             invitations = InvitationUtils.listConflictedInvitaitons(
                     fromdate, todate, 
-                    ResourceFloorCategory.fromLabel(floorCategory), context);
+                    FloorCategory.fromLabel(floorCategory), context);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
