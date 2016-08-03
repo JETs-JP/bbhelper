@@ -33,7 +33,8 @@ public class InvitationUtils {
             ZonedDateTime start, ZonedDateTime end,
             FloorCategory floorCategory,
             TimeoutManagedContext context) throws BbhelperException {
-        Set<String> calendar_ids = ResourceCache.getInstance().getAllCalendarIds();
+        Set<String> calendar_ids =
+                ResourceCache.getInstance().getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<String>();
         List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
         calendar_ids.stream().parallel().forEach(c -> {

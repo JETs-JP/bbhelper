@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -95,11 +94,11 @@ public class ResourceController {
      * @param resource_id
      * @return 指定された会議室の情報
      */
-    @RequestMapping(value = "/{resource_id}",
-                    method = RequestMethod.GET)
-    public ResourceWithInvitationsInRange getBookableResource(
-            @PathVariable("resource_id") String resource_id) {
-        return ResourceCache.getInstance().get(resource_id);
-    }
+//    @RequestMapping(value = "/{resource_id}",
+//                    method = RequestMethod.GET)
+//    public ResourceWithInvitationsInRange getBookableResource(
+//            @PathVariable("resource_id") String resource_id) {
+//        return ResourceCache.getInstance().get(resource_id);
+//    }
 
 }
