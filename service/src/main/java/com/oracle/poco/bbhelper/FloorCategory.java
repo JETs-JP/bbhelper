@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 enum FloorCategory {
     WORK_FLOOR("work", "resources_work.json"),
     LOWER_FLOOR("lower", "resources_lower.json"),
-    OTHER_FLOOR("other", "resources_other.json"),
+    OTHER_FLOOR("other", "resources_others.json"),
     ;
 
     private final String label;
@@ -19,7 +19,7 @@ enum FloorCategory {
 
     static final FloorCategory fromLabel(String label) {
         for (FloorCategory category : FloorCategory.values()) {
-            if (category.label == label) {
+            if (category.label.equals(label)) {
                 return category;
             }
         }
