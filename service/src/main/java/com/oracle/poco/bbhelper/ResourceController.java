@@ -2,7 +2,6 @@ package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
-import com.oracle.poco.bbhelper.model.ResourceWithInvitations;
-import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
+import com.oracle.poco.bbhelper.model.Resource;
 
 /**
  * 
@@ -55,26 +53,23 @@ public class ResourceController {
         TimeoutManagedContext context = (TimeoutManagedContext) request.
                 getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
         final Collection<Invitation> invitations;
+        // TODO これはパラメータから直接取りたい
+        // TODO フロアが指定されなかったら、全てのフロアの情報を返却する
+        FloorCategory floor = FloorCategory.fromLabel(floorCategory);
         try {
-            // TODO floorCategoryをパラメータから直接取りたい
             invitations = InvitationUtils.listConflictedInvitaitons(
-                    fromdate, todate, FloorCategory.fromLabel(floorCategory), context);
+                    fromdate, todate, floor, context);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
         }
 
-        Map<String, ResourceWithInvitations> resourceMap =
-                ResourceCache.getInstance().getClonedCache();
-        for (Invitation invitaion : invitations) {
-            String id = invitaion.getResource_id();
-            if (id == null || id.length() == 0) {
-                continue;
-            }
-            resourceMap.get(id).getInvitations().add(invitaion);
+        ResourcesWithInvitationsInRange retval =
+                new ResourcesWithInvitationsInRange(fromdate, todate);
+        for (Invitation invitation : invitations) {
+            retval.addInvitation(invitation);
         }
-        return new ResourcesWithInvitationsInRange(
-                fromdate, todate, resourceMap.values());
+        return retval;
     }
 
     /**
@@ -84,8 +79,8 @@ public class ResourceController {
      */
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
-    public Collection<ResourceWithInvitations> listAllBookableResources() {
-        return ResourceCache.getInstance().getClonedCache().values();
+    public Collection<Resource> listAllBookableResources() {
+        return ResourceCache.getInstance().getCache().values();
     }
 
     /**
@@ -96,9 +91,9 @@ public class ResourceController {
      */
     @RequestMapping(value = "/{resource_id}",
                     method = RequestMethod.GET)
-    public ResourceWithInvitations getBookableResource(
+    public Resource getBookableResource(
             @PathVariable("resource_id") String resource_id) {
-        return ResourceCache.getInstance().get(resource_id);
+        return ResourceCache.getInstance().getResource(resource_id);
     }
 
 }

@@ -13,18 +13,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
-import com.oracle.poco.bbhelper.model.ResourceWithInvitations;
+import com.oracle.poco.bbhelper.model.Resource;
 
 class ResourceCache {
 
     @Autowired
     private BbhelperLogger logger;
 
-    private Map<FloorCategory, List<ResourceWithInvitations>> cacheByFloor = 
-            new HashMap<FloorCategory, List<ResourceWithInvitations>>();
+    private Map<FloorCategory, List<Resource>> cacheByFloor = 
+            new HashMap<FloorCategory, List<Resource>>();
 
-    private Map<String, ResourceWithInvitations> cacheByResourceId = 
-            new HashMap<String, ResourceWithInvitations>();
+    private Map<String, Resource> cacheByResourceId = 
+            new HashMap<String, Resource>();
 
     private static ResourceCache instance = null;
 
@@ -45,10 +45,10 @@ class ResourceCache {
             for (FloorCategory category : FloorCategory.values()) {
                 InputStream in = this.getClass().getClassLoader().
                     getResourceAsStream(category.getJsonResource());
-                List<ResourceWithInvitations> list = new ObjectMapper().
-                        readValue(in, new TypeReference<List<ResourceWithInvitations>>(){});
+                List<Resource> list = new ObjectMapper().
+                        readValue(in, new TypeReference<List<Resource>>(){});
                 cacheByFloor.put(category, list);
-                for (ResourceWithInvitations r : list) {
+                for (Resource r : list) {
                     cacheByResourceId.put(r.getResource_id(), r);
                 }
             }
@@ -58,27 +58,29 @@ class ResourceCache {
         }
     }
 
-    Map<String, ResourceWithInvitations> getClonedCache() {
-        Map<String, ResourceWithInvitations> retval =
-                new HashMap<String, ResourceWithInvitations>(cacheByResourceId.size());
-        cacheByResourceId.entrySet().stream().forEach(e -> {
-            ResourceWithInvitations clone = 
-                    ResourceWithInvitations.deepClone(e.getValue());
-            retval.put(clone.getResource_id(), clone);
+    Map<String, Resource> getCache() {
+        return cacheByResourceId;
+    }
+
+    Map<String, Resource> getCache(FloorCategory floorCategory) {
+        if (floorCategory == null) {
+            return getCache();
+        }
+        List<Resource> resources = cacheByFloor.get(floorCategory);
+        Map<String, Resource> retval =
+                new HashMap<String, Resource>(resources.size());
+        resources.stream().forEach(r -> {
+            retval.put(r.getResource_id(), r);
         });
         return retval;
     }
 
-    ResourceWithInvitations get(String resource_id) {
+    Resource getResource(String resource_id) {
         // null check不要。reource_idがnullならnullを返す
-        ResourceWithInvitations origin = cacheByResourceId.get(resource_id);
-        if (origin == null) {
-            return null;
-        }
-        return ResourceWithInvitations.deepClone(origin);
+        return cacheByResourceId.get(resource_id);
     }
 
-    List<String> getAllCalendarIds () {
+    List<String> getCalendarIds() {
         List<String> retval = new ArrayList<String>(cacheByResourceId.size());
         cacheByResourceId.values().stream().forEach(r -> {
             retval.add(r.getCalendar_id());}
@@ -90,7 +92,7 @@ class ResourceCache {
         if (floorCategory == null) {
             floorCategory = FloorCategory.getDafault();
         }
-        List<ResourceWithInvitations> list = cacheByFloor.get(floorCategory);
+        List<Resource> list = cacheByFloor.get(floorCategory);
         List<String> retval = new ArrayList<String>(list.size());
         list.stream().forEach(r -> {
             retval.add(r.getCalendar_id());}
