@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.BbhelperInternalServerErrorException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 import com.oracle.poco.bbhelper.model.Resource;
@@ -39,12 +42,22 @@ public class ResourcesWithInvitationsInRange {
         return resources.values();
     }
 
-    public void addInvitation(Invitation invitation) {
-        // TODO invitation がレンジに収まっていなかったとき
+    public void addInvitation(Invitation invitation) throws BbhelperException {
         String resource_id = invitation.getResource_id();
         if (resource_id == null || resource_id.length() == 0) {
             return;
         }
+        ZonedDateTime start = invitation.getStart();
+        if (start.compareTo(todate) >= 0 || start.isEqual(todate)) {
+            throw new BbhelperInternalServerErrorException(
+                    ErrorDescription.INVITATION_OUT_OF_RANGE);
+        }
+        ZonedDateTime end = invitation.getEnd();
+        if (end.compareTo(fromdate) <= 0 || end.isEqual(fromdate)) {
+            throw new BbhelperInternalServerErrorException(
+                    ErrorDescription.INVITATION_OUT_OF_RANGE);
+        }
+
         ResourceWithInvitations resource = resources.get(resource_id);
         if (resource == null) {
             resource = new ResourceWithInvitations(

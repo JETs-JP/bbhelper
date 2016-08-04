@@ -59,17 +59,16 @@ public class ResourceController {
         try {
             invitations = InvitationUtils.listConflictedInvitaitons(
                     fromdate, todate, floor, context);
+            ResourcesWithInvitationsInRange retval =
+                    new ResourcesWithInvitationsInRange(fromdate, todate);
+            for (Invitation invitation : invitations) {
+                retval.addInvitation(invitation);
+            }
+            return retval;
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
         }
-
-        ResourcesWithInvitationsInRange retval =
-                new ResourcesWithInvitationsInRange(fromdate, todate);
-        for (Invitation invitation : invitations) {
-            retval.addInvitation(invitation);
-        }
-        return retval;
     }
 
     /**
