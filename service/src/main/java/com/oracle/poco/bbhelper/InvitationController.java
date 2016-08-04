@@ -30,7 +30,6 @@ public class InvitationController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String createInvitation(@RequestBody Invitation invitation) {
-        InvitationCache.getInstance().put(invitation);
         // TODO Implement
         return "request accepted.";
     }
@@ -39,7 +38,6 @@ public class InvitationController {
                     method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public String createInvitations(@RequestBody List<Invitation> invitations) {
-        InvitationCache.getInstance().put(invitations);
         // TODO Implement
         return "request accepted.";
     }

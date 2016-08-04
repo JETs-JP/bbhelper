@@ -7,11 +7,11 @@ public class ResourcesWithInvitationsInRange {
 
     ZonedDateTime fromdate;
     ZonedDateTime todate;
-    Collection<ResourceWithInvitationsInRange> resources;
+    Collection<ResourceWithInvitations> resources;
 
     public ResourcesWithInvitationsInRange(
             ZonedDateTime fromdate, ZonedDateTime todate,
-            Collection<ResourceWithInvitationsInRange> resources) {
+            Collection<ResourceWithInvitations> resources) {
         super();
         this.fromdate = fromdate;
         this.todate = todate;
@@ -26,7 +26,7 @@ public class ResourcesWithInvitationsInRange {
         return todate;
     }
 
-    public Collection<ResourceWithInvitationsInRange> getResources() {
+    public Collection<ResourceWithInvitations> getResources() {
         return resources;
     }
 

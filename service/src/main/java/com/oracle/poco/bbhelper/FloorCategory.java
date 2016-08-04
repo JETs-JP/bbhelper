@@ -27,12 +27,16 @@ enum FloorCategory {
     }
 
     @JsonValue
-    String getLabel() {
+    final String getLabel() {
         return label;
     }
 
-    String getJsonResource() {
+    final String getJsonResource() {
         return jsonResource;
+    }
+
+    static final FloorCategory getDafault() {
+        return FloorCategory.WORK_FLOOR;
     }
 
 }

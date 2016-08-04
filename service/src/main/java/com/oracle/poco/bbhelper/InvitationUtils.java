@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +30,9 @@ public class InvitationUtils {
 
     static Collection<Invitation> listConflictedInvitaitons(
             ZonedDateTime start, ZonedDateTime end,
-            FloorCategory floorCategory,
-            TimeoutManagedContext context) throws BbhelperException {
-        Set<String> calendar_ids =
+            FloorCategory floorCategory, TimeoutManagedContext context)
+                    throws BbhelperException {
+        List<String> calendar_ids =
                 ResourceCache.getInstance().getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<String>();
         List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
@@ -74,9 +73,8 @@ public class InvitationUtils {
         if (invitation_ids.size() == 0) {
             return null;
         }
-
-        List<BeeId> beeIds = new ArrayList<BeeId>();
-        invitation_ids.stream().parallel().forEach(i -> {
+        List<BeeId> beeIds = new ArrayList<BeeId>(invitation_ids.size());
+        invitation_ids.stream().forEach(i -> {
             beeIds.add(new BeeId(i, null));
         });
 

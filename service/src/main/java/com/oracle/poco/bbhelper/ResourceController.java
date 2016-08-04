@@ -2,11 +2,13 @@ package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
-import com.oracle.poco.bbhelper.model.ResourceWithInvitationsInRange;
+import com.oracle.poco.bbhelper.model.ResourceWithInvitations;
 import com.oracle.poco.bbhelper.model.ResourcesWithInvitationsInRange;
 
 /**
@@ -56,25 +58,23 @@ public class ResourceController {
         try {
             // TODO floorCategoryをパラメータから直接取りたい
             invitations = InvitationUtils.listConflictedInvitaitons(
-                    fromdate, todate, 
-                    FloorCategory.fromLabel(floorCategory), context);
+                    fromdate, todate, FloorCategory.fromLabel(floorCategory), context);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
         }
 
-        Collection<ResourceWithInvitationsInRange> resources = ResourceCache.
-                getInstance().getAllResources();
-        resources.stream().parallel().forEach(e -> {
-            String rid_r = e.getResource_id();
-            for (Invitation invitaion : invitations) {
-                String rid_i = invitaion.getResource_id();
-                if (rid_r.equals(rid_i)) {
-                    e.getInvitations().add(invitaion);
-                }
+        Map<String, ResourceWithInvitations> resourceMap =
+                ResourceCache.getInstance().getClonedCache();
+        for (Invitation invitaion : invitations) {
+            String id = invitaion.getResource_id();
+            if (id == null || id.length() == 0) {
+                continue;
             }
-        });
-        return new ResourcesWithInvitationsInRange(fromdate, todate, resources);
+            resourceMap.get(id).getInvitations().add(invitaion);
+        }
+        return new ResourcesWithInvitationsInRange(
+                fromdate, todate, resourceMap.values());
     }
 
     /**
@@ -84,8 +84,8 @@ public class ResourceController {
      */
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
-    public Collection<ResourceWithInvitationsInRange> listAllBookableResources() {
-        return ResourceCache.getInstance().getAllResources();
+    public Collection<ResourceWithInvitations> listAllBookableResources() {
+        return ResourceCache.getInstance().getClonedCache().values();
     }
 
     /**
@@ -94,11 +94,11 @@ public class ResourceController {
      * @param resource_id
      * @return 指定された会議室の情報
      */
-//    @RequestMapping(value = "/{resource_id}",
-//                    method = RequestMethod.GET)
-//    public ResourceWithInvitationsInRange getBookableResource(
-//            @PathVariable("resource_id") String resource_id) {
-//        return ResourceCache.getInstance().get(resource_id);
-//    }
+    @RequestMapping(value = "/{resource_id}",
+                    method = RequestMethod.GET)
+    public ResourceWithInvitations getBookableResource(
+            @PathVariable("resource_id") String resource_id) {
+        return ResourceCache.getInstance().get(resource_id);
+    }
 
 }

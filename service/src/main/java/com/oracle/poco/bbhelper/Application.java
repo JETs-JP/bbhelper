@@ -29,7 +29,6 @@ public class Application {
             @Override
             public void run() {
                 s_logger.info("shutdown.");
-//                BbhelperLogger.getInstance().info("shutdown.");
             }
         });
         s_logger.info("started.");
