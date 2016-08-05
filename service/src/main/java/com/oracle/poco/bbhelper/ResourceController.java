@@ -49,13 +49,10 @@ public class ResourceController {
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate,
-            @RequestParam String floorCategory) throws BbhelperException {
+            @RequestParam(required = false) FloorCategory floor) throws BbhelperException {
         TimeoutManagedContext context = (TimeoutManagedContext) request.
                 getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
         final Collection<Invitation> invitations;
-        // TODO これはパラメータから直接取りたい
-        // TODO フロアが指定されなかったら、全てのフロアの情報を返却する
-        FloorCategory floor = FloorCategory.fromLabel(floorCategory);
         try {
             invitations = InvitationUtils.listConflictedInvitaitons(
                     fromdate, todate, floor, context);
