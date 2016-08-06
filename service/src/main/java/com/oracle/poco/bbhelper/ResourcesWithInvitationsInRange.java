@@ -28,6 +28,10 @@ public class ResourcesWithInvitationsInRange {
         super();
         if (fromdate == null || todate == null) {
             throw new NullPointerException();
+            throw new NullPointerException("Date range is not set.");
+        }
+        if (fromdate.compareTo(todate) >= 0) {
+            throw new IllegalArgumentException("The fromdate is later than the todate.");
         }
         this.fromdate = fromdate;
         this.todate = todate;
