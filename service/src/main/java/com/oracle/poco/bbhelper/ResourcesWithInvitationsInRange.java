@@ -26,6 +26,9 @@ public class ResourcesWithInvitationsInRange {
     public ResourcesWithInvitationsInRange(
             ZonedDateTime fromdate, ZonedDateTime todate) {
         super();
+        if (fromdate == null || todate == null) {
+            throw new NullPointerException();
+        }
         this.fromdate = fromdate;
         this.todate = todate;
     }
