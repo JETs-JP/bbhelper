@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
@@ -50,10 +52,16 @@ public class ResourceController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate,
             @RequestParam(required = false) FloorCategory floor) throws BbhelperException {
-        TimeoutManagedContext context = (TimeoutManagedContext) request.
-                getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-        final Collection<Invitation> invitations;
         try {
+            if (fromdate.compareTo(todate) >= 0) {
+                BbhelperException e = new BbhelperBadRequestException(
+                        ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
+                throw e;
+            }
+
+            TimeoutManagedContext context = (TimeoutManagedContext) request.
+                    getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+            final Collection<Invitation> invitations;
             invitations = InvitationUtils.listConflictedInvitaitons(
                     fromdate, todate, floor, context);
             ResourcesWithInvitationsInRange retval =

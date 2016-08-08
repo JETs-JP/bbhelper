@@ -37,10 +37,20 @@ public class ResourcesWithInvitationsInRange {
         this.todate = todate;
     }
 
+    /**
+     * このオブジェクトが含むことができる会議の開始時刻を返却します
+     * 
+     * @return このオブジェクトが含むことができる会議の開始時刻
+     */
     public ZonedDateTime getFromdate() {
         return fromdate;
     }
 
+    /**
+     * このオブジェクトが含むことができる会議の終了時刻を返却します
+     * 
+     * @return このオブジェクトが含むことができる会議の終了時刻
+     */
     public ZonedDateTime getTodate() {
         return todate;
     }

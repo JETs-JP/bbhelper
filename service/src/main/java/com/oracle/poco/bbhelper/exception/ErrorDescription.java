@@ -2,12 +2,13 @@ package com.oracle.poco.bbhelper.exception;
 
 public enum ErrorDescription {
     UNAUTORIZED(1, "unauthorized."),
-    BAD_REQUEST(2, "bad request."),
-    INVITATION_OUT_OF_RANGE(3, "the invitation to set is out of specified range."),
-    FAILED_TO_LOG(4, "failed to log."),
-    FAILET_TO_LOAD_RESOURCES(5, "failed to load resources data."),
-    BEEHIVE4J_CONTEXT_EXPIRED(6, "beehive4j context is expired."),
-    BEEHIVE4J_FAULT(7, "some exception raised from beehive4j."),
+    HEADER_FOR_AUTHENTICATION_IS_NOT_SET(2, "header for authentication is not set."),
+    FROM_DATE_IS_LATER_THAN_TODATE(3, "fromdate is later than the todate."),
+    INVITATION_OUT_OF_RANGE(4, "the invitation to set is out of specified range."),
+    FAILED_TO_LOG(5, "failed to log."),
+    FAILET_TO_LOAD_RESOURCES(6, "failed to load resources data."),
+    BEEHIVE4J_CONTEXT_EXPIRED(7, "beehive4j context is expired."),
+    BEEHIVE4J_FAULT(8, "some exception raised from beehive4j."),
     ;
 
     private static final String CODE_HEADER = "BBHELPER-ERROR-";

@@ -37,14 +37,13 @@ public class SessionController {
     public ResponseEntity<String> login(HttpServletRequest request)
             throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
-        if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
-            BbhelperException be =
-                    new BbhelperBadRequestException(ErrorDescription.BAD_REQUEST);
-            logger.logBbhelperException(request, be);
-            throw be;
-        }
-
         try {
+            if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
+                BbhelperException be = new BbhelperBadRequestException(
+                        ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET);
+                throw be;
+            }
+
             URL host = new URL(config.getBeehiveUrl());
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
@@ -55,7 +54,7 @@ public class SessionController {
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
         } catch (MalformedURLException e) {
-            // do nothing.
+            // TODO URLのチェックは起動時に済ませておきたい.
             return null;
         } catch (Beehive4jException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(

@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 
@@ -48,21 +50,28 @@ public class InvitationController {
     public Collection<Invitation> listConflictedInvitaitons(
             HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime start,
+            ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime end,
-            @RequestParam(required = false) FloorCategory floor) throws BbhelperException {
-        TimeoutManagedContext context = (TimeoutManagedContext) request.
-                getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-        Collection<Invitation> retval = null;
+            ZonedDateTime todate,
+            @RequestParam(required = false) FloorCategory floor)
+                    throws BbhelperException {
         try {
+            if (fromdate.compareTo(todate) >= 0) {
+                BbhelperException e = new BbhelperBadRequestException(
+                        ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
+                throw e;
+            }
+
+            TimeoutManagedContext context = (TimeoutManagedContext) request.
+                    getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+            Collection<Invitation> retval = null;
             retval = InvitationUtils.listConflictedInvitaitons(
-                    start, end, floor, context);
+                    fromdate, todate, floor, context);
+            return retval;
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
         }
-        return retval;
     }
 
 }
