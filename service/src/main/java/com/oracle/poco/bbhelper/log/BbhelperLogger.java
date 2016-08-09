@@ -97,14 +97,13 @@ public class BbhelperLogger {
     }
 
     /**
-     * @param sessionId
+     * @param request
      */
     public void request(HttpServletRequest request) {
         if (request == null) {
-            // TODO 何らかのログを残してこのメソッドを終了する
-            return;
+            // このメソッドの誤った使い方
+            throw new NullPointerException("request is null.");
         }
-        // TODO requestから欲しい情報を取得して記録しておく
         AccessLogger.info("REQUEST: " + (String)request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_REQUEST_ID));
     }
@@ -114,10 +113,9 @@ public class BbhelperLogger {
      */
     public void response(HttpServletRequest request) {
         if (request == null) {
-            // TODO 何らかのログを残してこのメソッドを終了する
-            return;
+            // このメソッドの誤った使い方
+            throw new NullPointerException("request is null.");
         }
-        // TODO requestから欲しい情報を取得して記録しておく
         AccessLogger.info("RESPONSE: " + (String)request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_REQUEST_ID));
     }
