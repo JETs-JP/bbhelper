@@ -13,7 +13,7 @@ BBHelperは、1)Beehive上で予約可能な会議室を探す、2)会議室を�
 セッション管理 [/session]
 -------------------------
 
-### BBHelperにログインする [GET /login]
+### BBHelperにログインする [GET /session/login]
 BBHelperにログインします。<br>
 Beehiveのアカウントのユーザー名／パスワードをBasic認証のヘッダーの形式で送信し、ログインに成功すると認証済みであることを表すセッションIDを返却します。<br>
 以降、上記のセッションIDをヘッダーに付加してBBHelperのAPIを呼び出します。
@@ -51,9 +51,9 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
                 フォーマットはISO 8601拡張形式 (yyyy-MM-ddTHH:mm:ss.SSSZ)。オフセットに含まれる"+"記号を"%2b"に置き換えること（パーセントエンコーディング）<br>
     + floor:    `WORK` (string, required) - フロアカテゴリー<br>
                 取得対象のフロアを指定します。<br>
-                - "WORK": 執務階<br>
-                - "LOWER": 低層階<br>
-                - "OTHER": 執務、低層以外<br>
+                - "WORK": 執務階。16,17,18,19,20,21階<br>
+                - "LOWER": 低層階。10,11,12,13階<br>
+                - "OTHER": 執務、低層以外。15,23,24階<br>
 
 + Response 200 (application/json)
 
@@ -125,7 +125,7 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
 ### 会議室情報の一覧を取得する [GET /resources/list{?floor}]
 会議室情報の一覧を取得します。<br>
 会議室のフロアーの種類によって、取得対象を絞り込むことができます（floorパラメータの説明を参照）。<br>
-各会議室の情報の情報には、クエリで指定した時間帯の会議情報も含まれます。
+このAPIのレスポンスには会議情報は含まれません。
 
 + Request
     + Headers
@@ -135,9 +135,9 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
 + Parameters
     + floor:    `WORK` (string, required) - フロアカテゴリー<br>
                 取得対象のフロアを指定します。<br>
-                - "WORK": 執務階<br>
-                - "LOWER": 低層階<br>
-                - "OTHER": 執務、低層以外<br>
+                - "WORK": 執務階。16,17,18,19,20,21階<br>
+                - "LOWER": 低層階。10,11,12,13階<br>
+                - "OTHER": 執務、低層以外。15,23,24階<br>
 
 + Response 200 (application/json)
 
@@ -207,6 +207,11 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
 ### 指定した会議の情報を取得する [GET /invitations/{invitation_id}]
 登録済みの会議の情報を取得します。
 
++ Request
+    + Headers
+
+            BBH-Authorized-Session: rfsfog17jSX68TtjwXW6wIfEj0UvGkPm
+
 + Parameters
     + invitation_id: `bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB` (string, required) - 情報を取得したい会議のid<br>
 
@@ -243,6 +248,9 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
             "end": "2016-04-01T13:00:00.000+09:00"
         }
 
+    + Headers
+
+            BBH-Authorized-Session: rfsfog17jSX68TtjwXW6wIfEj0UvGkPm
 
 + Response 201 (application/json)
     + Headers
@@ -267,6 +275,11 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
 
 ### 登録済みの会議を削除する [DELETE /invitations/{invitation_id}]
 登録済みの会議を削除します。
+
++ Request (application/json)
+    + Headers
+
+            BBH-Authorized-Session: rfsfog17jSX68TtjwXW6wIfEj0UvGkPm
 
 + Parameters
     + invitation_id: `bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB` (string, required) - 削除したい会議のid<br>
