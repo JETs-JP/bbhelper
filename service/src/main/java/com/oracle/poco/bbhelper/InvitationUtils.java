@@ -21,6 +21,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.MyWorkspaceInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
@@ -128,6 +129,31 @@ public class InvitationUtils {
             retval.add(invitation);
         }
         return retval;
+    }
+
+    static String getDefaultCalendar(TimeoutManagedContext context)
+            throws BbhelperException {
+        MyWorkspaceInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        ResponseEntity<BeehiveResponse> response = null;
+        try {
+            response = invoker.invoke();
+        } catch (BeehiveApiFaultException e) {
+            BbhelperException be = null;
+            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                be = new BbhelperUnauthorizedException(
+                        ErrorDescription.UNAUTORIZED, e);
+            } else {
+                be = new BbhelperBeehive4jException(
+                        ErrorDescription.BEEHIVE4J_FAULT, e);
+            }
+            throw be;
+        }
+        BeehiveResponse body = response.getBody();
+        if (body == null) {
+            return null;
+        }
+        return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
     }
 
     private static String getNodeAsText(JsonNode node, String... names) {
