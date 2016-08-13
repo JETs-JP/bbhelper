@@ -16,9 +16,11 @@ import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
+import com.oracle.poco.bbhelper.model.Resource;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtCreateInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.MyWorkspaceInvoker;
@@ -26,6 +28,15 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultExce
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdater;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdaterOperation;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingUpdater;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceParticipantStatus;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceStatus;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceType;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Priority;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Transparency;
 
 public class InvitationUtils {
 
@@ -154,6 +165,69 @@ public class InvitationUtils {
             return null;
         }
         return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
+    }
+
+    static String createInvitaion(Invitation invitation, String calendar_id,
+            TimeoutManagedContext context) throws BbhelperException {
+        // BeeId
+        BeeId calendar = new BeeId(calendar_id, null);
+
+        // MeetingUpdater
+        Resource resource = ResourceCache.getInstance().getResource(
+                invitation.getResource_id());
+        List<MeetingParticipantUpdater> participantUpdaters = 
+                new ArrayList<MeetingParticipantUpdater>(1);
+        participantUpdaters.add(new MeetingParticipantUpdater(
+                null,
+                null,
+                MeetingParticipantUpdaterOperation.ADD,
+                new BeeId(resource.getResource_id(), null)));
+        MeetingUpdater meetingUpdater = new MeetingUpdater(
+                invitation.getName(),
+                null,
+                null,
+                null,
+                invitation.getEnd(),
+                false,
+                OccurrenceParticipantStatus.ACCEPTED,
+                null,
+                Priority.MEDIUM,
+                Transparency.TRANSPARENT,
+                resource.getName(),
+                participantUpdaters,
+                invitation.getStart(),
+                OccurrenceStatus.TENTATIVE, null, null);
+        
+        // OccurenceType
+        OccurrenceType type = OccurrenceType.MEETING;
+
+        MeetingCreator meetingCreater = new MeetingCreator(
+                calendar, meetingUpdater, type);
+        InvtCreateInvoker invoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
+        invoker.setRequestPayload(meetingCreater);
+
+        ResponseEntity<BeehiveResponse> response = null;
+        try {
+            response = invoker.invoke();
+        } catch (BeehiveApiFaultException e) {
+            BbhelperException be = null;
+            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                be = new BbhelperUnauthorizedException(
+                        ErrorDescription.UNAUTORIZED, e);
+            } else {
+                // TODO こちらに来ると、エラーレスポンスにろくにメッセージが
+                // 入ってこない。
+                be = new BbhelperBeehive4jException(
+                        ErrorDescription.BEEHIVE4J_FAULT, e);
+            }
+            throw be;
+        }
+        BeehiveResponse body = response.getBody();
+        if (body == null) {
+            return null;
+        }
+        return "OK";
     }
 
     private static String getNodeAsText(JsonNode node, String... names) {

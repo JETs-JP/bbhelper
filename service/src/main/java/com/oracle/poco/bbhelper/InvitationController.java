@@ -31,9 +31,23 @@ public class InvitationController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createInvitation(@RequestBody Invitation invitation) {
-        // TODO Implement
-        return "request accepted.";
+    public String createInvitation(HttpServletRequest request,
+            @RequestBody Invitation invitation)
+                    throws BbhelperException {
+        TimeoutManagedContext context = null;
+        String calendar_id = null;
+        String result = null;
+        try {
+            context = (TimeoutManagedContext) request.getAttribute(
+                    Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+            calendar_id = InvitationUtils.getDefaultCalendar(context);
+            result = InvitationUtils.createInvitaion(invitation, calendar_id, context);
+        } catch (BbhelperException e) {
+            logger.logBbhelperException(request, e);
+            throw e;
+        }
+        // TODO レスポンスとしてInvitationsを返す
+        return result;
     }
 
     @RequestMapping(value = "/list",
