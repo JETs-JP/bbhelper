@@ -19,6 +19,7 @@ import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtCreateInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
@@ -38,12 +39,36 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceType;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Priority;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Transparency;
 
-public class InvitationUtils {
+class Session {
 
-    static Collection<Invitation> listConflictedInvitaitons(
-            ZonedDateTime start, ZonedDateTime end,
-            FloorCategory floorCategory, TimeoutManagedContext context)
+    // TODO タイムアウト値はapplication.propertiesで設定できるようにする
+    private static final long TIMEOUT = 1000 * 60 * 60; //1hour
+
+    private long lastUsed;
+
+    private final BeehiveContext context;
+
+    private String calendar_id = null;
+
+    Session(BeehiveContext context) {
+        super();
+        this.lastUsed = System.currentTimeMillis();
+        this.context = context;
+    }
+
+    boolean isActive() {
+        return (System.currentTimeMillis() - lastUsed) < TIMEOUT;
+    }
+
+    private void update() {
+        lastUsed = System.currentTimeMillis();
+    }
+
+    Collection<Invitation> listConflictedInvitaitons(
+            ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
+        // update()が新規メソッドでも確実に実行されるような工夫が必要
+        update();
         List<String> calendar_ids =
                 ResourceCache.getInstance().getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<String>();
@@ -65,8 +90,6 @@ public class InvitationUtils {
                         }
                     }
                 }
-            } catch (BbhelperException e) {
-                bbhe.add(e);
             } catch (BeehiveApiFaultException e) {
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
@@ -115,7 +138,7 @@ public class InvitationUtils {
         return parseInvtReadBatchResult(body.getJson());
     }
 
-    private static List<Invitation> parseInvtReadBatchResult(JsonNode node) {
+    private List<Invitation> parseInvtReadBatchResult(JsonNode node) {
         Iterable<JsonNode> elements = node.get("elements");
         if (elements == null) {
             return null;
@@ -142,36 +165,14 @@ public class InvitationUtils {
         return retval;
     }
 
-    static String getDefaultCalendar(TimeoutManagedContext context)
-            throws BbhelperException {
-        MyWorkspaceInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
-        ResponseEntity<BeehiveResponse> response = null;
-        try {
-            response = invoker.invoke();
-        } catch (BeehiveApiFaultException e) {
-            BbhelperException be = null;
-            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e);
-            } else {
-                be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e);
-            }
-            throw be;
+    String createInvitaion(Invitation invitation) throws BbhelperException {
+        // update()が新規メソッドでも確実に実行されるような工夫が必要
+        update();
+        if (calendar_id == null || calendar_id.length() == 0) {
+            calendar_id = getDefaultCalendar();
         }
-        BeehiveResponse body = response.getBody();
-        if (body == null) {
-            return null;
-        }
-        return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
-    }
-
-    static String createInvitaion(Invitation invitation, String calendar_id,
-            TimeoutManagedContext context) throws BbhelperException {
         // BeeId
         BeeId calendar = new BeeId(calendar_id, null);
-
         // MeetingUpdater
         Resource resource = ResourceCache.getInstance().getResource(
                 invitation.getResource_id());
@@ -197,16 +198,14 @@ public class InvitationUtils {
                 participantUpdaters,
                 invitation.getStart(),
                 OccurrenceStatus.TENTATIVE, null, null);
-        
         // OccurenceType
         OccurrenceType type = OccurrenceType.MEETING;
-
+        // Create MeetingCreator and invoke
         MeetingCreator meetingCreater = new MeetingCreator(
                 calendar, meetingUpdater, type);
         InvtCreateInvoker invoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invoker.setRequestPayload(meetingCreater);
-
         ResponseEntity<BeehiveResponse> response = null;
         try {
             response = invoker.invoke();
@@ -230,7 +229,31 @@ public class InvitationUtils {
         return "OK";
     }
 
-    private static String getNodeAsText(JsonNode node, String... names) {
+    private String getDefaultCalendar() throws BbhelperException {
+        MyWorkspaceInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        ResponseEntity<BeehiveResponse> response = null;
+        try {
+            response = invoker.invoke();
+        } catch (BeehiveApiFaultException e) {
+            BbhelperException be = null;
+            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                be = new BbhelperUnauthorizedException(
+                        ErrorDescription.UNAUTORIZED, e);
+            } else {
+                be = new BbhelperBeehive4jException(
+                        ErrorDescription.BEEHIVE4J_FAULT, e);
+            }
+            throw be;
+        }
+        BeehiveResponse body = response.getBody();
+        if (body == null) {
+            return null;
+        }
+        return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
+    }
+
+    private String getNodeAsText(JsonNode node, String... names) {
         if (node == null) {
             throw new NullPointerException();
         }

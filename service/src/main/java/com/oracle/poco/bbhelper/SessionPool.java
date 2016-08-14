@@ -8,8 +8,8 @@ import org.apache.commons.lang.RandomStringUtils;
 
 class SessionPool {
 
-    private final Map<String, TimeoutManagedContext> pool =
-            new ConcurrentHashMap<String, TimeoutManagedContext>();
+    private final Map<String, Session> pool =
+            new ConcurrentHashMap<String, Session>();
 
     private static SessionPool instance = null;
 
@@ -23,7 +23,7 @@ class SessionPool {
         return instance;
     }
 
-    String put(TimeoutManagedContext context) {
+    String put(Session context) {
         // TODO same client and user.
         refreshPool();
         String session_id;
@@ -34,13 +34,13 @@ class SessionPool {
         return session_id;
     }
 
-    TimeoutManagedContext get(String session_id) {
+    Session get(String session_id) {
         refreshPool();
         return pool.get(session_id);
     }
 
     private void refreshPool() {
-        for (Entry<String, TimeoutManagedContext> entry : pool.entrySet()) {
+        for (Entry<String, Session> entry : pool.entrySet()) {
             if (!entry.getValue().isActive()) {
                 pool.remove(entry.getKey());
             }

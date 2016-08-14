@@ -58,12 +58,10 @@ public class ResourceController {
                         ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
                 throw e;
             }
-
-            TimeoutManagedContext context = (TimeoutManagedContext) request.
-                    getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-            final Collection<Invitation> invitations;
-            invitations = InvitationUtils.listConflictedInvitaitons(
-                    fromdate, todate, floor, context);
+            Session session = (Session) request.getAttribute(
+                    Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+            Collection<Invitation> invitations = 
+                    session.listConflictedInvitaitons(fromdate, todate, floor);
             ResourcesWithInvitationsInRange retval =
                     new ResourcesWithInvitationsInRange(fromdate, todate);
             for (Invitation invitation : invitations) {

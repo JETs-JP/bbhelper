@@ -27,7 +27,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
         if (session_id == null || session_id.length() == 0) {
             throwUnauthorizedException(request);
         }
-        TimeoutManagedContext context = SessionPool.getInstance().get(session_id);
+        Session context = SessionPool.getInstance().get(session_id);
         if (context == null) {
             throwUnauthorizedException(request);
         }

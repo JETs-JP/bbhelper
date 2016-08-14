@@ -2,7 +2,6 @@ package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,31 +30,18 @@ public class InvitationController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createInvitation(HttpServletRequest request,
-            @RequestBody Invitation invitation)
+    public String createInvitation(
+            HttpServletRequest request, @RequestBody Invitation invitation)
                     throws BbhelperException {
-        TimeoutManagedContext context = null;
-        String calendar_id = null;
-        String result = null;
         try {
-            context = (TimeoutManagedContext) request.getAttribute(
+            Session session = (Session) request.getAttribute(
                     Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-            calendar_id = InvitationUtils.getDefaultCalendar(context);
-            result = InvitationUtils.createInvitaion(invitation, calendar_id, context);
+            // TODO レスポンスとしてInvitationsを返す
+            return session.createInvitaion(invitation);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
         }
-        // TODO レスポンスとしてInvitationsを返す
-        return result;
-    }
-
-    @RequestMapping(value = "/list",
-                    method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public String createInvitations(@RequestBody List<Invitation> invitations) {
-        // TODO Implement
-        return "request accepted.";
     }
 
     @RequestMapping(value = "/list",
@@ -75,13 +61,9 @@ public class InvitationController {
                         ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
                 throw e;
             }
-
-            TimeoutManagedContext context = (TimeoutManagedContext) request.
-                    getAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
-            Collection<Invitation> retval = null;
-            retval = InvitationUtils.listConflictedInvitaitons(
-                    fromdate, todate, floor, context);
-            return retval;
+            Session session = (Session) request.getAttribute(
+                    Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+            return session.listConflictedInvitaitons(fromdate, todate, floor);
         } catch (BbhelperException e) {
             logger.logBbhelperException(request, e);
             throw e;
