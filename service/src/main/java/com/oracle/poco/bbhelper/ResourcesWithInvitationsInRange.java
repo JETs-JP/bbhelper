@@ -16,18 +16,28 @@ import com.oracle.poco.bbhelper.model.Resource;
 
 public class ResourcesWithInvitationsInRange {
 
+    /**
+     * このオブジェクトが含むことができる会議の開始時刻
+     */
     private final ZonedDateTime fromdate;
+    /**
+     * このオブジェクトが含むことができる会議の終了時刻
+     */
     private final ZonedDateTime todate;
 
     private Map<String, ResourceWithInvitations> resources =
             new HashMap<String, ResourceWithInvitations>();
 
-    // TODO このオブジェクトはファクトリーから取得するようにする
+    /**
+     * コンストラクタ
+     * 
+     * @param fromdate このオブジェクトが含むことができる会議の開始時刻
+     * @param todate このオブジェクトが含むことができる会議の終了時刻
+     */
     public ResourcesWithInvitationsInRange(
             ZonedDateTime fromdate, ZonedDateTime todate) {
         super();
         if (fromdate == null || todate == null) {
-            throw new NullPointerException();
             throw new NullPointerException("Date range is not set.");
         }
         if (fromdate.compareTo(todate) >= 0) {
@@ -85,7 +95,7 @@ public class ResourcesWithInvitationsInRange {
         resource.getInvitations().add(invitation);
     }
 
-    public final class ResourceWithInvitations extends Resource {
+    private final class ResourceWithInvitations extends Resource {
 
         private final List<Invitation> invitations;
 

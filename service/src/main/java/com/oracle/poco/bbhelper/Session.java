@@ -67,7 +67,7 @@ class Session {
     Collection<Invitation> listConflictedInvitaitons(
             ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
-        // update()が新規メソッドでも確実に実行されるような工夫が必要
+        // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
         List<String> calendar_ids =
                 ResourceCache.getInstance().getCalendarIds(floorCategory);
@@ -166,7 +166,7 @@ class Session {
     }
 
     String createInvitaion(Invitation invitation) throws BbhelperException {
-        // update()が新規メソッドでも確実に実行されるような工夫が必要
+        // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
         if (calendar_id == null || calendar_id.length() == 0) {
             calendar_id = getDefaultCalendar();
@@ -215,8 +215,7 @@ class Session {
                 be = new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e);
             } else {
-                // TODO こちらに来ると、エラーレスポンスにろくにメッセージが
-                // 入ってこない。
+                // TODO こちらに来ると、エラーレスポンスのメッセージがプア
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e);
             }
@@ -226,6 +225,7 @@ class Session {
         if (body == null) {
             return null;
         }
+        // TODO レスポンスとしてInvitationsを返す
         return "OK";
     }
 
