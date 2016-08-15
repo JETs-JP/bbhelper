@@ -59,7 +59,7 @@ public class ResourceController {
                 throw e;
             }
             Session session = (Session) request.getAttribute(
-                    Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT);
+                    Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
             Collection<Invitation> invitations = 
                     session.listConflictedInvitaitons(fromdate, todate, floor);
             ResourcesWithInvitationsInRange retval =

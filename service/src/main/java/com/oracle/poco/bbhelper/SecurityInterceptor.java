@@ -31,7 +31,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
         if (context == null) {
             throwUnauthorizedException(request);
         }
-        request.setAttribute(Constants.REQUEST_ATTR_KEY_BEEHIVE_CONTEXT, 
+        request.setAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT, 
                 SessionPool.getInstance().get(session_id));
         return true;
     }
