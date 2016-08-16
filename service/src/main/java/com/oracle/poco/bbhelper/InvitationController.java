@@ -39,7 +39,7 @@ public class InvitationController {
             // TODO レスポンスとしてInvitationsを返す
             return session.createInvitaion(invitation);
         } catch (BbhelperException e) {
-            logger.logBbhelperException(request, e);
+            logger.exception(request, e);
             throw e;
         }
     }
@@ -65,7 +65,7 @@ public class InvitationController {
                     Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
             return session.listConflictedInvitaitons(fromdate, todate, floor);
         } catch (BbhelperException e) {
-            logger.logBbhelperException(request, e);
+            logger.exception(request, e);
             throw e;
         }
     }

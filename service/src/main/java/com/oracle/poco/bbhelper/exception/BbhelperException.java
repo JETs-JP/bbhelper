@@ -2,21 +2,26 @@ package com.oracle.poco.bbhelper.exception;
 
 public abstract class BbhelperException extends Exception {
 
-    protected ErrorDescription description;
+    private final String chainedMessage;
 
     public BbhelperException(ErrorDescription description) {
         super(description.getFullDescription());
-        this.description = description;
+        chainedMessage = description.getFullDescription();
     }
 
     public BbhelperException(
             ErrorDescription description, Throwable cause) {
         super(description.getFullDescription(), cause);
-        this.description = description;
+        if (cause == null) {
+            chainedMessage = description.getFullDescription();
+        } else {
+            chainedMessage = description.getFullDescription() + ": "
+                    + cause.getMessage();
+        }
     }
 
-    public ErrorDescription getErrorDescription() {
-        return description;
+    public String getChainedMessage() {
+        return chainedMessage;
     }
 
     /**

@@ -18,10 +18,12 @@ import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 /**
  * このアプリケーションのために構成されたロガーを提供するためのユーティリティ・
- * クラスです。
- *
+ * クラスです。<br>
  * このアプリケーションで実装されるログ出力は、すべて本クラスを使用することを
  * 想定しています。
+ * 
+ * 実装の方針:
+ *       パラメータ
  *
  * @author hhayakaw
  *
@@ -138,7 +140,11 @@ public class BbhelperLogger {
     public void severe(HttpServletRequest request, ErrorDescription description) {
         if (description == null) {
             // do nothing.
+            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
             return;
+        }
+        if (request == null) {
+            severe(description);
         }
         String message = getBaseMessage(
                 request, description.getFullDescription()).toString();
@@ -151,6 +157,7 @@ public class BbhelperLogger {
     public void severe(ErrorDescription description) {
         if (description == null) {
             // do nothing.
+            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
             return;
         }
         SystemLogger.severe(description.getFullDescription());
@@ -160,26 +167,17 @@ public class BbhelperLogger {
      * @param reqest
      * @param e
      */
-    public void logBbhelperException(
-            HttpServletRequest request, BbhelperException e) {
+    public void exception(HttpServletRequest request, BbhelperException e) {
         if (e == null) {
+            // TODO パラメータ不足の時の処理を共通化
+            SystemLogger.severe(
+                    "Required parameter for logging \"BbhelperException\" is empty.");
             return;
         }
-        logThrowable(request, e.getErrorDescription().getFullDescription(), e);
-    }
-
-    /**
-     * @param t
-     */
-    private void logThrowable(
-            HttpServletRequest request, String message, Throwable t) {
-        if (t == null) {
-            // do nothing.
-            return;
-        }
-        String logMessage = getBaseMessage(request, message).toString();
-        SystemLogger.severe(logMessage);
-        DebugLogger.log(Level.SEVERE, logMessage, t);
+        String errMessage =  e.getChainedMessage();
+        String message = getBaseMessage(request, errMessage).toString();
+        SystemLogger.severe(message);
+        DebugLogger.log(Level.SEVERE, message, e);
     }
 
     /**

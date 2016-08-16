@@ -40,7 +40,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
             throws BbhelperException {
         BbhelperException e = new BbhelperUnauthorizedException(
                 ErrorDescription.UNAUTORIZED);
-        logger.logBbhelperException(request, e);
+        logger.exception(request, e);
         throw e;
     }
 

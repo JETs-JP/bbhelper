@@ -11,18 +11,19 @@ public enum ErrorDescription {
     BEEHIVE4J_FAULT(8, "some exception raised from beehive4j."),
     ;
 
-    private static final String CODE_HEADER = "BBHELPER-ERROR-";
+    private static final String ERROR_CODE_HEADER = "BBHELPER-ERROR-";
 
-    private final String code;
+    private final String errorCode;
+
     private final String message;
 
     ErrorDescription(int code, String message) {
-        this.code = CODE_HEADER + String.format("%04d", code);
+        this.errorCode = ERROR_CODE_HEADER + String.format("%04d", code);
         this.message = message;
     }
 
     public String getCode() {
-        return code;
+        return errorCode;
     }
 
     public String getMessage() {
@@ -30,7 +31,7 @@ public enum ErrorDescription {
     }
 
     public String getFullDescription() {
-        return code + ": " + message;
+        return errorCode + ": " + getMessage();
     }
 
 }

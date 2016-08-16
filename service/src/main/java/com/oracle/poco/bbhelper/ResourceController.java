@@ -69,7 +69,7 @@ public class ResourceController {
             }
             return retval;
         } catch (BbhelperException e) {
-            logger.logBbhelperException(request, e);
+            logger.exception(request, e);
             throw e;
         }
     }

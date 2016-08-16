@@ -58,7 +58,7 @@ public class SessionController {
         } catch (Beehive4jException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e);
-            logger.logBbhelperException(request, be);
+            logger.exception(request, be);
             throw be;
         }
     }
