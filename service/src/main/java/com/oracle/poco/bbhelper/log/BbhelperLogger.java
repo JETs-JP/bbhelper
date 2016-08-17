@@ -103,23 +103,21 @@ public class BbhelperLogger {
      */
     public void request(HttpServletRequest request) {
         if (request == null) {
-            // このメソッドの誤った使い方
-            throw new NullPointerException("request is null.");
+            // TODO missing parameter
+            return;
         }
-        AccessLogger.info("REQUEST: " + (String)request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_REQUEST_ID));
+        AccessLogger.info(messageWithRequestProfile(request, "request."));
     }
 
     /**
-     * @param message
+     * @param request
      */
     public void response(HttpServletRequest request) {
         if (request == null) {
-            // このメソッドの誤った使い方
-            throw new NullPointerException("request is null.");
+            // TODO missing parameter
+            return;
         }
-        AccessLogger.info("RESPONSE: " + (String)request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_REQUEST_ID));
+        AccessLogger.info(messageWithRequestProfile(request, "response."));
     }
 
     /**
@@ -127,84 +125,137 @@ public class BbhelperLogger {
      */
     public void info(String message) {
         if (message == null || message.length() == 0) {
-            // do nothing.
+            // TODO missing parameter
             return;
         }
         SystemLogger.info(message);
+        DebugLogger.info(message);
     }
 
-    /**
-     * @param request
-     * @param description
-     */
-    public void severe(HttpServletRequest request, ErrorDescription description) {
-        if (description == null) {
-            // do nothing.
-            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
-            return;
-        }
-        if (request == null) {
-            severe(description);
-        }
-        String message = getBaseMessage(
-                request, description.getFullDescription()).toString();
-        SystemLogger.severe(message);
-    }
+//    /**
+//     * @param request
+//     * @param description
+//     */
+//    public void severe(HttpServletRequest request, ErrorDescription description) {
+//        if (description == null) {
+//            // do nothing.
+//            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
+//            return;
+//        }
+//        if (request == null) {
+//            severe(description);
+//        }
+//        String message = getBaseMessage(
+//                request, description.getFullDescription()).toString();
+//        SystemLogger.severe(message);
+//    }
 
     /**
      * @param description
      */
     public void severe(ErrorDescription description) {
         if (description == null) {
-            // do nothing.
-            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
+            // TODO missing parameter
             return;
         }
-        SystemLogger.severe(description.getFullDescription());
+        String log = description.getFullDescription();
+        SystemLogger.severe(log);
+        DebugLogger.severe(log);
     }
 
     /**
+     * 例外の情報をログに出力します。
+     * 
+     * @param e
+     */
+    public void exception(BbhelperException e) {
+        if (e == null) {
+            // TODO missing parameter
+            return;
+        }
+        String log = e.getChainedMessage();
+        SystemLogger.severe(log);
+        DebugLogger.log(Level.SEVERE, log, e);
+    }
+
+    /**
+     * 例外の情報をログに出力します。
+     * 
      * @param reqest
      * @param e
      */
     public void exception(HttpServletRequest request, BbhelperException e) {
-        if (e == null) {
-            // TODO パラメータ不足の時の処理を共通化
-            SystemLogger.severe(
-                    "Required parameter for logging \"BbhelperException\" is empty.");
-            return;
+        if (request == null) {
+            // TODO missing parameter
+            exception(e);
         }
-        String errMessage =  e.getChainedMessage();
-        String message = getBaseMessage(request, errMessage).toString();
-        SystemLogger.severe(message);
-        DebugLogger.log(Level.SEVERE, message, e);
+        String log = messageWithRequestProfile(request, e.getChainedMessage());
+        SystemLogger.severe(log);
+        DebugLogger.log(Level.SEVERE, log, e);
     }
 
     /**
+     * デバッグログを出力します。
+     * 
      * @param message
      */
     public void debug(String message) {
         if (message == null || message.length() == 0) {
-            // do nothing.
+            // TODO missing parameter
             return;
         }
         DebugLogger.fine(message);
     }
 
-    private StringBuilder getBaseMessage(
-            HttpServletRequest request, String message) {
-        String request_id;
+    /**
+     * デバッグログを出力します。
+     * 
+     * @param request
+     * @param message
+     */
+    public void debug(HttpServletRequest request, String message) {
         if (request == null) {
-            request_id = "N/A";
+            // TODO missing parameter
+            debug(message);
         }
-        request_id = (String)request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_REQUEST_ID);
+        DebugLogger.fine(messageWithRequestProfile(request, message));
+    }
+
+    /**
+     * HTTPリクエストの情報を、ログ出力用の文字列として返却します。
+     * 
+     * このメソッドでは入力値のチェックをしていないので、呼び出し元で必ず
+     * チェックすること。
+     * 
+     * @param request
+     * @return 
+     */
+    private String requestProfile(HttpServletRequest request) {
         StringBuilder builder = new StringBuilder();
-        // TODO requestがNullの時のケアが足りてない
+        String request_id = (String)request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_REQUEST_ID);
         builder.append("REQUEST_ID: ").append(request_id).append(",");
-        builder.append("REQUEST_URL: ").append(request.getRequestURL()).append(",");
-        builder.append("MESSAGE: ").append(message);
-        return builder;
+        builder.append("REQUEST_URL: ").append(request.getRequestURL());
+        // TODO 他の情報を追加。追加したら↑にカンマを追加すること
+        return builder.toString();
+    }
+
+    /**
+     * HTTPリクエストの情報と指定されたメッセージを含む、ログ出力用の文字列を
+     * 返却します。
+     * 
+     * このメソッドでは入力値のチェックをしていないので、呼び出し元で必ず
+     * チェックすること。
+     * 
+     * @param request
+     * @param message
+     * @return 
+     */
+    private String messageWithRequestProfile(
+            HttpServletRequest request, String message) {
+        StringBuilder builder = new StringBuilder(requestProfile(request));
+        builder.append(",").append("MESSAGE: ").append(message);
+        return builder.toString();
     }
 
 }
