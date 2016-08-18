@@ -226,7 +226,7 @@ class Session {
             return null;
         }
         // TODO レスポンスとしてInvitationsを返す
-        return "OK";
+        return getNodeAsText(body.getJson(), "collabId", "id");
     }
 
     private String getDefaultCalendar() throws BbhelperException {
