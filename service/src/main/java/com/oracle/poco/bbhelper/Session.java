@@ -24,6 +24,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtCreateInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.MyWorkspaceInvoker;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
@@ -165,7 +166,7 @@ class Session {
         return retval;
     }
 
-    String createInvitaion(Invitation invitation) throws BbhelperException {
+    Invitation createInvitaion(Invitation invitation) throws BbhelperException {
         // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
         if (calendar_id == null || calendar_id.length() == 0) {
@@ -203,30 +204,75 @@ class Session {
         // Create MeetingCreator and invoke
         MeetingCreator meetingCreater = new MeetingCreator(
                 calendar, meetingUpdater, type);
-        InvtCreateInvoker invoker =
+        InvtCreateInvoker invtCreateInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
-        invoker.setRequestPayload(meetingCreater);
-        ResponseEntity<BeehiveResponse> response = null;
+        invtCreateInvoker.setRequestPayload(meetingCreater);
+        ResponseEntity<BeehiveResponse> invtCreateResponse = null;
         try {
-            response = invoker.invoke();
+            invtCreateResponse = invtCreateInvoker.invoke();
         } catch (BeehiveApiFaultException e) {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e);
             } else {
-                // TODO こちらに来ると、エラーレスポンスのメッセージがプア
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e);
             }
             throw be;
         }
-        BeehiveResponse body = response.getBody();
+        BeehiveResponse body = invtCreateResponse.getBody();
         if (body == null) {
             return null;
         }
-        // TODO レスポンスとしてInvitationsを返す
-        return getNodeAsText(body.getJson(), "collabId", "id");
+        String invitation_id = getNodeAsText(body.getJson(), "collabId", "id");
+        if (invitation_id == null || invitation_id.length() == 0) {
+            // TODO エラー処理。RuntimeExceptionを作ったほうがいいかも
+//            throw new BbhelperInternalServerErrorException();
+        }
+        InvtReadInvoker invtReadInvoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
+        invtReadInvoker.setPathValue(invitation_id);
+        ResponseEntity<BeehiveResponse> invtReadResponse = null;
+        try {
+            invtReadResponse = invtReadInvoker.invoke();
+        } catch (BeehiveApiFaultException e) {
+            BbhelperException be = null;
+            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                be = new BbhelperUnauthorizedException(
+                        ErrorDescription.UNAUTORIZED, e);
+            } else {
+                be = new BbhelperBeehive4jException(
+                        ErrorDescription.BEEHIVE4J_FAULT, e);
+            }
+            throw be;
+        }
+        BeehiveResponse invtReadResponseBody = invtReadResponse.getBody();
+        if (invtReadResponseBody == null) {
+            // TODO これはエラーケース
+            return null;
+        }
+        return parseInvtReadResult(invtReadResponseBody.getJson());
+    }
+
+    // TODO 重複する実装を共通化
+    private Invitation parseInvtReadResult(JsonNode node) {
+        Person organizer = new Person(
+                getNodeAsText(node, "organizer", "name"),
+                getNodeAsText(node, "organizer", "address"),
+                null);
+        Invitation invitation = new Invitation(
+                node.get("name").asText(),
+                node.get("collabId").get("id").asText(),
+                node.get("invitee").get("participant").get("collabId").get("id").asText(),
+                organizer,
+                ZonedDateTime.parse(
+                        node.get("start").asText(),
+                        DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                ZonedDateTime.parse(
+                        node.get("end").asText(),
+                        DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+        return invitation;
     }
 
     private String getDefaultCalendar() throws BbhelperException {
@@ -253,6 +299,10 @@ class Session {
         return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
     }
 
+    /*
+     *  TODO 想定と異なるデータが入ってきたときと、正しくNullだった時とが
+     *  区別できるように修正する
+     */
     private String getNodeAsText(JsonNode node, String... names) {
         if (node == null) {
             throw new NullPointerException();

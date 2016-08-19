@@ -30,13 +30,12 @@ public class InvitationController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createInvitation(
+    public Invitation createInvitation(
             HttpServletRequest request, @RequestBody Invitation invitation)
                     throws BbhelperException {
         try {
             Session session = (Session) request.getAttribute(
                     Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
-            // TODO レスポンスとしてInvitationsを返す
             return session.createInvitaion(invitation);
         } catch (BbhelperException e) {
             logger.exception(request, e);
