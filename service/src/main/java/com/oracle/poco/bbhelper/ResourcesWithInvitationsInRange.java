@@ -1,17 +1,17 @@
 package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperInternalServerErrorException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
-
 import com.oracle.poco.bbhelper.model.Resource;
 
 public class ResourcesWithInvitationsInRange {
@@ -25,7 +25,7 @@ public class ResourcesWithInvitationsInRange {
      */
     private final ZonedDateTime todate;
 
-    private Map<String, ResourceWithInvitations> resources =
+    private final Map<String, ResourceWithInvitations> resourcesWithInvitations =
             new HashMap<String, ResourceWithInvitations>();
 
     /**
@@ -33,9 +33,10 @@ public class ResourcesWithInvitationsInRange {
      * 
      * @param fromdate このオブジェクトが含むことができる会議の開始時刻
      * @param todate このオブジェクトが含むことができる会議の終了時刻
+     * @param floor
      */
     public ResourcesWithInvitationsInRange(
-            ZonedDateTime fromdate, ZonedDateTime todate) {
+            ZonedDateTime fromdate, ZonedDateTime todate, FloorCategory floor) {
         super();
         if (fromdate == null || todate == null) {
             throw new NullPointerException("Date range is not set.");
@@ -45,6 +46,12 @@ public class ResourcesWithInvitationsInRange {
         }
         this.fromdate = fromdate;
         this.todate = todate;
+        Map<String, Resource> resources =
+                ResourceCache.getInstance().getCache(floor);
+        for (Entry<String, Resource> resource : resources.entrySet()) {
+            resourcesWithInvitations.put(resource.getKey(),
+                    new ResourceWithInvitations(resource.getValue()));
+        }
     }
 
     /**
@@ -66,7 +73,7 @@ public class ResourcesWithInvitationsInRange {
     }
 
     public Collection<ResourceWithInvitations> getResources() {
-        return resources.values();
+        return resourcesWithInvitations.values();
     }
 
     public void addInvitation(Invitation invitation) throws BbhelperException {
@@ -84,31 +91,27 @@ public class ResourcesWithInvitationsInRange {
             throw new BbhelperInternalServerErrorException(
                     ErrorDescription.INVITATION_OUT_OF_RANGE);
         }
-
-        ResourceWithInvitations resource = resources.get(resource_id);
-        if (resource == null) {
-            resource = new ResourceWithInvitations(
-                    ResourceCache.getInstance().getResource(resource_id),
-                    new ArrayList<Invitation>());
-            resources.put(resource_id, resource);
+        ResourceWithInvitations resourceWithInvitation =
+                resourcesWithInvitations.get(resource_id);
+        if (resourceWithInvitation == null) {
+            throw new BbhelperInternalServerErrorException(
+                    ErrorDescription.INVITATION_OUT_OF_FLOOR_CATEGORY);
         }
-        resource.getInvitations().add(invitation);
+        resourceWithInvitation.getInvitations().add(invitation);
     }
 
     private final class ResourceWithInvitations extends Resource {
 
-        private final List<Invitation> invitations;
+        private final Set<Invitation> invitations = new HashSet<Invitation>();
 
-        private ResourceWithInvitations(Resource resource,
-                List<Invitation> invitations) {
+        private ResourceWithInvitations(Resource resource) {
             super(resource.getName(), resource.getResource_id(),
                     resource.getCalendar_id(), resource.getLocation(),
                     resource.getCapacity(), resource.getLink(),
                     resource.getFacility());
-            this.invitations = invitations;
         }
 
-        public final List<Invitation> getInvitations() {
+        public final Set<Invitation> getInvitations() {
             return invitations;
         }
     }

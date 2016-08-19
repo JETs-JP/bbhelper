@@ -63,7 +63,7 @@ public class ResourceController {
             Collection<Invitation> invitations = 
                     session.listConflictedInvitaitons(fromdate, todate, floor);
             ResourcesWithInvitationsInRange retval =
-                    new ResourcesWithInvitationsInRange(fromdate, todate);
+                    new ResourcesWithInvitationsInRange(fromdate, todate, floor);
             for (Invitation invitation : invitations) {
                 retval.addInvitation(invitation);
             }
