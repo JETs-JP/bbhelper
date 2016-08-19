@@ -2,20 +2,33 @@ package com.oracle.poco.bbhelper.model;
 
 public class Person {
 
+    private static final String ARIA_URL_FORMAT =
+            "https://people.us.oracle.com/pls/oracle/f"
+            + "?p=8000:1:12962344332185:::RP,RIR:P1_SEARCH,"
+            + "P1_SEARCH_TYPE:" + "%s" + ",People";
+
+    private static final String SCHEME_MAILTO = "mailto:";
+
     private String name;
     private String address;
-    // TODO: linkを埋める仕組みを実装する
     private String link;
 
     public Person() {
         super();
     }
 
-    public Person(String name, String address, String link) {
+    public Person(String name, String address) {
         super();
         this.name = name;
         this.address = address;
-        this.link = link;
+        if (address == null || address.length() == 0) {
+            this.link = null;
+        }
+        if (address.startsWith(SCHEME_MAILTO)) {
+            address = address.substring(SCHEME_MAILTO.length());
+        }
+        // TODO きちんとしたメールアドレスのチェックをすべき
+        this.link = String.format(ARIA_URL_FORMAT, address.split("@")[0]);
     }
 
     public String getName() {

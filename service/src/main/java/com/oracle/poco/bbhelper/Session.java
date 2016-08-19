@@ -259,8 +259,7 @@ class Session {
     private Invitation parseInvtReadResult(JsonNode node) {
         Person organizer = new Person(
                 getNodeAsText(node, "organizer", "name"),
-                getNodeAsText(node, "organizer", "address"),
-                null);
+                getNodeAsText(node, "organizer", "address"));
         Invitation invitation = new Invitation(
                 node.get("name").asText(),
                 node.get("collabId").get("id").asText(),
