@@ -146,22 +146,7 @@ class Session {
         }
         List<Invitation> retval = new ArrayList<Invitation>();
         for (JsonNode element : elements) {
-            Person organizer = new Person(
-                    getNodeAsText(element, "organizer", "name"),
-                    getNodeAsText(element, "organizer", "address"),
-                    null);
-            Invitation invitation = new Invitation(
-                    element.get("name").asText(),
-                    element.get("collabId").get("id").asText(),
-                    element.get("invitee").get("participant").get("collabId").get("id").asText(),
-                    organizer,
-                    ZonedDateTime.parse(
-                            element.get("start").asText(),
-                            DateTimeFormatter.ISO_OFFSET_DATE_TIME),
-                    ZonedDateTime.parse(
-                            element.get("end").asText(),
-                            DateTimeFormatter.ISO_OFFSET_DATE_TIME));
-            retval.add(invitation);
+            retval.add(parseInvitationJsonNode(element));
         }
         return retval;
     }
@@ -252,11 +237,10 @@ class Session {
             // TODO これはエラーケース
             return null;
         }
-        return parseInvtReadResult(invtReadResponseBody.getJson());
+        return parseInvitationJsonNode(invtReadResponseBody.getJson());
     }
 
-    // TODO 重複する実装を共通化
-    private Invitation parseInvtReadResult(JsonNode node) {
+    private Invitation parseInvitationJsonNode(JsonNode node) {
         Person organizer = new Person(
                 getNodeAsText(node, "organizer", "name"),
                 getNodeAsText(node, "organizer", "address"));
