@@ -20,7 +20,8 @@ public abstract class BbhelperException extends Exception {
         }
     }
 
-    public String getChainedMessage() {
+    @Override
+    public String getMessage() {
         return chainedMessage;
     }
 
