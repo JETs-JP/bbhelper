@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BbhelperBadRequestException extends BbhelperException {
 
     public BbhelperBadRequestException(
-            ErrorDescription description, Throwable cause) {
-        super(description, cause);
+            ErrorDescription description, Throwable cause, HttpStatus status) {
+        super(description, cause, status);
     }
 
-    public BbhelperBadRequestException(ErrorDescription description) {
-        super(description);
+    public BbhelperBadRequestException(
+            ErrorDescription description, HttpStatus status) {
+        super(description, status);
     }
 
     /**

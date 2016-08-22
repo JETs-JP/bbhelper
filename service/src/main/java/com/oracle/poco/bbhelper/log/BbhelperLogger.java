@@ -173,7 +173,7 @@ public class BbhelperLogger {
             // TODO missing parameter
             return;
         }
-        String log = e.getChainedMessage();
+        String log = e.getMessage();
         SystemLogger.severe(log);
         DebugLogger.log(Level.SEVERE, log, e);
     }
@@ -189,7 +189,7 @@ public class BbhelperLogger {
             // TODO missing parameter
             exception(e);
         }
-        String log = messageWithRequestProfile(request, e.getChainedMessage());
+        String log = messageWithRequestProfile(request, e.getMessage());
         SystemLogger.severe(log);
         DebugLogger.log(Level.SEVERE, log, e);
     }

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.springframework.http.HttpStatus;
+
 import java.util.Set;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -84,18 +87,21 @@ public class ResourcesWithInvitationsInRange {
         ZonedDateTime start = invitation.getStart();
         if (start.compareTo(todate) >= 0 || start.isEqual(todate)) {
             throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_RANGE);
+                    ErrorDescription.INVITATION_OUT_OF_RANGE,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         ZonedDateTime end = invitation.getEnd();
         if (end.compareTo(fromdate) <= 0 || end.isEqual(fromdate)) {
             throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_RANGE);
+                    ErrorDescription.INVITATION_OUT_OF_RANGE,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         ResourceWithInvitations resourceWithInvitation =
                 resourcesWithInvitations.get(resource_id);
         if (resourceWithInvitation == null) {
             throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_FLOOR_CATEGORY);
+                    ErrorDescription.INVITATION_OUT_OF_FLOOR_CATEGORY,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
         resourceWithInvitation.getInvitations().add(invitation);
     }

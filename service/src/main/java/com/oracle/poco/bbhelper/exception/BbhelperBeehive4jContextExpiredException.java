@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BbhelperBeehive4jContextExpiredException extends BbhelperException {
 
     public BbhelperBeehive4jContextExpiredException(
-            ErrorDescription description, Throwable cause) {
-        super(description, cause);
+            ErrorDescription description, Throwable cause, HttpStatus status) {
+        super(description, cause, status);
     }
 
-    public BbhelperBeehive4jContextExpiredException(ErrorDescription description) {
-        super(description);
+    public BbhelperBeehive4jContextExpiredException(
+            ErrorDescription description, HttpStatus status) {
+        super(description, status);
     }
 
     /**

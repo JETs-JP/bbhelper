@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -39,7 +40,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
     private void throwUnauthorizedException(HttpServletRequest request)
             throws BbhelperException {
         BbhelperException e = new BbhelperUnauthorizedException(
-                ErrorDescription.UNAUTORIZED);
+                ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
         logger.exception(request, e);
         throw e;
     }

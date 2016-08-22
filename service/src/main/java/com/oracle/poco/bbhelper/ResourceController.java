@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,27 +52,24 @@ public class ResourceController {
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate,
-            @RequestParam(required = false) FloorCategory floor) throws BbhelperException {
-        try {
-            if (fromdate.compareTo(todate) >= 0) {
-                BbhelperException e = new BbhelperBadRequestException(
-                        ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
-                throw e;
-            }
-            Session session = (Session) request.getAttribute(
-                    Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
-            Collection<Invitation> invitations = 
-                    session.listConflictedInvitaitons(fromdate, todate, floor);
-            ResourcesWithInvitationsInRange retval =
-                    new ResourcesWithInvitationsInRange(fromdate, todate, floor);
-            for (Invitation invitation : invitations) {
-                retval.addInvitation(invitation);
-            }
-            return retval;
-        } catch (BbhelperException e) {
-            logger.exception(request, e);
+            @RequestParam(required = false) FloorCategory floor)
+                    throws BbhelperException {
+        if (fromdate.compareTo(todate) >= 0) {
+            BbhelperException e = new BbhelperBadRequestException(
+                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE,
+                    HttpStatus.BAD_REQUEST);
             throw e;
         }
+        Session session = (Session) request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
+        Collection<Invitation> invitations = 
+                session.listConflictedInvitaitons(fromdate, todate, floor);
+        ResourcesWithInvitationsInRange retval =
+                new ResourcesWithInvitationsInRange(fromdate, todate, floor);
+        for (Invitation invitation : invitations) {
+            retval.addInvitation(invitation);
+        }
+        return retval;
     }
 
     /**

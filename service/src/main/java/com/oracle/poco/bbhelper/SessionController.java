@@ -40,13 +40,15 @@ public class SessionController {
         try {
             if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
                 BbhelperException be = new BbhelperBadRequestException(
-                        ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET);
+                        ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET,
+                        HttpStatus.BAD_REQUEST);
                 throw be;
             }
 
             URL host = new URL(config.getBeehiveUrl());
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
+            // TODO SessionPoolをDIで取得する
             String session_id = SessionPool.getInstance().put(new Session(context));
             HttpHeaders headers = new HttpHeaders();
             headers.add(
@@ -57,7 +59,8 @@ public class SessionController {
             return null;
         } catch (Beehive4jException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
-                    ErrorDescription.BEEHIVE4J_FAULT, e);
+                    ErrorDescription.BEEHIVE4J_FAULT, e,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
             logger.exception(request, be);
             throw be;
         }

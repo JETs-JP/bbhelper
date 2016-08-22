@@ -1,28 +1,38 @@
 package com.oracle.poco.bbhelper.exception;
 
+import org.springframework.http.HttpStatus;
+
 public abstract class BbhelperException extends Exception {
 
     private final String chainedMessage;
 
-    public BbhelperException(ErrorDescription description) {
+    private final HttpStatus status;
+
+    public BbhelperException(ErrorDescription description, HttpStatus status) {
         super(description.getFullDescription());
-        chainedMessage = description.getFullDescription();
+        this.chainedMessage = description.getFullDescription();
+        this.status = status;
     }
 
     public BbhelperException(
-            ErrorDescription description, Throwable cause) {
+            ErrorDescription description, Throwable cause, HttpStatus status) {
         super(description.getFullDescription(), cause);
         if (cause == null) {
-            chainedMessage = description.getFullDescription();
+            this.chainedMessage = description.getFullDescription();
         } else {
-            chainedMessage = description.getFullDescription() + ": "
+            this.chainedMessage = description.getFullDescription() + ": "
                     + cause.getMessage();
         }
+        this.status = status;
     }
 
     @Override
     public String getMessage() {
         return chainedMessage;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 
     /**

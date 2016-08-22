@@ -7,12 +7,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BbhelperUnauthorizedException extends BbhelperException {
 
     public BbhelperUnauthorizedException(
-            ErrorDescription description, Throwable cause) {
-        super(description, cause);
+            ErrorDescription description, Throwable cause, HttpStatus status) {
+        super(description, cause, status);
     }
 
-    public BbhelperUnauthorizedException(ErrorDescription description) {
-        super(description);
+    public BbhelperUnauthorizedException(
+            ErrorDescription description, HttpStatus status) {
+        super(description, status);
     }
 
     /**

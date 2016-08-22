@@ -94,10 +94,17 @@ class Session {
             } catch (BeehiveApiFaultException e) {
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
-                            ErrorDescription.UNAUTORIZED, e));
+                            ErrorDescription.UNAUTORIZED, e,
+                            HttpStatus.UNAUTHORIZED));
                 } else {
+                    /*
+                     *  TODO beehive4jExceptionが上がったら、そのステータスコードを引き継ぎたい
+                     *  他の場所も同じ。
+                     */
+                    
                     bbhe.add(new BbhelperBeehive4jException(
-                            ErrorDescription.BEEHIVE4J_FAULT, e));
+                            ErrorDescription.BEEHIVE4J_FAULT, e,
+                            HttpStatus.INTERNAL_SERVER_ERROR));
                 }
 
             }
@@ -125,10 +132,12 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e);
+                        ErrorDescription.UNAUTORIZED, e,
+                        HttpStatus.UNAUTHORIZED);
             } else {
                 be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e);
+                        ErrorDescription.BEEHIVE4J_FAULT, e,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             }
             throw be;
         }
@@ -199,10 +208,12 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e);
+                        ErrorDescription.UNAUTORIZED, e,
+                        HttpStatus.UNAUTHORIZED);
             } else {
                 be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e);
+                        ErrorDescription.BEEHIVE4J_FAULT, e,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             }
             throw be;
         }
@@ -225,10 +236,12 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e);
+                        ErrorDescription.UNAUTORIZED, e,
+                        HttpStatus.UNAUTHORIZED);
             } else {
                 be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e);
+                        ErrorDescription.BEEHIVE4J_FAULT, e,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             }
             throw be;
         }
@@ -268,10 +281,12 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e);
+                        ErrorDescription.UNAUTORIZED, e,
+                        HttpStatus.UNAUTHORIZED);
             } else {
                 be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e);
+                        ErrorDescription.BEEHIVE4J_FAULT, e,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             }
             throw be;
         }

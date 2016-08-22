@@ -33,14 +33,9 @@ public class InvitationController {
     public Invitation createInvitation(
             HttpServletRequest request, @RequestBody Invitation invitation)
                     throws BbhelperException {
-        try {
-            Session session = (Session) request.getAttribute(
-                    Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
-            return session.createInvitaion(invitation);
-        } catch (BbhelperException e) {
-            logger.exception(request, e);
-            throw e;
-        }
+        Session session = (Session) request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
+        return session.createInvitaion(invitation);
     }
 
     @RequestMapping(value = "/list",
@@ -54,19 +49,15 @@ public class InvitationController {
             ZonedDateTime todate,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
-        try {
-            if (fromdate.compareTo(todate) >= 0) {
-                BbhelperException e = new BbhelperBadRequestException(
-                        ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE);
-                throw e;
-            }
-            Session session = (Session) request.getAttribute(
-                    Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
-            return session.listConflictedInvitaitons(fromdate, todate, floor);
-        } catch (BbhelperException e) {
-            logger.exception(request, e);
+        if (fromdate.compareTo(todate) >= 0) {
+            BbhelperException e = new BbhelperBadRequestException(
+                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE,
+                    HttpStatus.BAD_REQUEST);
             throw e;
         }
+        Session session = (Session) request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
+        return session.listConflictedInvitaitons(fromdate, todate, floor);
     }
 
 }

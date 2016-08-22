@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BbhelperInternalServerErrorException extends BbhelperException {
 
     public BbhelperInternalServerErrorException(
-            ErrorDescription description, Throwable cause) {
-        super(description, cause);
+            ErrorDescription description, Throwable cause, HttpStatus status) {
+        super(description, cause, status);
     }
 
-    public BbhelperInternalServerErrorException(ErrorDescription description) {
-        super(description);
+    public BbhelperInternalServerErrorException(
+            ErrorDescription description, HttpStatus status) {
+        super(description, status);
     }
 
     /**

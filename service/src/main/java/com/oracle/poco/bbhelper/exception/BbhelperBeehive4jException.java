@@ -9,13 +9,14 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
                 reason = "some exception raised from beehive4j.")
 public class BbhelperBeehive4jException extends BbhelperException {
 
-    public BbhelperBeehive4jException(
-            ErrorDescription description, Beehive4jException cause) {
-        super(description, cause);
+    public BbhelperBeehive4jException(ErrorDescription description,
+            Beehive4jException cause, HttpStatus status) {
+        super(description, cause, status);
     }
 
-    public BbhelperBeehive4jException(ErrorDescription description) {
-        super(description);
+    public BbhelperBeehive4jException(
+            ErrorDescription description, HttpStatus status) {
+        super(description, status);
     }
 
     /**
