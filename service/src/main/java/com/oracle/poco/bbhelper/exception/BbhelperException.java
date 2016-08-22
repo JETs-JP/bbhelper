@@ -20,8 +20,12 @@ public abstract class BbhelperException extends Exception {
         if (cause == null) {
             this.chainedMessage = description.getFullDescription();
         } else {
-            this.chainedMessage = description.getFullDescription() + ": "
-                    + cause.getMessage();
+            StringBuilder builder =
+                    new StringBuilder(description.getFullDescription());
+            builder.append("(cause: ");
+            builder.append(cause.getMessage());
+            builder.append(")");
+            this.chainedMessage = builder.toString();
         }
         this.status = status;
     }
