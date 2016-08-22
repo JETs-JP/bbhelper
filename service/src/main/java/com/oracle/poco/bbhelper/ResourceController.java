@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
 
@@ -31,9 +29,6 @@ import com.oracle.poco.bbhelper.model.Resource;
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
-
-    @Autowired
-    private BbhelperLogger logger;
 
     /**
      * 予約された会議を含む、各会議室の情報を返却します。

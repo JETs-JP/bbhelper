@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,15 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 @RestController
 @RequestMapping("/invitations")
 public class InvitationController {
-
-    @Autowired
-    BbhelperLogger logger;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
