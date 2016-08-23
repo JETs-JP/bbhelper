@@ -17,7 +17,6 @@ import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
@@ -29,22 +28,18 @@ public class SessionController {
     @Autowired
     private Configurations config;
 
-    @Autowired
-    private BbhelperLogger logger;
-
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(HttpServletRequest request)
             throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
+        if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
+            BbhelperException be = new BbhelperBadRequestException(
+                    ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET,
+                    HttpStatus.BAD_REQUEST);
+            throw be;
+        }
         try {
-            if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
-                BbhelperException be = new BbhelperBadRequestException(
-                        ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET,
-                        HttpStatus.BAD_REQUEST);
-                throw be;
-            }
-
             URL host = new URL(config.getBeehiveUrl());
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
@@ -61,7 +56,6 @@ public class SessionController {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e,
                     HttpStatus.INTERNAL_SERVER_ERROR);
-            logger.exception(request, be);
             throw be;
         }
     }
@@ -74,7 +68,6 @@ public class SessionController {
     @RequestMapping(value = "/ping",
                     method = RequestMethod.GET)
     public String ping() {
-        logger.info("/ping.");
         return "I'm working...";
     }
 
