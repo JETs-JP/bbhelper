@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
@@ -25,9 +24,9 @@ class AccessLogInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(
+    public void afterCompletion(
             HttpServletRequest request, HttpServletResponse response,
-            Object handler, ModelAndView modelAndView) throws Exception {
+            Object handler, Exception ex) throws Exception {
         logger.response(request);
     }
 
