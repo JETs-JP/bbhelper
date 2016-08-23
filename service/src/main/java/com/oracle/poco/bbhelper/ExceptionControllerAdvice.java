@@ -21,8 +21,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleBbhelperException(
             BbhelperException ex, WebRequest request) {
-        // TODO リクエストの情報をログに出力する
-        logger.exception(ex);
+        logger.exception(request, ex);
         return handleExceptionInternal(ex, null, null, ex.getStatus(), request);
     }
 

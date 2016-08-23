@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.WebRequest;
 
 import com.oracle.poco.bbhelper.Constants;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -184,12 +185,12 @@ public class BbhelperLogger {
      * @param reqest
      * @param e
      */
-    public void exception(HttpServletRequest request, BbhelperException e) {
+    public void exception(WebRequest request, BbhelperException e) {
         if (request == null) {
             // TODO missing parameter
             exception(e);
         }
-        String log = messageWithRequestProfile(request, e.getMessage());
+        String log = messageWithRequestId(request, e.getMessage());
         SystemLogger.severe(log);
         DebugLogger.log(Level.SEVERE, log, e);
     }
@@ -213,12 +214,12 @@ public class BbhelperLogger {
      * @param request
      * @param message
      */
-    public void debug(HttpServletRequest request, String message) {
+    public void debug(WebRequest request, String message) {
         if (request == null) {
             // TODO missing parameter
             debug(message);
         }
-        DebugLogger.fine(messageWithRequestProfile(request, message));
+        DebugLogger.fine(messageWithRequestId(request, message));
     }
 
     /**
@@ -234,8 +235,8 @@ public class BbhelperLogger {
         StringBuilder builder = new StringBuilder();
         String request_id = (String)request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_REQUEST_ID);
-        builder.append("REQUEST_ID: ").append(request_id).append(",");
-        builder.append("REQUEST_URL: ").append(request.getRequestURL());
+        builder.append("REQUEST_ID: ").append(request_id);
+        builder.append(",").append("REQUEST_URL: ").append(request.getRequestURL());
         // TODO 他の情報を追加。追加したら↑にカンマを追加すること
         return builder.toString();
     }
@@ -254,6 +255,27 @@ public class BbhelperLogger {
     private String messageWithRequestProfile(
             HttpServletRequest request, String message) {
         StringBuilder builder = new StringBuilder(requestProfile(request));
+        builder.append(",").append("MESSAGE: ").append(message);
+        return builder.toString();
+    }
+
+    /**
+     * HTTPリクエストの識別子と指定されたメッセージを含む、ログ出力用の文字列を
+     * 返却します。
+     * 
+     * このメソッドでは入力値のチェックをしていないので、呼び出し元で必ず
+     * チェックすること。
+     * 
+     * @param request
+     * @param message
+     * @return 
+     */
+    private String messageWithRequestId(
+            WebRequest request, String message) {
+        String request_id = (String)request.getAttribute(
+                Constants.REQUEST_ATTR_KEY_REQUEST_ID, WebRequest.SCOPE_REQUEST);
+        StringBuilder builder = new StringBuilder();
+        builder.append("REQUEST_ID: ").append(request_id);
         builder.append(",").append("MESSAGE: ").append(message);
         return builder.toString();
     }
