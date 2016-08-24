@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperInternalServerErrorException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
@@ -108,6 +109,7 @@ public class ResourcesWithInvitationsInRange {
 
     private final class ResourceWithInvitations extends Resource {
 
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
         private final Set<Invitation> invitations = new HashSet<Invitation>();
 
         private ResourceWithInvitations(Resource resource) {
