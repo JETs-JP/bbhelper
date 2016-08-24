@@ -28,6 +28,9 @@ public class SessionController {
     @Autowired
     private Configurations config;
 
+    @Autowired
+    private SessionPool sessionPool;
+
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(HttpServletRequest request)
@@ -43,8 +46,7 @@ public class SessionController {
             URL host = new URL(config.getBeehiveUrl());
             BeehiveContext context = 
                     BeehiveContext.getBeehiveContext(host, basicAuthHeader);
-            // TODO SessionPoolをDIで取得する
-            String session_id = SessionPool.getInstance().put(new Session(context));
+            String session_id = sessionPool.put(new Session(context));
             HttpHeaders headers = new HttpHeaders();
             headers.add(
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);

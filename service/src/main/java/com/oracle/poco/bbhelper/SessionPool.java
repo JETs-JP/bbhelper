@@ -5,23 +5,16 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 class SessionPool {
 
     private final Map<String, Session> pool =
             new ConcurrentHashMap<String, Session>();
 
-    private static SessionPool instance = null;
-
     // uninstanciable
     private SessionPool() {}
-
-    static SessionPool getInstance() {
-        if (instance == null) {
-            instance =  new SessionPool();
-        }
-        return instance;
-    }
 
     String put(Session context) {
         // TODO same client and user.

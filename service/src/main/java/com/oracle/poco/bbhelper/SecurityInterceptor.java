@@ -10,9 +10,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 class SecurityInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private SessionPool sessionPool;
 
     /**
      * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
@@ -23,22 +25,18 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
         String session_id =
                 request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0) {
-            throwUnauthorizedException(request);
+            BbhelperException e = new BbhelperUnauthorizedException(
+                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+            throw e;
         }
-        Session context = SessionPool.getInstance().get(session_id);
-        if (context == null) {
-            throwUnauthorizedException(request);
+        Session session = sessionPool.get(session_id);
+        if (session == null) {
+            BbhelperException e = new BbhelperUnauthorizedException(
+                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+            throw e;
         }
-        request.setAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT, 
-                SessionPool.getInstance().get(session_id));
+        request.setAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION, session);
         return true;
-    }
-
-    private void throwUnauthorizedException(HttpServletRequest request)
-            throws BbhelperException {
-        BbhelperException e = new BbhelperUnauthorizedException(
-                ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
-        throw e;
     }
 
 }

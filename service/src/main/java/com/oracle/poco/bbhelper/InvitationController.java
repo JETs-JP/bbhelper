@@ -29,7 +29,7 @@ public class InvitationController {
             HttpServletRequest request, @RequestBody Invitation invitation)
                     throws BbhelperException {
         Session session = (Session) request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
+                Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.createInvitaion(invitation);
     }
 
@@ -51,7 +51,7 @@ public class InvitationController {
             throw e;
         }
         Session session = (Session) request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_BBH_SESSION_CONTEXT);
+                Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.listConflictedInvitaitons(fromdate, todate, floor);
     }
 
