@@ -1,5 +1,8 @@
 package com.oracle.poco.bbhelper;
 
+import java.io.Console;
+import java.net.URL;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +10,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
+
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
 
 @SpringBootApplication
 public class Application {
@@ -16,15 +22,26 @@ public class Application {
 
     private static BbhelperLogger s_logger;
 
+    @Autowired
+    private Configurations config;
+
+    private static Configurations s_config;
+    
+    private static boolean force = false;
+
     @PostConstruct
     public void init() {
         s_logger = logger;
+        s_config = config;
     }
 
-    public static void main(String args[]) {
-        ResourceCache.initialize();
-        // TODO ここでbeehiveとの接続をチェックしておきたい
+    public static void main(String[] args) {
         SpringApplication.run(Application.class);
+        readOptions(args);
+        if (!force) {
+            checkConnection();
+        }
+        ResourceCache.initialize();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
@@ -32,6 +49,34 @@ public class Application {
             }
         });
         s_logger.info("started.");
+    }
+
+    private static void readOptions(String[] args) {
+        for (String arg : args) {
+            if ("-f".equals(arg)) {
+                force = true;
+            }
+        }
+    }
+
+    private static void checkConnection() {
+        System.out.println("Check connection with beehive...");
+        Console console = System.console();
+        String id = console.readLine("ID (email): ");
+        String password = new String(console.readPassword("Password: "));
+        BeehiveContext context = null;
+        try {
+            context = BeehiveContext.getBeehiveContext(
+                    s_config.getBeehiveUrl(), id, password);
+        } catch (Beehive4jException e) {
+            // TODO Auto-generated catch block
+            System.exit(1);
+        } finally {
+            if (context == null) {
+                // TODO log
+                System.exit(1);
+            }
+        }
     }
 
 }

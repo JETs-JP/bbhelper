@@ -1,8 +1,5 @@
 package com.oracle.poco.bbhelper;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,17 +40,13 @@ public class SessionController {
             throw be;
         }
         try {
-            URL host = new URL(config.getBeehiveUrl());
-            BeehiveContext context = 
-                    BeehiveContext.getBeehiveContext(host, basicAuthHeader);
+            BeehiveContext context = BeehiveContext.getBeehiveContext(
+                    config.getBeehiveUrl(), basicAuthHeader);
             String session_id = sessionPool.put(new Session(context));
             HttpHeaders headers = new HttpHeaders();
             headers.add(
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
-        } catch (MalformedURLException e) {
-            // TODO URLのチェックは起動時に済ませておきたい.
-            return null;
         } catch (Beehive4jException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e,
