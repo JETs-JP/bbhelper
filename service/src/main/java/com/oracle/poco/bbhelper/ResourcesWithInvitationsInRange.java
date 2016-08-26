@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.Set;
@@ -19,6 +20,9 @@ import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
 
 public class ResourcesWithInvitationsInRange {
+
+    @Autowired
+    private ResourceCache resourceCache;
 
     /**
      * このオブジェクトが含むことができる会議の開始時刻
@@ -50,8 +54,7 @@ public class ResourcesWithInvitationsInRange {
         }
         this.fromdate = fromdate;
         this.todate = todate;
-        Map<String, Resource> resources =
-                ResourceCache.getInstance().getCache(floor);
+        Map<String, Resource> resources = resourceCache.getCache(floor);
         for (Entry<String, Resource> resource : resources.entrySet()) {
             resourcesWithInvitations.put(resource.getKey(),
                     new ResourceWithInvitations(resource.getValue()));

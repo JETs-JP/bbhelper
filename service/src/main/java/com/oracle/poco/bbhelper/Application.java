@@ -40,7 +40,6 @@ public class Application {
         if (!force) {
             checkConnection();
         }
-        ResourceCache.initialize();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {

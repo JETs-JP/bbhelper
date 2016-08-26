@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -42,6 +43,9 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Transparency;
 
 class Session {
 
+    @Autowired
+    private ResourceCache resourceCache;
+
     // TODO タイムアウト値はapplication.propertiesで設定できるようにする
     private static final long TIMEOUT = 1000 * 60 * 60; //1hour
 
@@ -70,8 +74,7 @@ class Session {
                     throws BbhelperException {
         // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
-        List<String> calendar_ids =
-                ResourceCache.getInstance().getCalendarIds(floorCategory);
+        List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<String>();
         List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
         calendar_ids.stream().parallel().forEach(c -> {
@@ -169,8 +172,8 @@ class Session {
         // BeeId
         BeeId calendar = new BeeId(calendar_id, null);
         // MeetingUpdater
-        Resource resource = ResourceCache.getInstance().getResource(
-                invitation.getResource_id());
+        Resource resource =
+                resourceCache.getResource(invitation.getResource_id());
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
         participantUpdaters.add(new MeetingParticipantUpdater(

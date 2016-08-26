@@ -3,6 +3,7 @@ package com.oracle.poco.bbhelper;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,9 @@ public class SessionController {
     @Autowired
     private SessionPool sessionPool;
 
+    @Autowired
+    private AutowireCapableBeanFactory factory;
+
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(HttpServletRequest request)
@@ -42,7 +46,9 @@ public class SessionController {
         try {
             BeehiveContext context = BeehiveContext.getBeehiveContext(
                     config.getBeehiveUrl(), basicAuthHeader);
-            String session_id = sessionPool.put(new Session(context));
+            Session session = new Session(context);
+            factory.autowireBean(session);
+            String session_id = sessionPool.put(session);
             HttpHeaders headers = new HttpHeaders();
             headers.add(
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);

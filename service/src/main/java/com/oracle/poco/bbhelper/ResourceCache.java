@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Resource;
 
+@Component
 class ResourceCache {
 
     @Autowired
@@ -26,21 +28,11 @@ class ResourceCache {
     private Map<String, Resource> cacheByResourceId = 
             new HashMap<String, Resource>();
 
-    private static ResourceCache instance = null;
-
-    static ResourceCache getInstance() {
-        initialize();
-        return instance;
+    public ResourceCache() throws IOException {
+        loadBookableResources();
     }
 
-    static void initialize() {
-        if (instance == null) {
-            instance = new ResourceCache();
-            instance.loadBookableResources();
-        }
-    }
-
-    private void loadBookableResources() {
+    private void loadBookableResources() throws IOException {
         try {
             for (FloorCategory category : FloorCategory.values()) {
                 InputStream in = this.getClass().getClassLoader().
@@ -53,8 +45,8 @@ class ResourceCache {
                 }
             }
         } catch (IOException e) {
-            logger.severe(ErrorDescription.FAILET_TO_LOAD_RESOURCES);
-            System.exit(1);
+            logger.severe(ErrorDescription.FAILED_TO_LOAD_RESOURCE);
+            throw e;
         }
     }
 

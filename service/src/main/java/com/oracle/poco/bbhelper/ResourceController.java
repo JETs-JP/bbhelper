@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,9 @@ import com.oracle.poco.bbhelper.model.Resource;
 @RestController
 @RequestMapping("/resources")
 public class ResourceController {
+
+    @Autowired
+    private ResourceCache resourceCache;
 
     /**
      * 予約された会議を含む、各会議室の情報を返却します。
@@ -75,7 +79,7 @@ public class ResourceController {
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
     public Collection<Resource> listAllBookableResources() {
-        return ResourceCache.getInstance().getCache().values();
+        return resourceCache.getCache().values();
     }
 
     /**
@@ -88,7 +92,7 @@ public class ResourceController {
                     method = RequestMethod.GET)
     public Resource getBookableResource(
             @PathVariable("resource_id") String resource_id) {
-        return ResourceCache.getInstance().getResource(resource_id);
+        return resourceCache.getResource(resource_id);
     }
 
 }
