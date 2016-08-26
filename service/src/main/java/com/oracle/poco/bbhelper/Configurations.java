@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
-import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
@@ -27,12 +25,11 @@ class Configurations {
         return beehiveUrl;
     }
 
-    // TODO 例外処理を実装する
     public void setBeehiveUrl(String beehiveUrl) throws MalformedURLException {
         try {
             this.beehiveUrl = new URL(beehiveUrl);
         } catch (MalformedURLException e) {
-            logger.severe(ErrorDescription.FAILET_TO_LOAD_RESOURCES);
+            logger.severe(ErrorDescription.FAILED_TO_LOAD_CONFIGURATION);
             throw e;
         }
     }
