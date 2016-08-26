@@ -1,7 +1,6 @@
 package com.oracle.poco.bbhelper;
 
 import java.io.Console;
-import java.net.URL;
 
 import javax.annotation.PostConstruct;
 
