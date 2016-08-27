@@ -17,7 +17,7 @@ import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
 
 @RestController
 @RequestMapping("/session")
@@ -53,10 +53,9 @@ public class SessionController {
             headers.add(
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<String>(null, headers, HttpStatus.OK);
-        } catch (Beehive4jException e) {
+        } catch (BeehiveApiFaultException e) {
             BbhelperBeehive4jException be = new BbhelperBeehive4jException(
-                    ErrorDescription.BEEHIVE4J_FAULT, e,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+                    ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
             throw be;
         }
     }
