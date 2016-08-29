@@ -9,9 +9,10 @@ public enum ErrorDescription {
             5, "the invitation to set doesn't belong in the sepcified floor category."),
     FAILED_TO_LOG(6, "failed to log."),
     FAILED_TO_LOAD_RESOURCE(7, "failed to load resources data."),
-    FAILED_TO_LOAD_CONFIGURATION(8, "failed to load app configuration."),
-    BEEHIVE4J_CONTEXT_EXPIRED(9, "beehive4j context is expired."),
-    BEEHIVE4J_FAULT(10, "some exception raised from beehive4j."),
+    FAILED_TO_LOAD_PROPERTIES(8, "failed to load app properties."),
+    FAILED_TO_CHECK_CONNECTION_WITH_BEEHIVE(9, "failed to check conntection with beehive."),
+    BEEHIVE4J_CONTEXT_EXPIRED(10, "beehive4j context is expired."),
+    BEEHIVE4J_FAULT(11, "some exception raised from beehive4j."),
     ;
 
     private static final String ERROR_CODE_HEADER = "BBHELPER-ERROR-";

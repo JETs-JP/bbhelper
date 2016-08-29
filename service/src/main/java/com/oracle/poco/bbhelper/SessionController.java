@@ -24,7 +24,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultExce
 public class SessionController {
 
     @Autowired
-    private Configurations config;
+    private ApplicationProperties properties;
 
     @Autowired
     private SessionPool sessionPool;
@@ -45,7 +45,7 @@ public class SessionController {
         }
         try {
             BeehiveContext context = BeehiveContext.getBeehiveContext(
-                    config.getBeehiveUrl(), basicAuthHeader);
+                    properties.getBeehiveUrl(), basicAuthHeader);
             Session session = new Session(context);
             factory.autowireBean(session);
             String session_id = sessionPool.put(session);

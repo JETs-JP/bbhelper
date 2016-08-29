@@ -22,16 +22,16 @@ public class Application {
     private static BbhelperLogger s_logger;
 
     @Autowired
-    private Configurations config;
+    private ApplicationProperties properties;
 
-    private static Configurations s_config;
+    private static ApplicationProperties s_properties;
     
     private static boolean force = false;
 
     @PostConstruct
     public void init() {
         s_logger = logger;
-        s_config = config;
+        s_properties = properties;
     }
 
     public static void main(String[] args) {

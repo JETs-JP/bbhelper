@@ -12,7 +12,7 @@ import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 @Component
 @ConfigurationProperties(prefix = "com.oracle.poco.bbhelper")
-class Configurations {
+class ApplicationProperties {
 
     @Autowired
     private BbhelperLogger logger;
@@ -29,7 +29,7 @@ class Configurations {
         try {
             this.beehiveUrl = new URL(beehiveUrl);
         } catch (MalformedURLException e) {
-            logger.severe(ErrorDescription.FAILED_TO_LOAD_CONFIGURATION);
+            logger.severe(ErrorDescription.FAILED_TO_LOAD_PROPERTIES);
             throw e;
         }
     }
