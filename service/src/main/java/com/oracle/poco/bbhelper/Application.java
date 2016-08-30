@@ -65,7 +65,7 @@ public class Application {
         BeehiveContext context = null;
         try {
             context = BeehiveContext.getBeehiveContext(
-                    s_config.getBeehiveUrl(), id, password);
+                    s_properties.getBeehiveUrl(), id, password);
         } catch (Beehive4jException e) {
             // TODO Auto-generated catch block
             System.exit(1);
