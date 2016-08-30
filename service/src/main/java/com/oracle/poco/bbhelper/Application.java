@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
@@ -67,11 +68,11 @@ public class Application {
             context = BeehiveContext.getBeehiveContext(
                     s_properties.getBeehiveUrl(), id, password);
         } catch (Beehive4jException e) {
-            // TODO Auto-generated catch block
+            s_logger.severe(ErrorDescription.FAILED_TO_CHECK_CONNECTION_WITH_BEEHIVE);
             System.exit(1);
         } finally {
             if (context == null) {
-                // TODO log
+                s_logger.severe(ErrorDescription.FAILED_TO_CHECK_CONNECTION_WITH_BEEHIVE);
                 System.exit(1);
             }
         }
