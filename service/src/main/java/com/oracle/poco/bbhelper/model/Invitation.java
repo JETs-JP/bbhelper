@@ -2,15 +2,38 @@ package com.oracle.poco.bbhelper.model;
 
 import java.time.ZonedDateTime;
 
-// TODO: 開始日時と終了日時が不整合を起こすようなスケジュールを排除したい
-// TODO: invitaion_idをユーザーが明示的に設定するのを防止したい
+import javax.validation.constraints.NotNull;
+
+// TODO: 開始日時と終了日時の関係を、SpringのValidationを使ってチェックする
 public final class Invitation {
 
+    /**
+     * 会議の名前
+     */
+    @NotNull
     private String name;
+    /**
+     * 会議のId。beehive上の識別子
+     */
     private String invitation_id;
+    /**
+     * 会議室のId。beehive上の識別子
+     */
+    @NotNull
     private String resource_id;
+    /**
+     * 会議の主催者
+     */
     private Person organizer;
+    /**
+     * 会議の開始日時
+     */
+    @NotNull
     private ZonedDateTime start;
+    /**
+     * 会議の終了日時
+     */
+    @NotNull
     private ZonedDateTime end;
 
     public Invitation() {
