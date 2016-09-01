@@ -209,15 +209,8 @@ class Session {
             }
             throw be;
         }
-        BeehiveResponse body = invtCreateResponse.getBody();
-        if (body == null) {
-            return null;
-        }
-        String invitation_id = getNodeAsText(body.getJson(), "collabId", "id");
-        if (invitation_id == null || invitation_id.length() == 0) {
-            // TODO エラー処理。RuntimeExceptionを作ったほうがいいかも
-//            throw new BbhelperInternalServerErrorException();
-        }
+        String invitation_id = getNodeAsText(
+                invtCreateResponse.getBody().getJson(), "collabId", "id");
         InvtReadInvoker invtReadInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
         invtReadInvoker.setPathValue(invitation_id);
@@ -235,12 +228,7 @@ class Session {
             }
             throw be;
         }
-        BeehiveResponse invtReadResponseBody = invtReadResponse.getBody();
-        if (invtReadResponseBody == null) {
-            // TODO これはエラーケース
-            return null;
-        }
-        return parseInvitationJsonNode(invtReadResponseBody.getJson());
+        return parseInvitationJsonNode(invtReadResponse.getBody().getJson());
     }
 
     private Invitation parseInvitationJsonNode(JsonNode node) {
