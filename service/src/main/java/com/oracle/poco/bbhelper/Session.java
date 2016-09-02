@@ -273,10 +273,6 @@ class Session {
         return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
     }
 
-    /*
-     *  TODO 想定と異なるデータが入ってきたときと、正しくNullだった時とが
-     *  区別できるように修正する
-     */
     private String getNodeAsText(JsonNode node, String... names) {
         if (node == null) {
             throw new NullPointerException();
@@ -285,6 +281,10 @@ class Session {
             return node.asText();
         }
         for (String name : names) {
+            if (!node.has(name)) {
+                throw new IllegalArgumentException(
+                        "Json data and requird field names aren't consistent.");
+            }
             if ((node = node.get(name)) == null) {
                 return null;
             }
