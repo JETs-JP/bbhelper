@@ -22,7 +22,7 @@ import com.oracle.poco.bbhelper.model.Resource;
 
 /**
  * 
- * 会議室の情報を取り扱うためのREST APIを提供するController
+ * Beehiveにある会議室の情報を取り扱うためのREST APIを提供するController
  * 
  * @author hiroshi.hayakawa@oracle.com
  *
