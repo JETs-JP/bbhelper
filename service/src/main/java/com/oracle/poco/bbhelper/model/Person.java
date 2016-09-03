@@ -27,7 +27,7 @@ public class Person {
         if (address.startsWith(SCHEME_MAILTO)) {
             address = address.substring(SCHEME_MAILTO.length());
         }
-        // TODO きちんとしたメールアドレスのチェックをすべき
+        // TODO 本当は正しいMail Addressのチェックをするのが望ましい
         this.link = String.format(ARIA_URL_FORMAT, address.split("@")[0]);
     }
 

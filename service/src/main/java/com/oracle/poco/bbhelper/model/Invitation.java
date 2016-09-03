@@ -4,7 +4,6 @@ import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;
 
-// TODO: 開始日時と終了日時の関係を、SpringのValidationを使ってチェックする
 public final class Invitation {
 
     /**

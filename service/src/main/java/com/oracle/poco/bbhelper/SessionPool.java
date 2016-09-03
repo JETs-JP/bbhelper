@@ -17,7 +17,6 @@ class SessionPool {
     private SessionPool() {}
 
     String put(Session context) {
-        // TODO same client and user.
         refreshPool();
         String session_id;
         do {

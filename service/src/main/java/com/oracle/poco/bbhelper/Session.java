@@ -46,7 +46,6 @@ class Session {
     @Autowired
     private ResourceCache resourceCache;
 
-    // TODO タイムアウト値はapplication.propertiesで設定できるようにする
     @Autowired
     private ApplicationProperties properties;
 
