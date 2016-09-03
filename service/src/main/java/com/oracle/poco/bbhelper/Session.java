@@ -47,7 +47,8 @@ class Session {
     private ResourceCache resourceCache;
 
     // TODO タイムアウト値はapplication.propertiesで設定できるようにする
-    private static final long TIMEOUT = 1000 * 60 * 60; //1hour
+    @Autowired
+    private ApplicationProperties properties;
 
     private long lastUsed;
 
@@ -62,7 +63,7 @@ class Session {
     }
 
     boolean isActive() {
-        return (System.currentTimeMillis() - lastUsed) < TIMEOUT;
+        return (System.currentTimeMillis() - lastUsed) < properties.getSessionTimeout();
     }
 
     private void update() {

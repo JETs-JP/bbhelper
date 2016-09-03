@@ -19,7 +19,7 @@ class ApplicationProperties {
 
     private URL beehiveUrl;
 
-    private long beehiveSessionTimeout;
+    private long sessionTimeout;
 
     URL getBeehiveUrl() {
         return beehiveUrl;
@@ -34,12 +34,12 @@ class ApplicationProperties {
         }
     }
 
-    long getBeehiveSessionTimeout() {
-        return beehiveSessionTimeout;
+    long getSessionTimeout() {
+        return sessionTimeout;
     }
 
-    public void setBeehiveSessionTimeout(long beehiveSessionTimeout) {
-        this.beehiveSessionTimeout = beehiveSessionTimeout;
+    public void setSessionTimeout(long sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
     }
 
 }
