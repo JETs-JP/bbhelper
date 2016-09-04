@@ -3,11 +3,13 @@ package com.oracle.poco.bbhelper.log;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
@@ -235,9 +237,26 @@ public class BbhelperLogger {
         StringBuilder builder = new StringBuilder();
         String request_id = (String)request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_REQUEST_ID);
-        builder.append("REQUEST_ID: ").append(request_id);
-        builder.append(",").append("REQUEST_URL: ").append(request.getRequestURL());
-        // TODO 他の情報を追加。追加したら↑にカンマを追加すること
+        builder.append("REQUEST_ID:").append(request_id);
+        builder.append(",").append("METHOD:").append(request.getMethod());
+        builder.append(",").append("REQUEST_URL:").append(request.getRequestURL());
+        builder.append(",").append("QUERY_STRING:").append(request.getQueryString());
+//        builder.append(",").append("HEADERS:");
+//        Enumeration<String> itr = request.getHeaderNames();
+//        while (itr.hasMoreElements()) {
+//            String name = itr.nextElement();
+//            builder.append(name).append("=").append(request.getHeader(name));
+//        }
+//        builder.append(",").append("COOKIES:");
+//        for (Cookie cookie : request.getCookies()) {
+//            builder.append(cookie.toString());
+//        }
+        builder.append(",").append("LOCAL_ADDR:").append(request.getLocalAddr());
+        builder.append(",").append("LOCAL_NAME:").append(request.getLocalName());
+        builder.append(",").append("LOCAL_PORT:").append(request.getLocalPort());
+        builder.append(",").append("REMOTE_ADDR:").append(request.getRemoteAddr());
+        builder.append(",").append("REMOTE_HOST:").append(request.getRemoteHost());
+        builder.append(",").append("REMOTE_PORT:").append(request.getRemotePort());
         return builder.toString();
     }
 
