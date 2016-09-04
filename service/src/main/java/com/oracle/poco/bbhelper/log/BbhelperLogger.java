@@ -241,16 +241,6 @@ public class BbhelperLogger {
         builder.append(",").append("METHOD:").append(request.getMethod());
         builder.append(",").append("REQUEST_URL:").append(request.getRequestURL());
         builder.append(",").append("QUERY_STRING:").append(request.getQueryString());
-//        builder.append(",").append("HEADERS:");
-//        Enumeration<String> itr = request.getHeaderNames();
-//        while (itr.hasMoreElements()) {
-//            String name = itr.nextElement();
-//            builder.append(name).append("=").append(request.getHeader(name));
-//        }
-//        builder.append(",").append("COOKIES:");
-//        for (Cookie cookie : request.getCookies()) {
-//            builder.append(cookie.toString());
-//        }
         builder.append(",").append("LOCAL_ADDR:").append(request.getLocalAddr());
         builder.append(",").append("LOCAL_NAME:").append(request.getLocalName());
         builder.append(",").append("LOCAL_PORT:").append(request.getLocalPort());
