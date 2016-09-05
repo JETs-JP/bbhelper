@@ -3,13 +3,11 @@ package com.oracle.poco.bbhelper.log;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Component;
@@ -106,7 +104,6 @@ public class BbhelperLogger {
      */
     public void request(HttpServletRequest request) {
         if (request == null) {
-            // TODO missing parameter
             return;
         }
         AccessLogger.info(messageWithRequestProfile(request, "request."));
@@ -117,7 +114,6 @@ public class BbhelperLogger {
      */
     public void response(HttpServletRequest request) {
         if (request == null) {
-            // TODO missing parameter
             return;
         }
         AccessLogger.info(messageWithRequestProfile(request, "response."));
@@ -128,37 +124,17 @@ public class BbhelperLogger {
      */
     public void info(String message) {
         if (message == null || message.length() == 0) {
-            // TODO missing parameter
             return;
         }
         SystemLogger.info(message);
         DebugLogger.info(message);
     }
 
-//    /**
-//     * @param request
-//     * @param description
-//     */
-//    public void severe(HttpServletRequest request, ErrorDescription description) {
-//        if (description == null) {
-//            // do nothing.
-//            SystemLogger.severe("Required parameter for logging \"ErrorDescription\" is empty.");
-//            return;
-//        }
-//        if (request == null) {
-//            severe(description);
-//        }
-//        String message = getBaseMessage(
-//                request, description.getFullDescription()).toString();
-//        SystemLogger.severe(message);
-//    }
-
     /**
      * @param description
      */
     public void severe(ErrorDescription description) {
         if (description == null) {
-            // TODO missing parameter
             return;
         }
         String log = description.getFullDescription();
@@ -173,7 +149,6 @@ public class BbhelperLogger {
      */
     public void exception(BbhelperException e) {
         if (e == null) {
-            // TODO missing parameter
             return;
         }
         String log = e.getMessage();
@@ -189,7 +164,6 @@ public class BbhelperLogger {
      */
     public void exception(WebRequest request, BbhelperException e) {
         if (request == null) {
-            // TODO missing parameter
             exception(e);
         }
         String log = messageWithRequestId(request, e.getMessage());
@@ -204,7 +178,6 @@ public class BbhelperLogger {
      */
     public void debug(String message) {
         if (message == null || message.length() == 0) {
-            // TODO missing parameter
             return;
         }
         DebugLogger.fine(message);
@@ -218,7 +191,6 @@ public class BbhelperLogger {
      */
     public void debug(WebRequest request, String message) {
         if (request == null) {
-            // TODO missing parameter
             debug(message);
         }
         DebugLogger.fine(messageWithRequestId(request, message));
