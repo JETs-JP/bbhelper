@@ -16,8 +16,8 @@ import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
 
 @RestController
 @RequestMapping("/session")

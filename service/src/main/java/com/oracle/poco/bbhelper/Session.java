@@ -19,27 +19,27 @@ import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveApiDefinitions;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveResponse;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtCreateInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtListByRangeInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadBatchInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.InvtReadInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.MyWorkspaceInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.BeehiveApiFaultException;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeId;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.BeeIdList;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.CalendarRange;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingCreator;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdater;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingParticipantUpdaterOperation;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.MeetingUpdater;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceParticipantStatus;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceStatus;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.OccurrenceType;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Priority;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.model.Transparency;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveApiDefinitions;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveResponse;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtCreateInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtListByRangeInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtReadBatchInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtReadInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.MyWorkspaceInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeId;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeIdList;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.CalendarRange;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingCreator;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdater;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdaterOperation;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingUpdater;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceParticipantStatus;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceStatus;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceType;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Priority;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
 
 class Session {
 

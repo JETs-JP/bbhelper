@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive_client.exception.Beehive4jException;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
 
 @SpringBootApplication
 public class Application {
