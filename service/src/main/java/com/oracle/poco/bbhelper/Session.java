@@ -78,8 +78,11 @@ class Session {
         List<String> invitation_ids = new ArrayList<String>();
         List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
         calendar_ids.stream().parallel().forEach(c -> {
-            CalendarRange range =
-                    new CalendarRange(new BeeId(c, null), start, end);
+            CalendarRange range = new CalendarRange.Builder()
+                    .beeId(new BeeId.Builder().id(c).build())
+                    .start(start)
+                    .end(end)
+                    .build();
             try {
                 InvtListByRangeInvoker invoker = context.getInvoker(
                         BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
@@ -114,7 +117,7 @@ class Session {
         }
         List<BeeId> beeIds = new ArrayList<BeeId>(invitation_ids.size());
         invitation_ids.stream().forEach(i -> {
-            beeIds.add(new BeeId(i, null));
+            beeIds.add(new BeeId.Builder().id(i).build());
         });
 
         BeeIdList beeIdList = new BeeIdList(beeIds);
@@ -160,38 +163,37 @@ class Session {
         if (calendar_id == null || calendar_id.length() == 0) {
             calendar_id = getDefaultCalendar();
         }
-        // BeeId
-        BeeId calendar = new BeeId(calendar_id, null);
+        // BeeId of user's calendar
+        BeeId calendar = new BeeId.Builder().id(calendar_id).build();
         // MeetingUpdater
         Resource resource =
                 resourceCache.getResource(invitation.getResource_id());
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
-        participantUpdaters.add(new MeetingParticipantUpdater(
-                null,
-                null,
-                MeetingParticipantUpdaterOperation.ADD,
-                new BeeId(resource.getResource_id(), null)));
-        MeetingUpdater meetingUpdater = new MeetingUpdater(
-                invitation.getName(),
-                null,
-                null,
-                null,
-                invitation.getEnd(),
-                false,
-                OccurrenceParticipantStatus.ACCEPTED,
-                null,
-                Priority.MEDIUM,
-                Transparency.TRANSPARENT,
-                resource.getName(),
-                participantUpdaters,
-                invitation.getStart(),
-                OccurrenceStatus.TENTATIVE, null, null);
-        // OccurenceType
-        OccurrenceType type = OccurrenceType.MEETING;
-        // Create MeetingCreator and invoke
-        MeetingCreator meetingCreater = new MeetingCreator(
-                calendar, meetingUpdater, type);
+        BeeId resourceCalendarId = new BeeId.Builder()
+                .id(resource.getCalendar_id())
+                .build();
+        participantUpdaters.add(new MeetingParticipantUpdater.Builder()
+                .operation(MeetingParticipantUpdaterOperation.ADD)
+                .beeId(resourceCalendarId)
+                .build());
+        MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
+                .name(invitation.getName())
+                .start(invitation.getStart())
+                .end(invitation.getEnd())
+                .status(OccurrenceStatus.TENTATIVE)
+                .participantUpdaters(participantUpdaters)
+                .locationName(resource.getName())
+                .includeOnlineConference(false)
+                .inviteeParticipantStatus(OccurrenceParticipantStatus.ACCEPTED)
+                .inviteePriority(Priority.MEDIUM)
+                .inviteeTransparency(Transparency.TRANSPARENT)
+                .build();
+        MeetingCreator meetingCreater = new MeetingCreator.Builder()
+                .calendar(calendar)
+                .meetingUpdater(meetingUpdater)
+                .type(OccurrenceType.MEETING)
+                .build();
         InvtCreateInvoker invtCreateInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
         invtCreateInvoker.setRequestPayload(meetingCreater);
