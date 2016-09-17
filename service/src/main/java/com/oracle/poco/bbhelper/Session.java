@@ -170,12 +170,12 @@ class Session {
                 resourceCache.getResource(invitation.getResource_id());
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
-        BeeId resourceCalendarId = new BeeId.Builder()
-                .id(resource.getCalendar_id())
+        BeeId resourceId = new BeeId.Builder()
+                .id(resource.getResource_id())
                 .build();
         participantUpdaters.add(new MeetingParticipantUpdater.Builder()
                 .operation(MeetingParticipantUpdaterOperation.ADD)
-                .beeId(resourceCalendarId)
+                .beeId(resourceId)
                 .build());
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
                 .name(invitation.getName())
