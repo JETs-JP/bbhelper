@@ -1,10 +1,14 @@
 package com.oracle.poco.bbhelper.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Resource {
 
     private String name;
-    private String resource_id;
-    private String calendar_id;
+    @JsonProperty("resource_id")
+    private String resourceId;
+    @JsonProperty("calendar_id")
+    private String calendarId;
     private String location;
     private int capacity;
     private String link;
@@ -14,12 +18,12 @@ public class Resource {
         super();
     }
 
-    public Resource(String name, String resource_id, String calendar_id,
-            String location, int capacity, String link, Facility facility) {
+    public Resource(String name, String resourceId, String calendarId,
+                    String location, int capacity, String link, Facility facility) {
         super();
         this.name = name;
-        this.resource_id = resource_id;
-        this.calendar_id = calendar_id;
+        this.resourceId = resourceId;
+        this.calendarId = calendarId;
         this.location = location;
         this.capacity = capacity;
         this.link = link;
@@ -31,11 +35,11 @@ public class Resource {
     }
 
     public final String getResourceId() {
-        return resource_id;
+        return resourceId;
     }
 
     public final String getCalendarId() {
-        return calendar_id;
+        return calendarId;
     }
 
     public final String getLocation() {
@@ -56,7 +60,7 @@ public class Resource {
 
     @Override
     public String toString() {
-        return "Resource [name=" + name + ", resource_id=" + resource_id + ", calendar_id=" + calendar_id
+        return "Resource [name=" + name + ", resource_id=" + resourceId + ", calendar_id=" + calendarId
                 + ", location=" + location + ", capacity=" + capacity + ", link=" + link + ", facility=" + facility
                 + "]";
     }
