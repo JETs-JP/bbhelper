@@ -1,29 +1,15 @@
 package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperInternalServerErrorException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
 
+// TODO Builderパターンを適用
 public class ResourcesWithInvitationsInRange {
-
-    @Autowired
-    private ResourceCache resourceCache;
-
     /**
      * このオブジェクトが含むことができる会議の開始時刻
      */
@@ -32,19 +18,20 @@ public class ResourcesWithInvitationsInRange {
      * このオブジェクトが含むことができる会議の終了時刻
      */
     private final ZonedDateTime todate;
-
-    private final Map<String, ResourceWithInvitations> resourcesWithInvitations =
-            new HashMap<String, ResourceWithInvitations>();
+    /**
+     * 予約済み会議情報付きの会議室情報の一覧
+     */
+    private final Map<String, ResourceWithInvitations> resourcesWithInvitations = new HashMap<>();
 
     /**
      * コンストラクタ
      * 
-     * @param fromdate このオブジェクトが含むことができる会議の開始時刻
-     * @param todate このオブジェクトが含むことができる会議の終了時刻
-     * @param floor
+     * @param fromdate  このオブジェクトが含むことができる会議の開始時刻
+     * @param todate    このオブジェクトが含むことができる会議の終了時刻
+     * @param resources このオブジェクトが含むことができる会議室
      */
     public ResourcesWithInvitationsInRange(
-            ZonedDateTime fromdate, ZonedDateTime todate, FloorCategory floor) {
+            ZonedDateTime fromdate, ZonedDateTime todate, Collection<Resource> resources) {
         super();
         if (fromdate == null || todate == null) {
             throw new NullPointerException("Date range is not set.");
@@ -52,17 +39,22 @@ public class ResourcesWithInvitationsInRange {
         if (fromdate.compareTo(todate) >= 0) {
             throw new IllegalArgumentException("The fromdate is later than the todate.");
         }
+        if (resources == null) {
+            throw new NullPointerException("No resources specified.");
+        }
+        if (resources.isEmpty()) {
+            throw new IllegalArgumentException("No resources specified.");
+        }
         this.fromdate = fromdate;
         this.todate = todate;
-        Map<String, Resource> resources = resourceCache.getCache(floor);
-        for (Entry<String, Resource> resource : resources.entrySet()) {
-            resourcesWithInvitations.put(resource.getKey(),
-                    new ResourceWithInvitations(resource.getValue()));
+        for (Resource resource : resources) {
+            resourcesWithInvitations.put(resource.getResourceId(),
+                    new ResourceWithInvitations(resource));
         }
     }
 
     /**
-     * このオブジェクトが含むことができる会議の開始時刻を返却します
+     * このオブジェクトが含むことができる会議の開始時刻を返却する
      * 
      * @return このオブジェクトが含むことができる会議の開始時刻
      */
@@ -71,7 +63,7 @@ public class ResourcesWithInvitationsInRange {
     }
 
     /**
-     * このオブジェクトが含むことができる会議の終了時刻を返却します
+     * このオブジェクトが含むことができる会議の終了時刻を返却する
      * 
      * @return このオブジェクトが含むことができる会議の終了時刻
      */
@@ -79,42 +71,57 @@ public class ResourcesWithInvitationsInRange {
         return todate;
     }
 
+    /**
+     * 予約済み会議情報付きの会議室情報のリストを返却する
+     *
+     * @return 予約済み会議情報付きの会議室情報のリスト
+     */
     public Collection<ResourceWithInvitations> getResources() {
         return resourcesWithInvitations.values();
     }
 
+    /**
+     * 予約済み会議情報を追加する
+     * 予約済み会議情報が、このオブジェクトが含むことができないものの場合、なにもせずに終了する
+     *
+     * @param invitation 予約済み会議室情報
+     */
     public void addInvitation(Invitation invitation) throws BbhelperException {
         String resource_id = invitation.getResource_id();
         if (resource_id == null || resource_id.length() == 0) {
-            return;
+            throw new IllegalArgumentException("Specified invitation has no resource id.");
         }
         ZonedDateTime start = invitation.getStart();
         if (start.compareTo(todate) >= 0 || start.isEqual(todate)) {
-            throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_RANGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return;
         }
         ZonedDateTime end = invitation.getEnd();
         if (end.compareTo(fromdate) <= 0 || end.isEqual(fromdate)) {
-            throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_RANGE,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return;
         }
-        ResourceWithInvitations resourceWithInvitation =
+        ResourceWithInvitations resourceWithInvitations =
                 resourcesWithInvitations.get(resource_id);
-        if (resourceWithInvitation == null) {
-            throw new BbhelperInternalServerErrorException(
-                    ErrorDescription.INVITATION_OUT_OF_FLOOR_CATEGORY,
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+        if (resourceWithInvitations == null) {
+            return;
         }
-        resourceWithInvitation.getInvitations().add(invitation);
+        resourceWithInvitations.getInvitations().add(invitation);
     }
 
+    /**
+     * 予約済み会議情報を含む会議室情報
+     */
     private final class ResourceWithInvitations extends Resource {
-
+        /**
+         * 予約済み会議情報のセット
+         */
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        private final Set<Invitation> invitations = new HashSet<Invitation>();
+        private final Set<Invitation> invitations = new HashSet<>();
 
+        /**
+         * コンストラクタ
+         *
+         * @param resource 会議室情報
+         */
         private ResourceWithInvitations(Resource resource) {
             super(resource.getName(), resource.getResourceId(),
                     resource.getCalendarId(), resource.getLocation(),
@@ -122,7 +129,12 @@ public class ResourcesWithInvitationsInRange {
                     resource.getFacility());
         }
 
-        public final Set<Invitation> getInvitations() {
+        /**
+         * 予約済み会議情報のセットを取得する
+         *
+         * @return 予約済み会議情報のセット
+         */
+        final Set<Invitation> getInvitations() {
             return invitations;
         }
     }

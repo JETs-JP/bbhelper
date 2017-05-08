@@ -97,6 +97,7 @@ class ResourceCache {
     }
 
     /**
+     * 会議室のカレンダーIDのリストを返却する
      *
      * @param floorCategory 会議室の用途分類
      * @return 会議室のカレンダーIDのリストを返却する

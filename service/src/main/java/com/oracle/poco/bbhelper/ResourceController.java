@@ -51,7 +51,7 @@ public class ResourceController {
             ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime todate,
-            @RequestParam(required = false) FloorCategory floor)
+            @RequestParam(required = false) FloorCategory floorCategory)
                     throws BbhelperException {
         if (fromdate.compareTo(todate) >= 0) {
             BbhelperException e = new BbhelperBadRequestException(
@@ -62,9 +62,11 @@ public class ResourceController {
         Session session = (Session) request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         Collection<Invitation> invitations = 
-                session.listConflictedInvitations(fromdate, todate, floor);
+                session.listConflictedInvitations(fromdate, todate, floorCategory);
+        Collection<Resource> resources =
+                resourceCache.getCache(floorCategory).values();
         ResourcesWithInvitationsInRange retval =
-                new ResourcesWithInvitationsInRange(fromdate, todate, floor);
+                new ResourcesWithInvitationsInRange(fromdate, todate, resources);
         for (Invitation invitation : invitations) {
             retval.addInvitation(invitation);
         }
