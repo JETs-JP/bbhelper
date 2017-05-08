@@ -62,7 +62,7 @@ public class ResourceController {
         Session session = (Session) request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         Collection<Invitation> invitations = 
-                session.listConflictedInvitaitons(fromdate, todate, floor);
+                session.listConflictedInvitations(fromdate, todate, floor);
         ResourcesWithInvitationsInRange retval =
                 new ResourcesWithInvitationsInRange(fromdate, todate, floor);
         for (Invitation invitation : invitations) {

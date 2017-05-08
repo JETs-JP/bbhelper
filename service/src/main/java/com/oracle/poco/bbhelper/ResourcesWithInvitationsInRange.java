@@ -116,8 +116,8 @@ public class ResourcesWithInvitationsInRange {
         private final Set<Invitation> invitations = new HashSet<Invitation>();
 
         private ResourceWithInvitations(Resource resource) {
-            super(resource.getName(), resource.getResource_id(),
-                    resource.getCalendar_id(), resource.getLocation(),
+            super(resource.getName(), resource.getResourceId(),
+                    resource.getCalendarId(), resource.getLocation(),
                     resource.getCapacity(), resource.getLink(),
                     resource.getFacility());
         }

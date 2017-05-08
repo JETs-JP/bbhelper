@@ -41,42 +41,91 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceType;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Priority;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
 
+/**
+ * このアプリケーションのセッションの実態。
+ * beehive4jのコンテキストの取得に成功したら、このオブジェクトのインスタンスを
+ * 生成し、このアプリケーション固有のセッションIDに紐づけてメモリに保存する。
+ * Beehiveに対する操作はこのオブジェクトの責務。
+ *
+ * TODO 全体的に、BeehiveContextの生き死にに合わせたハンドリングを実装する
+ * TODO スレッドセーフな実装になっていることを確認する
+ */
+@SuppressWarnings("ALL")
 class Session {
 
+    // TODO コンストラクタインジェクションに切り替えてfinalにする
+    /**
+     * 会議室の一般情報を保持するキャッシュ
+     */
     @Autowired
     private ResourceCache resourceCache;
-
+    /**
+     * このアプリケーション全体のプロパティ
+     */
     @Autowired
     private ApplicationProperties properties;
 
+    /**
+     * 最後にインスタンスが利用された時刻
+     */
     private long lastUsed;
-
+    /**
+     * beehive4jのコンテキスト
+     */
     private final BeehiveContext context;
+    /**
+     * ログイン中のユーザーのカレンダーID。beehiveのAPIで定義されているもの
+     */
+    private String calendar_id;
 
-    private String calendar_id = null;
-
+    /**
+     * コンストラクタ
+     *
+     * @param context beehive4jのコンテキスト
+     */
     Session(BeehiveContext context) {
         super();
         this.lastUsed = System.currentTimeMillis();
+        // TODO: コンテキストが不正な値の場合を排除する
         this.context = context;
     }
 
+    /**
+     * セッションが有効（タイムアウトしていない）であることを確認する
+     *
+     * @return セッション有効（タイムアウトしていない）かどうかを表すフラグ
+     */
     boolean isActive() {
         return (System.currentTimeMillis() - lastUsed) < properties.getSessionTimeout();
     }
 
+    /**
+     * インスタンスが最後に利用された時刻を更新する
+     */
     private void update() {
         lastUsed = System.currentTimeMillis();
     }
 
-    Collection<Invitation> listConflictedInvitaitons(
+    /**
+     * 指定した時間範囲にかぶる会議をリストする
+     *
+     * @param start 検索対象の時間範囲の起点
+     * @param end   検索対象の時間範囲の終点
+     * @param floorCategory 会議室のフロアの分類
+     *
+     * @return 指定した時間範囲にかぶる会議のCollection。一つも該当がない場合null
+     * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
+     */
+    Collection<Invitation> listConflictedInvitations(
             ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
         // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
+        // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
-        List<String> invitation_ids = new ArrayList<String>();
-        List<BbhelperException> bbhe = new ArrayList<BbhelperException>();
+        List<String> invitation_ids = new ArrayList<>();
+        List<BbhelperException> bbhe = new ArrayList<>();
+        // TODO ラムダ式内のエラーハンドリングを見直す
         calendar_ids.stream().parallel().forEach(c -> {
             CalendarRange range = new CalendarRange.Builder()
                     .beeId(new BeeId.Builder().id(c).build())
@@ -98,6 +147,7 @@ class Session {
                     }
                 }
             } catch (BeehiveApiFaultException e) {
+                // TODO エラーハンドリングを簡潔に書けるように工夫する
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
                             ErrorDescription.UNAUTORIZED, e, e.getHttpStatus()));
@@ -157,6 +207,14 @@ class Session {
         return retval;
     }
 
+    /**
+     * 会議を登録する
+     *
+     * @param invitation 登録した会議を表すInvitationオブジェクト
+     *
+     * @return 登録された会議を表すInvitationオブジェクト
+     * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
+     */
     Invitation createInvitaion(Invitation invitation) throws BbhelperException {
         // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
         update();
@@ -171,7 +229,7 @@ class Session {
         List<MeetingParticipantUpdater> participantUpdaters = 
                 new ArrayList<MeetingParticipantUpdater>(1);
         BeeId resourceId = new BeeId.Builder()
-                .id(resource.getResource_id())
+                .id(resource.getResourceId())
                 .build();
         participantUpdaters.add(new MeetingParticipantUpdater.Builder()
                 .operation(MeetingParticipantUpdaterOperation.ADD)

@@ -88,7 +88,7 @@ public class InvitationController {
         }
         Session session = (Session) request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        return session.listConflictedInvitaitons(fromdate, todate, floor);
+        return session.listConflictedInvitations(fromdate, todate, floor);
     }
 
 }

@@ -30,11 +30,11 @@ public class Resource {
         return name;
     }
 
-    public final String getResource_id() {
+    public final String getResourceId() {
         return resource_id;
     }
 
-    public final String getCalendar_id() {
+    public final String getCalendarId() {
         return calendar_id;
     }
 
