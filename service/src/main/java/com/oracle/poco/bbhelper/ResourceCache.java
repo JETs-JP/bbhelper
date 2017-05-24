@@ -18,28 +18,27 @@ import com.oracle.poco.bbhelper.model.Resource;
 
 @Component
 class ResourceCache {
-    /**
-     * ロガー
-     */
-    // TODO コンストラクタインジェクションに切り替えて、final宣言を追加する
-    @Autowired
-    private BbhelperLogger logger;
+
     /**
      * 会議室の用途分類をキーに、会議室情報のリストを保持するキャッシュ
      */
-    private Map<FloorCategory, List<Resource>> cacheByFloor = new HashMap<>();
+    private final Map<FloorCategory, List<Resource>> cacheByFloor = new HashMap<>();
     /**
      * 会議室のResourceIdをキーに、会議室情報を保持するキャッシュ
      */
     // TODO ResourceId オブジェクトを定義する。キーを型で縛る
-    private Map<String, Resource> cacheByResourceId = new HashMap<>();
+    private final Map<String, Resource> cacheByResourceId = new HashMap<>();
 
     /**
      * コンストラクタ
      *
      * @throws IOException 会議室情報が記述されたファイルへのアクセスでエラーが発生した場合
      */
-    public ResourceCache() throws IOException {
+    @Autowired
+    ResourceCache(BbhelperLogger logger) throws IOException {
+        if (logger == null) {
+            throw new IllegalArgumentException("Logger is not assigned.");
+        }
         try {
             for (FloorCategory category : FloorCategory.values()) {
                 InputStream in = this.getClass().getClassLoader().
