@@ -101,7 +101,7 @@ class Session {
     /**
      * インスタンスが最後に利用された時刻を更新する
      */
-    private void update() {
+    void update() {
         lastUsed = System.currentTimeMillis();
     }
 
@@ -118,8 +118,6 @@ class Session {
     Collection<Invitation> listConflictedInvitations(
             ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
-        // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
-        update();
         // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
@@ -215,8 +213,6 @@ class Session {
      * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
      */
     Invitation createInvitaion(Invitation invitation) throws BbhelperException {
-        // TODO update()が新規メソッドでも確実に実行されるような工夫が必要
-        update();
         if (calendar_id == null || calendar_id.length() == 0) {
             calendar_id = getDefaultCalendar();
         }

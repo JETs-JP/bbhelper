@@ -4,7 +4,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
+import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,9 +30,14 @@ class SessionPool {
         return session_id;
     }
 
-    Session get(String session_id) {
-        refreshPool();
-        return pool.get(session_id);
+    Session use(String session_id) throws BbhelperException {
+        Session session = pool.get(session_id);
+        if (session == null || !session.isActive()) {
+            throw new BbhelperUnauthorizedException(
+                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+        }
+        session.update();
+        return session;
     }
 
     private void refreshPool() {

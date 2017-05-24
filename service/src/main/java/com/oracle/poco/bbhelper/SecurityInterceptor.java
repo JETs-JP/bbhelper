@@ -29,7 +29,7 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
                     ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
             throw e;
         }
-        Session session = sessionPool.get(session_id);
+        Session session = sessionPool.use(session_id);
         if (session == null) {
             BbhelperException e = new BbhelperUnauthorizedException(
                     ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
