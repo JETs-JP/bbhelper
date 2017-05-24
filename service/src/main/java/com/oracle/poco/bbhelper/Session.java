@@ -212,7 +212,10 @@ class Session {
      * @return 登録された会議を表すInvitationオブジェクト
      * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
      */
-    Invitation createInvitaion(Invitation invitation) throws BbhelperException {
+    Invitation createInvitation(Invitation invitation) throws BbhelperException {
+        if (invitation == null) {
+            return null;
+        }
         if (calendar_id == null || calendar_id.length() == 0) {
             calendar_id = getDefaultCalendar();
         }
@@ -221,8 +224,7 @@ class Session {
         // MeetingUpdater
         Resource resource =
                 resourceCache.getResource(invitation.getResource_id());
-        List<MeetingParticipantUpdater> participantUpdaters = 
-                new ArrayList<MeetingParticipantUpdater>(1);
+        List<MeetingParticipantUpdater> participantUpdaters = new ArrayList<>(1);
         BeeId resourceId = new BeeId.Builder()
                 .id(resource.getResourceId())
                 .build();
@@ -242,19 +244,19 @@ class Session {
                 .inviteePriority(Priority.MEDIUM)
                 .inviteeTransparency(Transparency.TRANSPARENT)
                 .build();
-        MeetingCreator meetingCreater = new MeetingCreator.Builder()
+        MeetingCreator meetingCreator = new MeetingCreator.Builder()
                 .calendar(calendar)
                 .meetingUpdater(meetingUpdater)
                 .type(OccurrenceType.MEETING)
                 .build();
         InvtCreateInvoker invtCreateInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_CREATE);
-        invtCreateInvoker.setRequestPayload(meetingCreater);
-        ResponseEntity<BeehiveResponse> invtCreateResponse = null;
+        invtCreateInvoker.setRequestPayload(meetingCreator);
+        ResponseEntity<BeehiveResponse> invtCreateResponse;
         try {
             invtCreateResponse = invtCreateInvoker.invoke();
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be = null;
+            BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());
@@ -269,11 +271,11 @@ class Session {
         InvtReadInvoker invtReadInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
         invtReadInvoker.setPathValue(invitation_id);
-        ResponseEntity<BeehiveResponse> invtReadResponse = null;
+        ResponseEntity<BeehiveResponse> invtReadResponse;
         try {
             invtReadResponse = invtReadInvoker.invoke();
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be = null;
+            BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
                         ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());

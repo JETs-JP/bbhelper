@@ -48,7 +48,7 @@ public class InvitationController {
                     throws BbhelperException {
         Session session = (Session) request.getAttribute(
                 Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        return session.createInvitaion(invitation);
+        return session.createInvitation(invitation);
     }
 
     /**
@@ -72,7 +72,7 @@ public class InvitationController {
     @RequestMapping(value = "/list",
                     method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Collection<Invitation> listConflictedInvitaitons(
+    public Collection<Invitation> listConflictedInvitations(
             HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             ZonedDateTime fromdate,

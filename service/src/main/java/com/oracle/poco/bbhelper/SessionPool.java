@@ -1,16 +1,15 @@
 package com.oracle.poco.bbhelper;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * 本アプリケーションのセッションを、セッションIDと紐付けて格納するためのプール
+ */
+// TODO 使われなくなったままプールに残ったセッションを削除する必要あり
 @Component
 class SessionPool {
 

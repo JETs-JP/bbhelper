@@ -38,10 +38,9 @@ public class SessionController {
             throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
         if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
-            BbhelperException be = new BbhelperBadRequestException(
+            throw new BbhelperBadRequestException(
                     ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET,
                     HttpStatus.BAD_REQUEST);
-            throw be;
         }
         try {
             BeehiveContext context = BeehiveContext.getBeehiveContext(
@@ -52,11 +51,10 @@ public class SessionController {
             HttpHeaders headers = new HttpHeaders();
             headers.add(
                     Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
-            return new ResponseEntity<String>(null, headers, HttpStatus.OK);
+            return new ResponseEntity<>(null, headers, HttpStatus.OK);
         } catch (BeehiveApiFaultException e) {
-            BbhelperBeehive4jException be = new BbhelperBeehive4jException(
+            throw new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
-            throw be;
         }
     }
 
