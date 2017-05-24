@@ -14,38 +14,48 @@ import org.springframework.stereotype.Component;
 @Component
 class SessionPool {
 
-    private final Map<String, Session> pool =
-            new ConcurrentHashMap<String, Session>();
+    private final Map<String, Session> pool = new ConcurrentHashMap<>();
 
     // uninstanciable
     private SessionPool() {}
 
-    String put(Session context) {
-        refreshPool();
+    /**
+     * 新規発行したセッションをプールに保存し、新しいセッションIDを返却します。
+     *
+     * @param session 新規発行されたセッション
+     * @return セッションID
+     */
+    String put(Session session) {
+        if (session == null) {
+            throw new IllegalArgumentException("Session object is not given.");
+        }
         String session_id;
         do {
             session_id = RandomStringUtils.randomAlphanumeric(32);
         } while (pool.keySet().contains(session_id));
-        pool.put(session_id, context);
+        pool.put(session_id, session);
         return session_id;
     }
 
-    Session use(String session_id) throws BbhelperException {
+    /**
+     * 指定したセッションIDに対応するセッションオブジェクトを返却します。
+     * 目的のセッションオブジェクトが存在しないか、タイムアウトしている場合nullを返却します。
+     *
+     * @param session_id セッションID
+     * @return 指定したセッションIDに対応するセッションオブジェクト。
+     *         目的のセッションオブジェクトが存在しないか、タイムアウトしている場合nullを返却
+     */
+    Session use(String session_id) {
         Session session = pool.get(session_id);
-        if (session == null || !session.isActive()) {
-            throw new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+        if (session == null) {
+            return null;
+        }
+        if (!session.isActive()) {
+            pool.remove(session_id);
+            return null;
         }
         session.update();
         return session;
-    }
-
-    private void refreshPool() {
-        for (Entry<String, Session> entry : pool.entrySet()) {
-            if (!entry.getValue().isActive()) {
-                pool.remove(entry.getKey());
-            }
-        }
     }
 
 }
