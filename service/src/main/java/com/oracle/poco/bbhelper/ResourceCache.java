@@ -104,13 +104,18 @@ class ResourceCache {
      *         floorCategoryがnullの場合、すべての会議室のカレンダーIDを返却する
      */
     List<String> getCalendarIds(FloorCategory floorCategory) {
-        // TODO floorCategoryがnullのときは、すべての会議室のカレンダーIDを返す
+        FloorCategory[] categories;
         if (floorCategory == null) {
-            floorCategory = FloorCategory.getDefault();
+            categories = FloorCategory.values();
+        } else {
+            categories = new FloorCategory[]{floorCategory};
         }
-        List<Resource> list = cacheByFloor.get(floorCategory);
-        List<String> retval = new ArrayList<>(list.size());
-        list.stream().forEach(r -> retval.add(r.getCalendarId()));
+        List<String> retval = new ArrayList<>();
+        for (FloorCategory category : categories) {
+            List<Resource> list = cacheByFloor.get(category);
+            list.forEach(r -> retval.add(r.getCalendarId()));
+        }
         return retval;
     }
+
 }

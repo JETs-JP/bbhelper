@@ -43,9 +43,4 @@ enum FloorCategory {
         return jsonResource;
     }
 
-    // TODO このメソッドは廃止する
-    static final FloorCategory getDefault() {
-        return FloorCategory.WORK;
-    }
-
 }
