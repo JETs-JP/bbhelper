@@ -67,8 +67,10 @@ public class ResourceController {
                 resourceCache.getCache(floorCategory).values();
         ResourcesWithInvitationsInRange retval =
                 new ResourcesWithInvitationsInRange(fromdate, todate, resources);
-        for (Invitation invitation : invitations) {
-            retval.addInvitation(invitation);
+        if (invitations != null && invitations.size() >= 0) {
+            for (Invitation invitation : invitations) {
+                retval.addInvitation(invitation);
+            }
         }
         return retval;
     }

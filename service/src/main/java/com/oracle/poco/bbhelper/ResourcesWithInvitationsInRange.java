@@ -110,11 +110,10 @@ public class ResourcesWithInvitationsInRange {
     /**
      * 予約済み会議情報を含む会議室情報
      */
-    private final class ResourceWithInvitations extends Resource {
+    public final class ResourceWithInvitations extends Resource {
         /**
          * 予約済み会議情報のセット
          */
-        @JsonInclude(JsonInclude.Include.NON_EMPTY)
         private final Set<Invitation> invitations = new HashSet<>();
 
         /**
@@ -134,7 +133,8 @@ public class ResourcesWithInvitationsInRange {
          *
          * @return 予約済み会議情報のセット
          */
-        final Set<Invitation> getInvitations() {
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
+        public final Set<Invitation> getInvitations() {
             return invitations;
         }
     }
