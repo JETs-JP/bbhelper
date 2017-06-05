@@ -203,13 +203,6 @@
     }
   },
   {
-    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000951B0D5D2",
-    "capacity": 18,
-    "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-CONF-24030_Tearoom",
-    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000951904C7F"
-  },
-  {
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B283075FB",
     "capacity": 8,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
