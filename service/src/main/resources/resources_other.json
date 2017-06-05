@@ -1,0 +1,220 @@
+[
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB7D57B",
+    "capacity": 2,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10006_10M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAF035B",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "液晶Display",
+      "phone": "IP-Phone常設"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB0683F",
+    "capacity": 8,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10008_10M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAC4E15",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB7D5B6",
+    "capacity": 12,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10010_10M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB1D927",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB6825F",
+    "capacity": 4,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10014_10M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFA6E087",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ、IP-Phone常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFAC4E7C",
+    "capacity": 8,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10018_10M6",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB4E279",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB95A82",
+    "capacity": 2,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-10022_10M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB4E289",
+    "link": "http://my.oracle.com/content/web/cnt437597",
+    "facility": {
+      "wall": "全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "液晶Display",
+      "phone": "IP-Phone常設"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB6819F",
+    "capacity": 4,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-11040_11M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB067E0",
+    "link": "http://my.oracle.com/content/web/cnt437598",
+    "facility": {
+      "wall": "全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-Phone常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFAC4DEB",
+    "capacity": 6,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-11042_11M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB7D55A",
+    "link": "http://my.oracle.com/content/web/cnt437598",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB681EE",
+    "capacity": 2,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-11050_11M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFA6E03B",
+    "link": "http://my.oracle.com/content/web/cnt437598",
+    "facility": {
+      "wall": "全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "液晶Display",
+      "phone": "IP-Phone常設"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000CB7601715",
+    "capacity": 16,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-12008_12M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000CBE5EEBDB",
+    "link": "http://my.oracle.com/content/web/cnt2103406",
+    "facility": {
+      "wall": "完全クローズ",
+      "door": "完全クローズ",
+      "projector": "プロジェクタ",
+      "phone": "IP-ConfStation常設",
+      "whiteboard": "ホワイトボード常設"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000CBE420D04",
+    "capacity": 16,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-12010_12M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000CBE5E8D58",
+    "link": "http://my.oracle.com/content/web/cnt2103406",
+    "facility": {
+      "wall": "完全クローズ",
+      "door": "完全クローズ",
+      "projector": "プロジェクタ、IP-ConfStation常設/ホワイトボード"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000732F65EDF",
+    "capacity": 14,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-12014_12M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000732CCA41A",
+    "link": "http://my.oracle.com/content/web/cnt2103406",
+    "facility": {
+      "wall": "完全クローズ（一部スリットガラスあり）",
+      "door": "完全クローズ",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000CBE9A3908",
+    "capacity": 14,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-12024_12M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000CBE5BE46B",
+    "link": "http://my.oracle.com/content/web/cnt2103406",
+    "facility": {
+      "wall": "完全クローズ（一部スリットガラスあり）",
+      "door": "完全クローズ",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB4DF73",
+    "capacity": 8,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-23022_23M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAC4AA2",
+    "link": "http://my.oracle.com/content/web/cnt437610",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000951B0D5D2",
+    "capacity": 18,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-24030_Tearoom",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000951904C7F"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000B283075FB",
+    "capacity": 8,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-VIDEO-24004_24M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000B28273FF5",
+    "link": "http://my.oracle.com/content/web/cnt437611"
+  }
+]

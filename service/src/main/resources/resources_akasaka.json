@@ -1,0 +1,176 @@
+[
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000656D392AD",
+    "capacity": 12,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13016_13M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006574EDC05"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000651DE8889",
+    "capacity": 12,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13018_13M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006577B2251"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000650796FC8",
+    "capacity": 12,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13020_13M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006578CE241"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065778EAE0",
+    "capacity": 12,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13024_13M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B00065753893F"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000657405AE2",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13030_13M6",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657861536"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006521C9822",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-13032_13M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657803051"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000654AF5A0C",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-14006_14M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006573F5B26"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065219C1AC",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-14014_14M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006577878FC"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000652BAB932",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-14024_14M5",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657757F5F",
+    "facility": {
+      "wall": "透明ガラス＋電動ロールスクリーン(部屋の中は見えなくなります)",
+      "door": "完全クローズ",
+      "projector": "プロジェクター常設(天井吊下げ)",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006577F03CD",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-14026_14M6",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B00065769207F"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006578226CD",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-14032_14M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006575FF800"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00064F965CE1",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15006_15M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006574B2806"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065062B32D",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15014_15M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B00065771EBD5"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000652C9B80F",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15016_15M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006577BD8D9"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065289A6AD",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15024_15M5",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657948CD2"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000653DEC9F9",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15026_15M6",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006576B1E75"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065737488F",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-15032_15M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006578746D7"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065785007E",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16006_16M1",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006577F727F"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006570FE59B",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16012_16M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657659FCF"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B000654B70B6E",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16014_16M3",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006578E9C33"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006578DA7BF",
+    "capacity": 4,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16016_16M4",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657633737"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006510FA62B",
+    "capacity": 20,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16024_16M5",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657610851"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B00065082F314",
+    "capacity": 2,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-CONF-16032_16M7",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B000657890080"
+  },
+  {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0006577F125B",
+    "capacity": 10,
+    "location": "Tokyo - Akasaka Center, Japan",
+    "name": "JP-TOKYO10-VIDEO-15012_15M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0006574F2AA8"
+  }
+]
