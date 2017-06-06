@@ -27,7 +27,7 @@ import com.oracle.poco.bbhelper.model.Invitation;
  * @author hhayakaw
  */
 @RestController
-@RequestMapping("/invitations")
+@RequestMapping("/api/invitations")
 public class InvitationController {
 
     /**
@@ -68,8 +68,7 @@ public class InvitationController {
      *          指定されたクエリが不正な場合<br>
      *          通信失敗など、BeehiveのREST API呼出しで障害が発生した場合
      */
-    @RequestMapping(value = "/list",
-                    method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Collection<Invitation> listConflictedInvitations(
             HttpServletRequest request,

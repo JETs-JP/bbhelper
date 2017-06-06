@@ -20,7 +20,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
 
 @RestController
-@RequestMapping("/session")
+@RequestMapping("/api/session")
 public class SessionController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class SessionController {
     @Autowired
     private AutowireCapableBeanFactory factory;
 
-    @RequestMapping(path = "/login",
+    @RequestMapping(path = "/actions/login",
                     method = RequestMethod.GET)
     public ResponseEntity<String> login(HttpServletRequest request) throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
@@ -54,18 +54,6 @@ public class SessionController {
             throw new BbhelperBeehive4jException(
                     ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
         }
-    }
-
-    /**
-     * シンプルな文字列を返却します。サーバーの稼働を確認する目的で設けられたAPIです。
-     * 
-     * @return 文字列 "I'm working..."
-     */
-    //TODO beehiveとの接続もチェックする
-    @RequestMapping(value = "/ping",
-                    method = RequestMethod.GET)
-    public String ping() {
-        return "I'm working...";
     }
 
 }

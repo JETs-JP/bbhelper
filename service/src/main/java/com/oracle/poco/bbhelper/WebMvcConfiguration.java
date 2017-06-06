@@ -6,13 +6,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-class WebMvcCofiguration extends WebMvcConfigurerAdapter {
+class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getAccessLogInterceptor());
         registry.addInterceptor(getSecurityInterceptor())
-                .excludePathPatterns("/session/**");
+                .excludePathPatterns("/api/session/**")
+                .excludePathPatterns("/api/system/echo");
     }
 
     @Bean
