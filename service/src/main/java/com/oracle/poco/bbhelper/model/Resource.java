@@ -1,25 +1,25 @@
 package com.oracle.poco.bbhelper.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Resource {
 
-    private String name;
-    @JsonProperty("resource_id")
-    private String resourceId;
-    @JsonProperty("calendar_id")
-    private String calendarId;
-    private String location;
-    private int capacity;
-    private String link;
-    private Facility facility;
+    private final String name;
+    private final String resourceId;
+    private final String calendarId;
+    private final String location;
+    private final int capacity;
+    private final String link;
+    private final Facility facility;
 
-    public Resource() {
-        super();
-    }
-
-    public Resource(String name, String resourceId, String calendarId,
-                    String location, int capacity, String link, Facility facility) {
+    @JsonCreator
+    public Resource(@JsonProperty("name") String name,
+                    @JsonProperty("resource_id") String resourceId,
+                    @JsonProperty("calendar_id") String calendarId,
+                    @JsonProperty("location") String location,
+                    @JsonProperty("capacity") int capacity, @JsonProperty("link") String link,
+                    @JsonProperty("facility") Facility facility) {
         super();
         this.name = name;
         this.resourceId = resourceId;

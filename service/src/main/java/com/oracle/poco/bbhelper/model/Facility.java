@@ -1,17 +1,21 @@
 package com.oracle.poco.bbhelper.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Facility {
 
-    private String wall;
-    private String door;
-    private String projector;
-    private String phone;
-    private String whiteboard;
+    private final String wall;
+    private final String door;
+    private final String projector;
+    private final String phone;
+    private final String whiteboard;
 
-    public Facility() {}
-
-    public Facility(String wall, String door, String projector, String phone,
-            String whiteboard) {
+    @JsonCreator
+    public Facility(@JsonProperty("wall") String wall, @JsonProperty("door") String door,
+                    @JsonProperty("projector") String projector, @JsonProperty("phone") String phone,
+                    @JsonProperty("whiteboard") String whiteboard) {
         super();
         this.wall = wall;
         this.door = door;
@@ -20,48 +24,29 @@ public class Facility {
         this.whiteboard = whiteboard;
     }
 
-    public static Facility deepClone(Facility origin) {
-        if (origin == null) {
-            return null;
-        }
-        return new Facility(
-                ((origin.getWall() != null) ? new String(origin.getWall()) : null),
-                ((origin.getDoor() != null) ? new String(origin.getDoor()) : null),
-                ((origin.getProjector() != null) ? new String(origin.getProjector()) : null),
-                ((origin.getPhone() != null) ? new String(origin.getPhone()) : null),
-                ((origin.getWhiteboard() != null) ? new String(origin.getWhiteboard()) : null)
-            );
-    }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getWall() {
         return wall;
     }
-    public void setWall(String wall) {
-        this.wall = wall;
-    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getDoor() {
         return door;
     }
-    public void setDoor(String door) {
-        this.door = door;
-    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getProjector() {
         return projector;
     }
-    public void setProjector(String projector) {
-        this.projector = projector;
-    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getPhone() {
         return phone;
     }
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getWhiteboard() {
         return whiteboard;
-    }
-    public void setWhiteboard(String whiteboard) {
-        this.whiteboard = whiteboard;
     }
 
 }

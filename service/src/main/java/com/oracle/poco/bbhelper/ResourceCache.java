@@ -2,10 +2,7 @@ package com.oracle.poco.bbhelper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,14 +17,15 @@ import com.oracle.poco.bbhelper.model.Resource;
 class ResourceCache {
 
     /**
-     * 会議室の用途分類をキーに、会議室情報のリストを保持するキャッシュ
-     */
-    private final Map<FloorCategory, List<Resource>> cacheByFloor = new HashMap<>();
-    /**
      * 会議室のResourceIdをキーに、会議室情報を保持するキャッシュ
      */
     // TODO ResourceId オブジェクトを定義する。キーを型で縛る
-    private final Map<String, Resource> cacheByResourceId = new HashMap<>();
+    private final Map<String, Resource> cacheByResourceId;
+    /**
+     * 会議室の用途分類をキーに、会議室情報のリストを保持するキャッシュ
+     */
+    // TODO ResourceId オブジェクトを定義する。キーを型で縛る
+    private final Map<FloorCategory, Map<String, Resource>> cacheByFloorAndResourceId;
 
     /**
      * コンストラクタ
@@ -40,16 +38,22 @@ class ResourceCache {
             throw new IllegalArgumentException("Logger is not assigned.");
         }
         try {
+            Map<FloorCategory, Map<String, Resource>> tempMapByFloorAndResourceId = new HashMap<>();
+            Map<String, Resource> tempMapByResourceId = new HashMap<>();
             for (FloorCategory category : FloorCategory.values()) {
-                InputStream in = this.getClass().getClassLoader().
-                        getResourceAsStream(category.getJsonResource());
-                List<Resource> list = new ObjectMapper().
-                        readValue(in, new TypeReference<List<Resource>>(){});
-                cacheByFloor.put(category, list);
+                InputStream in = this.getClass().getClassLoader().getResourceAsStream(
+                        category.getJsonResource());
+                List<Resource> list =
+                        new ObjectMapper().readValue(in, new TypeReference<List<Resource>>(){});
+                Map<String, Resource> map = new HashMap<>();
                 for (Resource r : list) {
-                    cacheByResourceId.put(r.getResourceId(), r);
+                    map.put(r.getResourceId(), r);
                 }
+                tempMapByFloorAndResourceId.put(category, Collections.unmodifiableMap(map));
+                tempMapByResourceId.putAll(map);
             }
+            cacheByFloorAndResourceId = Collections.unmodifiableMap(tempMapByFloorAndResourceId);
+            cacheByResourceId = Collections.unmodifiableMap(tempMapByResourceId);
         } catch (IOException e) {
             logger.severe(ErrorDescription.FAILED_TO_LOAD_RESOURCE);
             throw e;
@@ -61,7 +65,6 @@ class ResourceCache {
      *
      * @return 会議室情報を保持するマップ
      */
-    // TODO immutableなオブジェクトを返す
     Map<String, Resource> getCache() {
         return cacheByResourceId;
     }
@@ -73,15 +76,11 @@ class ResourceCache {
      * @return 会議室情報を保持するマップを返却する。
      *         floorCategoryがnullの場合、すべての会議室情報を含むマップを返却する
      */
-    // TODO immutableなオブジェクトを返す
     Map<String, Resource> getCache(FloorCategory floorCategory) {
         if (floorCategory == null) {
             return getCache();
         }
-        List<Resource> resources = cacheByFloor.get(floorCategory);
-        Map<String, Resource> retval = new HashMap<>(resources.size());
-        resources.forEach(r -> retval.put(r.getResourceId(), r));
-        return retval;
+        return cacheByFloorAndResourceId.get(floorCategory);
     }
 
     /**
@@ -103,18 +102,10 @@ class ResourceCache {
      *         floorCategoryがnullの場合、すべての会議室のカレンダーIDを返却する
      */
     List<String> getCalendarIds(FloorCategory floorCategory) {
-        FloorCategory[] categories;
-        if (floorCategory == null) {
-            categories = FloorCategory.values();
-        } else {
-            categories = new FloorCategory[]{floorCategory};
-        }
-        List<String> retval = new ArrayList<>();
-        for (FloorCategory category : categories) {
-            List<Resource> list = cacheByFloor.get(category);
-            list.forEach(r -> retval.add(r.getCalendarId()));
-        }
-        return retval;
+        Map<String, Resource> map = this.getCache(floorCategory);
+        List<String> resourceIds = new ArrayList<>(map.size());
+        map.values().forEach(r -> resourceIds.add(r.getCalendarId()));
+        return Collections.unmodifiableList(resourceIds);
     }
 
 }
