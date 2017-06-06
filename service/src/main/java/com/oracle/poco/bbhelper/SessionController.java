@@ -34,8 +34,7 @@ public class SessionController {
 
     @RequestMapping(path = "/login",
                     method = RequestMethod.GET)
-    public ResponseEntity<String> login(HttpServletRequest request)
-            throws BbhelperException {
+    public ResponseEntity<String> login(HttpServletRequest request) throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
         if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
             throw new BbhelperBadRequestException(
@@ -43,14 +42,13 @@ public class SessionController {
                     HttpStatus.BAD_REQUEST);
         }
         try {
-            BeehiveContext context = BeehiveContext.getBeehiveContext(
-                    properties.getBeehiveUrl(), basicAuthHeader);
+            BeehiveContext context =
+                    BeehiveContext.getBeehiveContext(properties.getBeehiveUrl(), basicAuthHeader);
             Session session = new Session(context);
             factory.autowireBean(session);
             String session_id = sessionPool.put(session);
             HttpHeaders headers = new HttpHeaders();
-            headers.add(
-                    Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
+            headers.add(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<>(null, headers, HttpStatus.OK);
         } catch (BeehiveApiFaultException e) {
             throw new BbhelperBeehive4jException(
@@ -63,6 +61,7 @@ public class SessionController {
      * 
      * @return 文字列 "I'm working..."
      */
+    //TODO beehiveとの接続もチェックする
     @RequestMapping(value = "/ping",
                     method = RequestMethod.GET)
     public String ping() {

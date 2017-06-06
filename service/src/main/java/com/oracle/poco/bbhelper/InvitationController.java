@@ -43,11 +43,10 @@ public class InvitationController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public Invitation createInvitation(HttpServletRequest request,
-            @Valid @RequestBody Invitation invitation)
+    public Invitation createInvitation(
+            HttpServletRequest request, @Valid @RequestBody Invitation invitation)
                     throws BbhelperException {
-        Session session = (Session) request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_BBH_SESSION);
+        Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.createInvitation(invitation);
     }
 
@@ -74,20 +73,16 @@ public class InvitationController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<Invitation> listConflictedInvitations(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime fromdate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime todate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
         if (fromdate.compareTo(todate) >= 0) {
             BbhelperException e = new BbhelperBadRequestException(
-                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE,
-                    HttpStatus.BAD_REQUEST);
+                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
             throw e;
         }
-        Session session = (Session) request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_BBH_SESSION);
+        Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.listConflictedInvitations(fromdate, todate, floor);
     }
 

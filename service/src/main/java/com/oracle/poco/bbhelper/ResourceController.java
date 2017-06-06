@@ -47,24 +47,19 @@ public class ResourceController {
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange listInvitations(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime fromdate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            ZonedDateTime todate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
         if (fromdate.compareTo(todate) >= 0) {
             BbhelperException e = new BbhelperBadRequestException(
-                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE,
-                    HttpStatus.BAD_REQUEST);
+                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
             throw e;
         }
-        Session session = (Session) request.getAttribute(
-                Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        Collection<Invitation> invitations = 
+        Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
+        Collection<Invitation> invitations =
                 session.listConflictedInvitations(fromdate, todate, floor);
-        Collection<Resource> resources =
-                resourceCache.getCache(floor).values();
+        Collection<Resource> resources = resourceCache.getCache(floor).values();
         ResourcesWithInvitationsInRange retval =
                 new ResourcesWithInvitationsInRange(fromdate, todate, resources);
         if (invitations != null && invitations.size() >= 0) {
