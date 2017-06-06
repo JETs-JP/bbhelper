@@ -3,7 +3,6 @@ package com.oracle.poco.bbhelper;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +114,7 @@ class Session {
      * @return 指定した時間範囲にかぶる会議のCollection。一つも該当がない場合null
      * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
      */
-    Collection<Invitation> listConflictedInvitations(
+    List<Invitation> listConflictedInvitations(
             ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
         // TODO 入力値チェック

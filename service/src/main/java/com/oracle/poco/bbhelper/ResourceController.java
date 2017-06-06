@@ -1,7 +1,7 @@
 package com.oracle.poco.bbhelper;
 
 import java.time.ZonedDateTime;
-import java.util.Collection;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,7 +68,7 @@ public class ResourceController {
      */
     @RequestMapping(value = "/actions/fetchWithInvitations",
                     method = RequestMethod.GET)
-    public ResourcesWithInvitationsInRange listInvitations(
+    public ResourcesWithInvitationsInRange fetchWithInvitations(
             HttpServletRequest request,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
@@ -91,6 +91,42 @@ public class ResourceController {
             }
         }
         return retval;
+    }
+
+    /**
+     * 指定した時間帯で予約可能な会議室のリストを返却します。
+     *
+     * @param fromdate
+     * @param todate
+     * @return 指定した時間帯で予約可能な会議室のリスト
+     * @throws BbhelperException
+     */
+    @RequestMapping(value = "/actions/fetchOnlyAvailable",
+            method = RequestMethod.GET)
+    public ResourcesWithInvitationsInRange fetchOnlyAvailable(
+            HttpServletRequest request,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
+            @RequestParam(required = false) FloorCategory floor)
+            throws BbhelperException {
+        if (fromdate.compareTo(todate) >= 0) {
+            BbhelperException e = new BbhelperBadRequestException(
+                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
+            throw e;
+        }
+        Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
+        List<Invitation> invitations =
+                session.listConflictedInvitations(fromdate, todate, floor);
+        Set<String> bookedResourceIds = new HashSet<>(invitations.size());
+        invitations.forEach(i -> bookedResourceIds.add(i.getResource_id()));
+        Collection<Resource> resources = resourceCache.getCache(floor).values();
+        Set<Resource> availableResources = new HashSet<>(resources.size());
+        for (Resource resource : resources) {
+            if (!bookedResourceIds.contains(resource.getResourceId())) {
+                availableResources.add(resource);
+            }
+        }
+        return new ResourcesWithInvitationsInRange(fromdate, todate, availableResources);
     }
 
 }
