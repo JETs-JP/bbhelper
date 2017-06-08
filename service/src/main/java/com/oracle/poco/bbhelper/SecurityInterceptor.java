@@ -26,13 +26,13 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
                 request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0) {
             BbhelperException e = new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+                    ErrorDescription.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
             throw e;
         }
         Session session = sessionPool.use(session_id);
         if (session == null) {
             BbhelperException e = new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTORIZED, HttpStatus.UNAUTHORIZED);
+                    ErrorDescription.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
             throw e;
         }
         request.setAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION, session);

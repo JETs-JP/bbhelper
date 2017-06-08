@@ -35,8 +35,13 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     private ErrorResponse createErrorResponse(Exception ex, HttpStatus status) {
         // ex, statusがnullになることはない
+        String errorCode = null;
+        if (ex instanceof BbhelperException) {
+            BbhelperException bbhe = (BbhelperException)ex;
+            errorCode = bbhe.getCode();
+        }
         ErrorResponse error = new ErrorResponse(
-                status.value(), status.getReasonPhrase(), ex.getMessage());
+                status.value(), status.getReasonPhrase(), errorCode, ex.getMessage());
         return error;
     }
 

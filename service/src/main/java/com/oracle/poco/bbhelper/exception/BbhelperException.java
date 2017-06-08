@@ -8,26 +8,30 @@ public abstract class BbhelperException extends Exception {
 
     private final HttpStatus status;
 
+    private final String code;
+
     public BbhelperException(ErrorDescription description, HttpStatus status) {
-        super(description.getFullDescription());
-        this.chainedMessage = description.getFullDescription();
+        super(description.getMessage());
+        this.chainedMessage = description.getMessage();
         this.status = status;
+        this.code = description.getCode();
     }
 
     public BbhelperException(
             ErrorDescription description, Throwable cause, HttpStatus status) {
-        super(description.getFullDescription(), cause);
+        super(description.getMessage(), cause);
         if (cause == null) {
-            this.chainedMessage = description.getFullDescription();
+            this.chainedMessage = description.getMessage();
         } else {
             StringBuilder builder =
-                    new StringBuilder(description.getFullDescription());
+                    new StringBuilder(description.getMessage());
             builder.append("(cause: ");
             builder.append(cause.getMessage());
             builder.append(")");
             this.chainedMessage = builder.toString();
         }
         this.status = status;
+        this.code = description.getCode();
     }
 
     @Override
@@ -37,6 +41,10 @@ public abstract class BbhelperException extends Exception {
 
     public HttpStatus getStatus() {
         return status;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     /**

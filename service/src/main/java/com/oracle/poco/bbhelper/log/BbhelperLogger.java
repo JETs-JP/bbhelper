@@ -137,7 +137,7 @@ public class BbhelperLogger {
         if (description == null) {
             return;
         }
-        String log = description.getFullDescription();
+        String log = description.getMessage();
         SystemLogger.severe(log);
         DebugLogger.severe(log);
     }

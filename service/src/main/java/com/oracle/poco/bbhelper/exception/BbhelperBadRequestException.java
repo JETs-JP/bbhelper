@@ -1,7 +1,9 @@
 package com.oracle.poco.bbhelper.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad Request.")
 public class BbhelperBadRequestException extends BbhelperException {
 
     public BbhelperBadRequestException(
@@ -9,8 +11,7 @@ public class BbhelperBadRequestException extends BbhelperException {
         super(description, cause, status);
     }
 
-    public BbhelperBadRequestException(
-            ErrorDescription description, HttpStatus status) {
+    public BbhelperBadRequestException(ErrorDescription description, HttpStatus status) {
         super(description, status);
     }
 

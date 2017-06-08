@@ -1,15 +1,19 @@
 package com.oracle.poco.bbhelper;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class ErrorResponse {
 
     private final int status;
     private final String error;
+    private final String code;
     private final String message;
 
-    public ErrorResponse(int status, String error, String message) {
+    public ErrorResponse(int status, String error, String code, String message) {
         super();
         this.status = status;
         this.error = error;
+        this.code = code;
         this.message = message;
     }
 
@@ -19,6 +23,11 @@ public class ErrorResponse {
 
     public String getError() {
         return error;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public String getCode() {
+        return code;
     }
 
     public String getMessage() {

@@ -12,8 +12,7 @@ public class BbhelperInternalServerErrorException extends BbhelperException {
         super(description, cause, status);
     }
 
-    public BbhelperInternalServerErrorException(
-            ErrorDescription description, HttpStatus status) {
+    public BbhelperInternalServerErrorException(ErrorDescription description, HttpStatus status) {
         super(description, status);
     }
 

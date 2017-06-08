@@ -1,17 +1,17 @@
 package com.oracle.poco.bbhelper.exception;
 
 public enum ErrorDescription {
-    UNAUTORIZED(1, "unauthorized."),
+    // 400
+    FROM_DATE_IS_LATER_THAN_TODATE(0, "fromdate is later than the todate."),
+    // 401
+    UNAUTHORIZED(1, "unauthorized."),
     HEADER_FOR_AUTHENTICATION_IS_NOT_SET(2, "header for authentication is not set."),
-    FROM_DATE_IS_LATER_THAN_TODATE(3, "fromdate is later than the todate."),
-    INVITATION_OUT_OF_RANGE(4, "the invitation to set is out of specified range."),
-    INVITATION_OUT_OF_FLOOR_CATEGORY(
-            5, "the invitation to set doesn't belong in the sepcified floor category."),
-    FAILED_TO_LOAD_RESOURCE(6, "failed to load resources data."),
-    FAILED_TO_LOAD_PROPERTIES(7, "failed to load app properties."),
-    FAILED_TO_CHECK_CONNECTION_WITH_BEEHIVE(8, "failed to check conntection with beehive."),
-    BEEHIVE4J_CONTEXT_EXPIRED(9, "beehive4j context is expired."),
-    BEEHIVE4J_FAULT(10, "some exception raised from beehive4j."),
+    // 500
+    FAILED_TO_LOAD_RESOURCE(3, "failed to load resources data."),
+    FAILED_TO_LOAD_PROPERTIES(4, "failed to load app properties."),
+    FAILED_TO_CHECK_CONNECTION_WITH_BEEHIVE(5, "failed to check conntection with beehive."),
+    BEEHIVE4J_CONTEXT_EXPIRED(6, "beehive4j context is expired."),
+    BEEHIVE4J_FAULT(7, "some exception raised from beehive4j."),
     ;
 
     private static final String ERROR_CODE_HEADER = "BBHELPER-ERROR-";
@@ -31,10 +31,6 @@ public enum ErrorDescription {
 
     public String getMessage() {
         return message;
-    }
-
-    public String getFullDescription() {
-        return errorCode + ": " + getMessage();
     }
 
 }

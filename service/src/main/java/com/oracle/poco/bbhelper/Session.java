@@ -146,7 +146,7 @@ class Session {
                 // TODO エラーハンドリングを簡潔に書けるように工夫する
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                     bbhe.add(new BbhelperUnauthorizedException(
-                            ErrorDescription.UNAUTORIZED, e, e.getHttpStatus()));
+                            ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus()));
                 } else {
                     bbhe.add(new BbhelperBeehive4jException(
                             ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus()));
@@ -177,7 +177,7 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());
+                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
             } else {
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
@@ -258,7 +258,7 @@ class Session {
             BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());
+                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
             } else {
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
@@ -277,7 +277,7 @@ class Session {
             BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());
+                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
             } else {
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
@@ -315,7 +315,7 @@ class Session {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
                 be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTORIZED, e, e.getHttpStatus());
+                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
             } else {
                 be = new BbhelperBeehive4jException(
                         ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
