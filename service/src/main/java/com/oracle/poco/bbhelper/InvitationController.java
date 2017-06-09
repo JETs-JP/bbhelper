@@ -1,19 +1,14 @@
 package com.oracle.poco.bbhelper;
 
-import java.time.ZonedDateTime;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
@@ -72,17 +67,16 @@ public class InvitationController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<Invitation> listConflictedInvitations(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
+            @ModelAttribute @Validated Duration duration, BindingResult result,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
-        if (fromdate.compareTo(todate) >= 0) {
-            BbhelperException e = new BbhelperBadRequestException(
+        if (result.hasErrors()) {
+            throw new BbhelperBadRequestException(
                     ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
-            throw e;
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        return session.listConflictedInvitations(fromdate, todate, floor);
+        return session.listConflictedInvitations(
+                duration.getFromdate(), duration.getTodate(), floor);
     }
 
 }

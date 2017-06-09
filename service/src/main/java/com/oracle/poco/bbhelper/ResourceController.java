@@ -1,18 +1,14 @@
 package com.oracle.poco.bbhelper;
 
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
@@ -61,8 +57,7 @@ public class ResourceController {
      * 予約された会議を含む、各会議室の情報を返却します。
      * 会議の情報は、クエリーで指定された時間帯にかぶる会議のみが含まれます。
      * 
-     * @param fromdate
-     * @param todate
+     * @param duration
      * @return 予約された会議を含む、各会議室の情報
      * @throws BbhelperException 
      */
@@ -70,21 +65,19 @@ public class ResourceController {
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange fetchWithInvitations(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
+            @ModelAttribute @Validated Duration duration, BindingResult result,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
-        if (fromdate.compareTo(todate) >= 0) {
-            BbhelperException e = new BbhelperBadRequestException(
+        if (result.hasErrors()) {
+            throw new BbhelperBadRequestException(
                     ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
-            throw e;
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        Collection<Invitation> invitations =
-                session.listConflictedInvitations(fromdate, todate, floor);
+        Collection<Invitation> invitations = session.listConflictedInvitations(
+                duration.getFromdate(), duration.getTodate(), floor);
         Collection<Resource> resources = resourceCache.getCache(floor).values();
-        ResourcesWithInvitationsInRange retval =
-                new ResourcesWithInvitationsInRange(fromdate, todate, resources);
+        ResourcesWithInvitationsInRange retval = new ResourcesWithInvitationsInRange(
+                duration.getFromdate(), duration.getTodate(), resources);
         if (invitations != null && invitations.size() >= 0) {
             for (Invitation invitation : invitations) {
                 retval.addInvitation(invitation);
@@ -96,8 +89,7 @@ public class ResourceController {
     /**
      * 指定した時間帯で予約可能な会議室のリストを返却します。
      *
-     * @param fromdate
-     * @param todate
+     * @param duration
      * @return 指定した時間帯で予約可能な会議室のリスト
      * @throws BbhelperException
      */
@@ -105,18 +97,16 @@ public class ResourceController {
             method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange fetchOnlyAvailable(
             HttpServletRequest request,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime fromdate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime todate,
+            @ModelAttribute @Validated Duration duration, BindingResult result,
             @RequestParam(required = false) FloorCategory floor)
             throws BbhelperException {
-        if (fromdate.compareTo(todate) >= 0) {
-            BbhelperException e = new BbhelperBadRequestException(
+        if (result.hasErrors()) {
+            throw new BbhelperBadRequestException(
                     ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
-            throw e;
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        List<Invitation> invitations =
-                session.listConflictedInvitations(fromdate, todate, floor);
+        List<Invitation> invitations = session.listConflictedInvitations(
+                duration.getFromdate(), duration.getTodate(), floor);
         Set<String> bookedResourceIds = new HashSet<>(invitations.size());
         invitations.forEach(i -> bookedResourceIds.add(i.getResource_id()));
         Collection<Resource> resources = resourceCache.getCache(floor).values();
@@ -126,7 +116,8 @@ public class ResourceController {
                 availableResources.add(resource);
             }
         }
-        return new ResourcesWithInvitationsInRange(fromdate, todate, availableResources);
+        return new ResourcesWithInvitationsInRange(
+                duration.getFromdate(), duration.getTodate(), availableResources);
     }
 
 }
