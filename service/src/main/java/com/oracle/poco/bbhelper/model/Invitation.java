@@ -10,34 +10,30 @@ public final class Invitation {
      * 会議の名前
      */
     @NotNull
-    private String name;
+    private final String name;
     /**
      * 会議のId。beehive上の識別子
      */
-    private String invitation_id;
+    private final String invitation_id;
     /**
      * 会議室のId。beehive上の識別子
      */
     @NotNull
-    private String resource_id;
+    private final String resource_id;
     /**
      * 会議の主催者
      */
-    private Person organizer;
+    private final Person organizer;
     /**
      * 会議の開始日時
      */
     @NotNull
-    private ZonedDateTime start;
+    private final ZonedDateTime start;
     /**
      * 会議の終了日時
      */
     @NotNull
-    private ZonedDateTime end;
-
-    public Invitation() {
-        super();
-    }
+    private final ZonedDateTime end;
 
     public Invitation(String name, String invitation_id, String resource_id,
             Person organizer, ZonedDateTime start, ZonedDateTime end) {
@@ -54,48 +50,24 @@ public final class Invitation {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getInvitation_id() {
         return invitation_id;
-    }
-
-    public void setInvitation_id(String invitation_id) {
-        this.invitation_id = invitation_id;
     }
 
     public String getResource_id() {
         return resource_id;
     }
 
-    public void setResource_id(String resource_id) {
-        this.resource_id = resource_id;
-    }
-
     public Person getOrganizer() {
         return organizer;
-    }
-
-    public void setOrganizer(Person organizer) {
-        this.organizer = organizer;
     }
 
     public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(ZonedDateTime start) {
-        this.start = start;
-    }
-
     public ZonedDateTime getEnd() {
         return end;
-    }
-
-    public void setEnd(ZonedDateTime end) {
-        this.end = end;
     }
 
     @Override
