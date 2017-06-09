@@ -30,7 +30,7 @@ public class InvitationController {
      * 新たに会議を登録します
      * 
      * @param request リクエスト
-     * @param invitation 新たに登録する会議の情報
+     * @param committer 新たに登録する会議の情報
      * @return 登録した会議の情報
      * @throws BbhelperException
      *          他の会議と重複するなど、Beehiveの機能上許可されない会議を登録しようとした場合<br>
@@ -39,10 +39,10 @@ public class InvitationController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Invitation createInvitation(
-            HttpServletRequest request, @Valid @RequestBody Invitation invitation)
+            HttpServletRequest request, @Valid @RequestBody InvitationCommitter committer)
                     throws BbhelperException {
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
-        return session.createInvitation(invitation);
+        return session.createInvitation(committer);
     }
 
     /**
@@ -50,12 +50,8 @@ public class InvitationController {
      * 指定した時間帯に被る会議の一覧を取得します
      * 
      * @param request HTTPリクエスト
-     * @param fromdate 
-     *      取得対象の会議情報の時間帯を指定するパラメータ。fromdateとtodateで
-     *      指定された範囲に会議時間帯が被るものが対象となる
-     * @param todate
-     *      取得対象の会議情報の時間帯を指定するパラメータ。fromdateとtodateで
-     *      指定された範囲に会議時間帯が被るものが対象となる
+     * @param duration
+     *      取得対象の会議情報の時間帯を指定するパラメータ。
      * @param floor
      *      会議の開催場所をフロアで絞り込むためのパラメータ
      * @return 該当する会議室の一覧

@@ -206,13 +206,13 @@ class Session {
     /**
      * 会議を登録する
      *
-     * @param invitation 登録した会議を表すInvitationオブジェクト
+     * @param committer 登録する会議の情報を保持するオブジェクト
      *
      * @return 登録された会議を表すInvitationオブジェクト
      * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
      */
-    Invitation createInvitation(Invitation invitation) throws BbhelperException {
-        if (invitation == null) {
+    Invitation createInvitation(InvitationCommitter committer) throws BbhelperException {
+        if (committer == null) {
             return null;
         }
         if (calendar_id == null || calendar_id.length() == 0) {
@@ -221,8 +221,7 @@ class Session {
         // BeeId of user's calendar
         BeeId calendar = new BeeId.Builder().id(calendar_id).build();
         // MeetingUpdater
-        Resource resource =
-                resourceCache.getResource(invitation.getResource_id());
+        Resource resource = resourceCache.getResource(committer.getResource_id());
         List<MeetingParticipantUpdater> participantUpdaters = new ArrayList<>(1);
         BeeId resourceId = new BeeId.Builder()
                 .id(resource.getResourceId())
@@ -232,9 +231,9 @@ class Session {
                 .beeId(resourceId)
                 .build());
         MeetingUpdater meetingUpdater = new MeetingUpdater.Builder()
-                .name(invitation.getName())
-                .start(invitation.getStart())
-                .end(invitation.getEnd())
+                .name(committer.getName())
+                .start(committer.getStart())
+                .end(committer.getEnd())
                 .status(OccurrenceStatus.TENTATIVE)
                 .participantUpdaters(participantUpdaters)
                 .locationName(resource.getName())
