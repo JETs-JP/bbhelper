@@ -28,6 +28,16 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
 
             BBH-Authorized-Session: rfsfog17jSX68TtjwXW6wIfEj0UvGkPm
 
++ Response 401 (application/json;charset=UTF-8)
+    ユーザー名／パスワードの組み合わせが送信されなかったか、正しくない値であったために認証に失敗した場合にこのレスポンスが返却されます。
+    + Body
+
+            {
+                "status": 401,
+                "error": "Unauthorized",
+                "message": "BBHELPER-ERROR-0010: some exception raised from beehive4j.(cause: 401: Unauthorized)"
+            }
+
 
 会議室情報の操作 [/api/resources]
 --------------------------------
@@ -58,70 +68,99 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
                 - "OTHER": その他。特殊な用途のエリア(10,11,12,23,24F)<br>
 
 + Response 200 (application/json)
+    + Body
 
-        {
-            "fromdate": "2016-04-01T12:00:00.000+09:00"
-            "todate": "2016-04-01T13:00:00.000+09:00"
-            "resources": {
-                [
-                    {
-                        "name": "JP-OAC-CONF-17006_17M1",
-                        "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644",
-                        "location": "OAC",
-                        "capacity": 2,
-                        "link": "https://layout.com/17M1",
-                        "facility": {
-                            "wall": "全面透明ガラス",
-                            "door": "全面透明ガラス",
-                            "projector": "液晶Display",
-                            "phone": "IP-Phone"
+            {
+                "fromdate": "2016-04-01T12:00:00.000+09:00"
+                "todate": "2016-04-01T13:00:00.000+09:00"
+                "resources": {
+                    [
+                        {
+                            "name": "JP-OAC-CONF-17006_17M1",
+                            "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDD86644",
+                            "location": "OAC",
+                            "capacity": 2,
+                            "link": "https://layout.com/17M1",
+                            "facility": {
+                                "wall": "全面透明ガラス",
+                                "door": "全面透明ガラス",
+                                "projector": "液晶Display",
+                                "phone": "IP-Phone"
+                            },
                         },
-                    },
-                    {
-                        "name": "JP-OAC-CONF-17010_17M3",
-                        "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DE093ED7",
-                        "location": "OAC",
-                        "capacity": 12,
-                        "link": "https://layout.com/17M3",
-                        "facility": {
-                            "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
-                            "door": "全面透明ガラス",
-                            "projector": "プロジェクタ",
-                            "phone": "IP-ConferenceStation",
-                            "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル"
-                        },
-                        "invitaitons": {
-                            [
-                                {
-                                    "name": "戦略会議",
-                                    "invitation_id": "bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB",
-                                    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DE093ED7",
-                                    "organizer": {
-                                        "name": "Yosuke Arai",
-                                        "address": "yosuke.arai@oracle.com",
-                                        "link": "https://people.us.oracle.com/pls/oracle/f?p=8000:2:::::PERSON_ID:243488629813781"
+                        {
+                            "name": "JP-OAC-CONF-17010_17M3",
+                            "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DE093ED7",
+                            "location": "OAC",
+                            "capacity": 12,
+                            "link": "https://layout.com/17M3",
+                            "facility": {
+                                "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+                                "door": "全面透明ガラス",
+                                "projector": "プロジェクタ",
+                                "phone": "IP-ConferenceStation",
+                                "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル"
+                            },
+                            "invitaitons": {
+                                [
+                                    {
+                                        "name": "戦略会議",
+                                        "invitation_id": "bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB",
+                                        "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DE093ED7",
+                                        "organizer": {
+                                            "name": "Yosuke Arai",
+                                            "address": "yosuke.arai@oracle.com",
+                                            "link": "https://people.us.oracle.com/pls/oracle/f?p=8000:2:::::PERSON_ID:243488629813781"
+                                        },
+                                        "start": "2016-04-01T11:30:00.000+09:00",
+                                        "end": "2016-04-01T12:30:00.000+09:00"
                                     },
-                                    "start": "2016-04-01T11:30:00.000+09:00",
-                                    "end": "2016-04-01T12:30:00.000+09:00"
-                                },
-                                {
-                                    "name": "定例会議",
-                                    "invitation_id": "bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB",
-                                    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDF0E78D",
-                                    "organizer": {
-                                        "name": "Junko Chino",
-                                        "address": "juko.chino@oracle.com",
-                                        "link": "https://people.us.oracle.com/pls/oracle/f?p=8000:2:::::PERSON_ID:243488629813781"
-                                    },
-                                    "start": "2016-04-01T12:30:00.000+09:00",
-                                    "end": "2016-04-01T13:30:00.000+09:00"
-                                }
-                            ]
+                                    {
+                                        "name": "定例会議",
+                                        "invitation_id": "bbh-invt:38893C00F42F38A1E0404498C8A6612B000D34BAADAB",
+                                        "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDF0E78D",
+                                        "organizer": {
+                                            "name": "Junko Chino",
+                                            "address": "juko.chino@oracle.com",
+                                            "link": "https://people.us.oracle.com/pls/oracle/f?p=8000:2:::::PERSON_ID:243488629813781"
+                                        },
+                                        "start": "2016-04-01T12:30:00.000+09:00",
+                                        "end": "2016-04-01T13:30:00.000+09:00"
+                                    }
+                                ]
+                            }
                         }
-                    }
-                ]
+                    ]
+                }
             }
-        }
+
++ Response 400 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 必須のパラメータが指定されなかった
+    + パラメータのフォーマットが正しくなかった
+    + formdateに指定した日時がtodateよりも後であった
+
+    + Body
+
+            {
+              "status": 400,
+              "error": "Bad Request",
+              "message": "BBHELPER-ERROR-0003: fromdate is later than the todate."
+            }
+
++ Response 401 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 本アプリケーションで有効なセッションIDが指定されなかった
+    + セッションがタイムアウトしている
+
+    + Body
+
+            {
+              "status": 401,
+              "error": "Unauthorized",
+              "message": "BBHELPER-ERROR-0001: unauthorized."
+            }
+
 
 ### 指定した時間帯に予約可能な、各会議室の情報のリストを取得する [GET /api/resources/actions/fetchOnlyAvailable{?fromdate}{?todate}{?floor}]
 指定した時間帯に予約可能な、各会議室の情報のリストを取得します。<br>
@@ -185,6 +224,33 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
             }
         }
 
++ Response 400 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 必須のパラメータが指定されなかった
+    + パラメータのフォーマットが正しくなかった
+    + formdateに指定した日時がtodateよりも後であった
+
+    + Body
+
+            {
+              "status": 400,
+              "error": "Bad Request",
+              "message": "BBHELPER-ERROR-0003: fromdate is later than the todate."
+            }
+
++ Response 401 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 本アプリケーションで有効なセッションIDが指定されなかった
+    + セッションがタイムアウトしている
+
+    + Body
+
+            {
+              "status": 401,
+              "error": "Unauthorized",
+              "message": "BBHELPER-ERROR-0001: unauthorized."
+            }
+
 ### 指定した会議室の情報を取得する [GET /api/resources/{resource_id}]
 指定したIDの会議室の情報を取得します
 
@@ -212,6 +278,30 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
                 "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル"
             }
         }
+
++ Response 401 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 本アプリケーションで有効なセッションIDが指定されなかった
+    + セッションがタイムアウトしている
+
+    + Body
+
+            {
+              "status": 401,
+              "error": "Unauthorized",
+              "message": "BBHELPER-ERROR-0001: unauthorized."
+            }
+
++ Response 404 (application/json;charset=UTF-8)
+    エラーケースです。Pathパラメータで指定したIDに対応する会議室が存在しなかった場合に、このレスポンスが返却されます。
+
+    + Body
+
+            {
+              "status": 404,
+              "error": "Not Found",
+              "message": "BBHELPER-ERROR-0011: not found."
+            }
 
 
 会議情報の操作 [/api/invitations]
@@ -285,3 +375,39 @@ Beehiveのアカウントのユーザー名／パスワードをBasic認証の�
                 "end": "2016-04-01T13:00:00.000+09:00"
             }
 
++ Response 400 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + リクエストボディが指定されなかった
+    + リクエストボディのフォーマットや値が不正だった
+
+    + Body
+
+            {
+              "status": 400,
+              "error": "Bad Request",
+              "message": "BBHELPER-ERROR-0003: fromdate is later than the todate."
+            }
+
++ Response 401 (application/json;charset=UTF-8)
+    エラーケースです。以下のいずれかに該当する場合に、このレスポンスが返却されます。
+    + 本アプリケーションで有効なセッションIDが指定されなかった
+    + セッションがタイムアウトしている
+
+    + Body
+
+            {
+              "status": 401,
+              "error": "Unauthorized",
+              "message": "BBHELPER-ERROR-0001: unauthorized."
+            }
+
++ Response 409 (application/json;charset=UTF-8)
+    エラーケースです。指定した時間帯に会議室がすでに予約済みである場合に、このレスポンスが返却されます。
+
+    + Body
+
+            {
+              "status": 409,
+              "error": "Conflict",
+              "message": "BBHELPER-ERROR-0012: conflict."
+            }
