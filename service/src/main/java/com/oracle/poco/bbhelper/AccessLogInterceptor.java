@@ -3,7 +3,7 @@ package com.oracle.poco.bbhelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -23,6 +23,7 @@ class AccessLogInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
+    // TODO この処理はエラーレスポンスのときにも呼ばれるのかどうか確認
     @Override
     public void afterCompletion(
             HttpServletRequest request, HttpServletResponse response,
