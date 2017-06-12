@@ -15,7 +15,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.oracle.poco.bbhelper.Constants;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 /**
  * このアプリケーションのために構成されたロガーを提供するためのユーティリティ・
@@ -133,13 +132,12 @@ public class BbhelperLogger {
     /**
      * @param description
      */
-    public void severe(ErrorDescription description) {
-        if (description == null) {
+    public void severe(String message) {
+        if (message == null || message.length() == 0) {
             return;
         }
-        String log = description.getMessage();
-        SystemLogger.severe(log);
-        DebugLogger.severe(log);
+        SystemLogger.severe(message);
+        DebugLogger.severe(message);
     }
 
     /**

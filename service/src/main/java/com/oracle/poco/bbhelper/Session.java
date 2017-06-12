@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
@@ -145,11 +144,9 @@ class Session {
             } catch (BeehiveApiFaultException e) {
                 // TODO エラーハンドリングを簡潔に書けるように工夫する
                 if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                    bbhe.add(new BbhelperUnauthorizedException(
-                            ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus()));
+                    bbhe.add(new BbhelperUnauthorizedException());
                 } else {
-                    bbhe.add(new BbhelperBeehive4jException(
-                            ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus()));
+                    bbhe.add(new BbhelperBeehive4jException());
                 }
 
             }
@@ -176,11 +173,9 @@ class Session {
         } catch (BeehiveApiFaultException e) {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
+                be = new BbhelperUnauthorizedException();
             } else {
-                be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
+                be = new BbhelperBeehive4jException();
             }
             throw be;
         }
@@ -256,11 +251,9 @@ class Session {
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
+                be = new BbhelperUnauthorizedException();
             } else {
-                be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
+                be = new BbhelperBeehive4jException();
             }
             throw be;
         }
@@ -275,11 +268,9 @@ class Session {
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
+                be = new BbhelperUnauthorizedException();
             } else {
-                be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
+                be = new BbhelperBeehive4jException();
             }
             throw be;
         }
@@ -313,11 +304,9 @@ class Session {
         } catch (BeehiveApiFaultException e) {
             BbhelperException be = null;
             if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
-                be = new BbhelperUnauthorizedException(
-                        ErrorDescription.UNAUTHORIZED, e, e.getHttpStatus());
+                be = new BbhelperUnauthorizedException();
             } else {
-                be = new BbhelperBeehive4jException(
-                        ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
+                be = new BbhelperBeehive4jException();
             }
             throw be;
         }

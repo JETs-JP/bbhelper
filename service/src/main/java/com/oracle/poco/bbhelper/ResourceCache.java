@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Resource;
 
@@ -55,7 +54,7 @@ class ResourceCache {
             cacheByFloorAndResourceId = Collections.unmodifiableMap(tempMapByFloorAndResourceId);
             cacheByResourceId = Collections.unmodifiableMap(tempMapByResourceId);
         } catch (IOException e) {
-            logger.severe(ErrorDescription.FAILED_TO_LOAD_RESOURCE);
+            logger.severe(e.getMessage());
             throw e;
         }
     }

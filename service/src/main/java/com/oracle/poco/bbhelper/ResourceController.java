@@ -5,14 +5,12 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
 
@@ -69,8 +67,7 @@ public class ResourceController {
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
         if (result.hasErrors()) {
-            throw new BbhelperBadRequestException(
-                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
+            throw new BbhelperBadRequestException();
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         Collection<Invitation> invitations = session.listConflictedInvitations(
@@ -101,8 +98,7 @@ public class ResourceController {
             @RequestParam(required = false) FloorCategory floor)
             throws BbhelperException {
         if (result.hasErrors()) {
-            throw new BbhelperBadRequestException(
-                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
+            throw new BbhelperBadRequestException();
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         List<Invitation> invitations = session.listConflictedInvitations(

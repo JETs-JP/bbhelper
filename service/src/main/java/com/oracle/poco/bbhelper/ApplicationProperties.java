@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 
 @Component
@@ -29,7 +28,7 @@ class ApplicationProperties {
         try {
             this.beehiveUrl = new URL(beehiveUrl);
         } catch (MalformedURLException e) {
-            logger.severe(ErrorDescription.FAILED_TO_LOAD_PROPERTIES);
+            logger.severe(e.getMessage());
             throw e;
         }
     }

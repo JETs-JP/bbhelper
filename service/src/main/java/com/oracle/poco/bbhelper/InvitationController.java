@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 import com.oracle.poco.bbhelper.model.Invitation;
 
 /**
@@ -67,8 +66,7 @@ public class InvitationController {
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
         if (result.hasErrors()) {
-            throw new BbhelperBadRequestException(
-                    ErrorDescription.FROM_DATE_IS_LATER_THAN_TODATE, HttpStatus.BAD_REQUEST);
+            throw new BbhelperBadRequestException();
         }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.listConflictedInvitations(

@@ -4,12 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 class SecurityInterceptor extends HandlerInterceptorAdapter {
 
@@ -25,14 +23,12 @@ class SecurityInterceptor extends HandlerInterceptorAdapter {
         String session_id =
                 request.getHeader(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION);
         if (session_id == null || session_id.length() == 0) {
-            BbhelperException e = new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+            BbhelperException e = new BbhelperUnauthorizedException();
             throw e;
         }
         Session session = sessionPool.use(session_id);
         if (session == null) {
-            BbhelperException e = new BbhelperUnauthorizedException(
-                    ErrorDescription.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+            BbhelperException e = new BbhelperUnauthorizedException();
             throw e;
         }
         request.setAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION, session);

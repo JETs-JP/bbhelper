@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.ErrorDescription;
 
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
@@ -37,9 +36,7 @@ public class SessionController {
     public ResponseEntity<String> login(HttpServletRequest request) throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
         if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
-            throw new BbhelperBadRequestException(
-                    ErrorDescription.HEADER_FOR_AUTHENTICATION_IS_NOT_SET,
-                    HttpStatus.BAD_REQUEST);
+            throw new BbhelperBadRequestException();
         }
         try {
             BeehiveContext context =
@@ -51,8 +48,7 @@ public class SessionController {
             headers.add(Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION, session_id);
             return new ResponseEntity<>(null, headers, HttpStatus.OK);
         } catch (BeehiveApiFaultException e) {
-            throw new BbhelperBeehive4jException(
-                    ErrorDescription.BEEHIVE4J_FAULT, e, e.getHttpStatus());
+            throw new BbhelperBeehive4jException();
         }
     }
 

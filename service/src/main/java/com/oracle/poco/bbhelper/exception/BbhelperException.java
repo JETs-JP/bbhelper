@@ -1,51 +1,31 @@
 package com.oracle.poco.bbhelper.exception;
 
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 
 public abstract class BbhelperException extends Exception {
 
-    private final String chainedMessage;
+    private final Throwable cause;
 
     private final HttpStatus status;
 
-    private final String code;
-
-    public BbhelperException(ErrorDescription description, HttpStatus status) {
-        super(description.getMessage());
-        this.chainedMessage = description.getMessage();
+    public BbhelperException(HttpStatus status) {
+        this.cause = null;
         this.status = status;
-        this.code = description.getCode();
     }
 
-    public BbhelperException(
-            ErrorDescription description, Throwable cause, HttpStatus status) {
-        super(description.getMessage(), cause);
-        if (cause == null) {
-            this.chainedMessage = description.getMessage();
-        } else {
-            StringBuilder builder =
-                    new StringBuilder(description.getMessage());
-            builder.append("(cause: ");
-            builder.append(cause.getMessage());
-            builder.append(")");
-            this.chainedMessage = builder.toString();
-        }
+    public BbhelperException(Throwable cause, HttpStatus status) {
+        this.cause = cause;
         this.status = status;
-        this.code = description.getCode();
-    }
-
-    @Override
-    public String getMessage() {
-        return chainedMessage;
     }
 
     public HttpStatus getStatus() {
         return status;
     }
 
-    public String getCode() {
-        return code;
-    }
+    abstract public String getCode();
+
+    abstract public MessageSourceResolvable getMessageSourceResolvable();
 
     /**
      * Serial Version UID.
