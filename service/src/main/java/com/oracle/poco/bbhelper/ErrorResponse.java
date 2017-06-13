@@ -2,7 +2,7 @@ package com.oracle.poco.bbhelper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 class ErrorResponse {
@@ -11,7 +11,7 @@ class ErrorResponse {
     private final String error;
     private final String code;
     private final String message;
-    private final List<Detail> details = new ArrayList<>();
+    private final List<String> details = new LinkedList<>();
 
     ErrorResponse(int status, String error, String code, String message) {
         super();
@@ -39,22 +39,12 @@ class ErrorResponse {
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public void addDetail(Detail detail) {
-        details.add(detail);
+    public List<String> getDetails() {
+        return details;
     }
 
-    class Detail {
-
-        private final String message;
-
-        Detail(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return this.message;
-        }
-
+    public void addDetail(String detail) {
+        details.add(detail);
     }
 
 }

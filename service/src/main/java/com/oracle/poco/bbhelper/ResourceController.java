@@ -1,18 +1,17 @@
 package com.oracle.poco.bbhelper;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
-import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -63,12 +62,9 @@ public class ResourceController {
                     method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange fetchWithInvitations(
             HttpServletRequest request,
-            @ModelAttribute @Validated Duration duration, BindingResult result,
+            @ModelAttribute @Validated Duration duration,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
-        if (result.hasErrors()) {
-            throw new BbhelperBadRequestException();
-        }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         Collection<Invitation> invitations = session.listConflictedInvitations(
                 duration.getFromdate(), duration.getTodate(), floor);
@@ -94,12 +90,9 @@ public class ResourceController {
             method = RequestMethod.GET)
     public ResourcesWithInvitationsInRange fetchOnlyAvailable(
             HttpServletRequest request,
-            @ModelAttribute @Validated Duration duration, BindingResult result,
+            @ModelAttribute @Validated Duration duration,
             @RequestParam(required = false) FloorCategory floor)
             throws BbhelperException {
-        if (result.hasErrors()) {
-            throw new BbhelperBadRequestException();
-        }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         List<Invitation> invitations = session.listConflictedInvitations(
                 duration.getFromdate(), duration.getTodate(), floor);

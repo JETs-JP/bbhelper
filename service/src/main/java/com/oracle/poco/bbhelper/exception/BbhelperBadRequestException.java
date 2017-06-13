@@ -25,11 +25,6 @@ public class BbhelperBadRequestException extends BbhelperException {
     }
 
     @Override
-    public String getCode() {
-        return getClass().getName();
-    }
-
-    @Override
     MessageSourceResolvable getMessageSourceResolvable() {
         return messageSourceResolvable;
     }

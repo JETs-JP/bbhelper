@@ -1,18 +1,13 @@
 package com.oracle.poco.bbhelper;
 
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.model.Invitation;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
-import com.oracle.poco.bbhelper.model.Invitation;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 /**
  * 
@@ -38,7 +33,8 @@ public class InvitationController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Invitation createInvitation(
-            HttpServletRequest request, @Valid @RequestBody InvitationCommitter committer)
+            HttpServletRequest request,
+            @RequestBody @Validated InvitationCommitter committer)
                     throws BbhelperException {
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.createInvitation(committer);
@@ -62,12 +58,9 @@ public class InvitationController {
     @ResponseStatus(HttpStatus.OK)
     public Collection<Invitation> listConflictedInvitations(
             HttpServletRequest request,
-            @ModelAttribute @Validated Duration duration, BindingResult result,
+            @ModelAttribute @Validated Duration duration,
             @RequestParam(required = false) FloorCategory floor)
                     throws BbhelperException {
-        if (result.hasErrors()) {
-            throw new BbhelperBadRequestException();
-        }
         Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
         return session.listConflictedInvitations(
                 duration.getFromdate(), duration.getTodate(), floor);
