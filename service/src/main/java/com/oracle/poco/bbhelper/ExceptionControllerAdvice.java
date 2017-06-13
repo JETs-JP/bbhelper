@@ -1,7 +1,6 @@
 package com.oracle.poco.bbhelper;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -16,15 +15,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     
     @Autowired
-    BbhelperLogger logger;
-
-    @Autowired
     MessageSource messageSource;
 
     // 独自に定義した例外用のハンドラ
     @ExceptionHandler
     public ResponseEntity<Object> handleBbhelperException(BbhelperException ex, WebRequest request) {
-        logger.exception(request, ex);
         return handleExceptionInternal(ex, null, null, ex.getStatus(), request);
     }
 
@@ -42,20 +37,23 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
      */
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-            Exception ex, Object body, HttpHeaders headers, HttpStatus status,
-            WebRequest request) {
+            Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponse error = createErrorResponse(ex, request, status);
         return super.handleExceptionInternal(ex, error, headers, status, request);
     }
 
     private ErrorResponse createErrorResponse(Exception ex, WebRequest request, HttpStatus status) {
         // ex, statusがnullになることはない
-        String errorCode = ex.getClass().getName();
+        String errorCode;
         String message;
         if (ex instanceof BbhelperException) {
-            message = messageSource.getMessage(
-                    ((BbhelperException) ex).getMessageSourceResolvable(), request.getLocale());
+            BbhelperException bbhe = (BbhelperException) ex;
+            errorCode = bbhe.getCode();
+            // TODO クライアントに返却するメッセージはExceptionから直接は取らない
+            message = bbhe.getLocalizedMessage();
         } else {
+            errorCode = getClass().getName();
+            // TODO クライアントに返却するメッセージはExceptionから直接は取らない
             message = messageSource.getMessage(
                     ex.getClass().getName(),null, ex.getLocalizedMessage(), request.getLocale());
         }

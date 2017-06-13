@@ -1,31 +1,53 @@
 package com.oracle.poco.bbhelper.exception;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
+@Component
 public abstract class BbhelperException extends Exception {
 
-    private final Throwable cause;
+    private static MessageSourceAccessor messageSourceAccessor;
 
     private final HttpStatus status;
 
     public BbhelperException(HttpStatus status) {
-        this.cause = null;
         this.status = status;
     }
 
     public BbhelperException(Throwable cause, HttpStatus status) {
-        this.cause = cause;
+        this.initCause(cause);
         this.status = status;
+    }
+
+    @Autowired
+    private void setMessageSourceAccessor(MessageSourceAccessor messageSourceAccessor) {
+        BbhelperException.messageSourceAccessor = messageSourceAccessor;
     }
 
     public HttpStatus getStatus() {
         return status;
     }
 
-    abstract public String getCode();
+    public String getCode() {
+        return getClass().getName();
+    }
 
-    abstract public MessageSourceResolvable getMessageSourceResolvable();
+    abstract MessageSourceResolvable getMessageSourceResolvable();
+
+    // TODO getLocaLizedMessageでもいいかもしれないので挙動を確認する
+    @Override
+    public String getMessage() {
+        return messageSourceAccessor.getMessage(getMessageSourceResolvable());
+    }
+
+    public String getMessage(Locale locale) {
+        return messageSourceAccessor.getMessage(getMessageSourceResolvable(), locale);
+    }
 
     /**
      * Serial Version UID.

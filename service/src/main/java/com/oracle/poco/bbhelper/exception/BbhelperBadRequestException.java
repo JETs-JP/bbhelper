@@ -3,27 +3,25 @@ package com.oracle.poco.bbhelper.exception;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
+@Component
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad Request.")
 public class BbhelperBadRequestException extends BbhelperException {
 
     private static final String DEFAULT_MESSAGE = "Bad Request";
 
-    private final MessageSourceResolvable messageSourceResolvable;
+    private final MessageSourceResolvable messageSourceResolvable =
+            new DefaultMessageSourceResolvable(new String[]{getClass().getName()}, DEFAULT_MESSAGE);
 
     public BbhelperBadRequestException() {
         super(HttpStatus.BAD_REQUEST);
-        messageSourceResolvable = new DefaultMessageSourceResolvable(
-                new String[]{getClass().getName()}, DEFAULT_MESSAGE);
     }
 
     public BbhelperBadRequestException(Throwable cause) {
         super(cause, HttpStatus.BAD_REQUEST);
-        messageSourceResolvable = new DefaultMessageSourceResolvable(
-                new String[]{getClass().getName()}, new Object[]{cause.getLocalizedMessage()},
-                DEFAULT_MESSAGE);
     }
 
     @Override
@@ -32,7 +30,7 @@ public class BbhelperBadRequestException extends BbhelperException {
     }
 
     @Override
-    public MessageSourceResolvable getMessageSourceResolvable() {
+    MessageSourceResolvable getMessageSourceResolvable() {
         return messageSourceResolvable;
     }
 
