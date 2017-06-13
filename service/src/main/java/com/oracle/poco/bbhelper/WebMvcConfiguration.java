@@ -1,5 +1,7 @@
 package com.oracle.poco.bbhelper;
 
+import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -24,6 +26,14 @@ class WebMvcConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     SecurityInterceptor getSecurityInterceptor() {
         return new SecurityInterceptor();
+    }
+
+    @Bean
+    FilterRegistrationBean mdcInsertingFilter() {
+        FilterRegistrationBean bean = new FilterRegistrationBean();
+        bean.setFilter(new MDCInsertingServletFilter());
+        bean.setOrder(1);
+        return bean;
     }
 
 }

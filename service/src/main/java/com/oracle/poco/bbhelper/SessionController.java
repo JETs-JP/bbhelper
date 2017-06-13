@@ -18,6 +18,7 @@ import com.oracle.poco.bbhelper.exception.BbhelperException;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
 
+// TODO このクラスにロギングを実装する
 @RestController
 @RequestMapping("/api/session")
 public class SessionController {

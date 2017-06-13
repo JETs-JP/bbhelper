@@ -1,20 +1,18 @@
 package com.oracle.poco.bbhelper;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Component
 @ConfigurationProperties(prefix = "com.oracle.poco.bbhelper")
 class ApplicationProperties {
 
-    @Autowired
-    private BbhelperLogger logger;
+    private final BbhelperLogger logger =
+            BbhelperLogger.getLogger(ApplicationProperties.class);
 
     private URL beehiveUrl;
 
@@ -28,7 +26,7 @@ class ApplicationProperties {
         try {
             this.beehiveUrl = new URL(beehiveUrl);
         } catch (MalformedURLException e) {
-            logger.severe(e.getMessage());
+            logger.fatal("Failed to load application properties.", e);
             throw e;
         }
     }

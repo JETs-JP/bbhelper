@@ -47,6 +47,7 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
  *
  * TODO 全体的に、BeehiveContextの生き死にに合わせたハンドリングを実装する
  * TODO スレッドセーフな実装になっていることを確認する
+ * TODO ここにロギングを実装する
  */
 class Session {
 

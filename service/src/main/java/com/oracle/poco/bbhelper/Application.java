@@ -1,25 +1,19 @@
 package com.oracle.poco.bbhelper;
 
-import java.io.Console;
-
-import javax.annotation.PostConstruct;
-
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
+import javax.annotation.PostConstruct;
+import java.io.Console;
 
 @SpringBootApplication
 public class Application {
 
-    @Autowired
-    private BbhelperLogger logger;
-
-    private static BbhelperLogger s_logger;
+    private final static BbhelperLogger logger = BbhelperLogger.getLogger(Application.class);
 
     @Autowired
     private ApplicationProperties properties;
@@ -30,7 +24,6 @@ public class Application {
 
     @PostConstruct
     public void init() {
-        s_logger = logger;
         s_properties = properties;
     }
 
@@ -43,10 +36,10 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                s_logger.info("shutdown.");
+                logger.info("shutdown.");
             }
         });
-        s_logger.info("started.");
+        logger.info("started.");
     }
 
     private static void readOptions(String[] args) {
@@ -58,7 +51,7 @@ public class Application {
     }
 
     private static void checkConnection() {
-        System.out.println("Check connection with beehive...");
+        logger.info("Checking beehive connection...");
         Console console = System.console();
         String id = console.readLine("ID (email): ");
         String password = new String(console.readPassword("Password: "));
@@ -67,11 +60,11 @@ public class Application {
             context = BeehiveContext.getBeehiveContext(
                     s_properties.getBeehiveUrl(), id, password);
         } catch (Beehive4jException e) {
-            s_logger.severe(e.getMessage());
+            logger.fatal("Connection check failed.", e);
             System.exit(1);
         } finally {
             if (context == null) {
-                s_logger.severe("unexpected.");
+                logger.fatal("unexpected error.");
                 System.exit(1);
             }
         }

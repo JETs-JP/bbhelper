@@ -1,16 +1,15 @@
 package com.oracle.poco.bbhelper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
 import com.oracle.poco.bbhelper.model.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 @Component
 class ResourceCache {
@@ -26,16 +25,16 @@ class ResourceCache {
     // TODO ResourceId オブジェクトを定義する。キーを型で縛る
     private final Map<FloorCategory, Map<String, Resource>> cacheByFloorAndResourceId;
 
+    private static final BbhelperLogger logger = BbhelperLogger.getLogger(ResourceCache.class);
+
     /**
      * コンストラクタ
      *
      * @throws IOException 会議室情報が記述されたファイルへのアクセスでエラーが発生した場合
      */
     @Autowired
-    ResourceCache(BbhelperLogger logger) throws IOException {
-        if (logger == null) {
-            throw new IllegalArgumentException("Logger is not assigned.");
-        }
+//    ResourceCache(BbhelperLogger logger) throws IOException {
+    ResourceCache() throws IOException {
         try {
             Map<FloorCategory, Map<String, Resource>> tempMapByFloorAndResourceId = new HashMap<>();
             Map<String, Resource> tempMapByResourceId = new HashMap<>();
@@ -54,7 +53,7 @@ class ResourceCache {
             cacheByFloorAndResourceId = Collections.unmodifiableMap(tempMapByFloorAndResourceId);
             cacheByResourceId = Collections.unmodifiableMap(tempMapByResourceId);
         } catch (IOException e) {
-            logger.severe(e.getMessage());
+            logger.fatal("Failed to load resource information.", e);
             throw e;
         }
     }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
  * 本アプリケーションのセッションを、セッションIDと紐付けて格納するためのプール
  */
 // TODO 使われなくなったままプールに残ったセッションを削除する必要あり
+// TODO 上記の処理の後、その処理ををログに残す
 @Component
 class SessionPool {
 

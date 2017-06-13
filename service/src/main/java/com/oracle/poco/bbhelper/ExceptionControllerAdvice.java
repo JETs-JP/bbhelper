@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+// TODO すべての例外ハンドリングでエラーがログに記録されるように実装する
 @ControllerAdvice
 public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
@@ -56,5 +57,4 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
                 ex.getClass().getName(), ex.getLocalizedMessage());
         return super.handleExceptionInternal(ex, error, headers, status, request);
     }
-
 }

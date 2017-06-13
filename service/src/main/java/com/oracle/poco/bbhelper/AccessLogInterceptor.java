@@ -1,25 +1,24 @@
 package com.oracle.poco.bbhelper;
 
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.MDC;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
-
 class AccessLogInterceptor extends HandlerInterceptorAdapter {
 
-    @Autowired
-    private BbhelperLogger logger;
+    private static final BbhelperLogger logger =
+            BbhelperLogger.getLogger(AccessLogInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
-        request.setAttribute(Constants.REQUEST_ATTR_KEY_REQUEST_ID,
-                RandomStringUtils.randomAlphanumeric(32));
-        logger.request(request);
+        String requestId = RandomStringUtils.randomAlphanumeric(32);
+        MDC.put(Constants.REQUEST_ATTR_KEY_REQUEST_ID, requestId);
+        logger.request();
         return true;
     }
 
@@ -28,7 +27,7 @@ class AccessLogInterceptor extends HandlerInterceptorAdapter {
     public void afterCompletion(
             HttpServletRequest request, HttpServletResponse response,
             Object handler, Exception ex) throws Exception {
-        logger.response(request);
+        logger.response();
     }
 
 }
