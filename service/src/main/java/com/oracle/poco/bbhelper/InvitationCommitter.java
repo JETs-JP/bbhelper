@@ -1,6 +1,7 @@
 package com.oracle.poco.bbhelper;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
 
 /**
@@ -12,11 +13,13 @@ public class InvitationCommitter {
      * 会議の名前
      */
     @NotNull
+    @Size(min = 1)
     private String name;
     /**
      * 会議室のId。beehive上の識別子
      */
     @NotNull
+    @Size(min = 1)
     private String resource_id;
     /**
      * 会議の開始日時
