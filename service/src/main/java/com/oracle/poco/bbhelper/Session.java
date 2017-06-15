@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveUnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -144,7 +145,7 @@ class Session {
                 }
             } catch (BeehiveApiFaultException e) {
                 // TODO エラーハンドリングを簡潔に書けるように工夫する
-                if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+                if (e instanceof BeehiveUnauthorizedException) {
                     bbhe.add(new BbhelperUnauthorizedException());
                 } else {
                     bbhe.add(new BbhelperBeehive4jException());
@@ -165,15 +166,15 @@ class Session {
         });
 
         BeeIdList beeIdList = new BeeIdList(beeIds);
-        ResponseEntity<BeehiveResponse> response = null;
+        ResponseEntity<BeehiveResponse> response;
         try {
             InvtReadBatchInvoker invoker = context.getInvoker(
                     BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
             invoker.setRequestPayload(beeIdList);
             response = invoker.invoke();
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be = null;
-            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+            BbhelperException be;
+            if (e instanceof BeehiveUnauthorizedException) {
                 be = new BbhelperUnauthorizedException();
             } else {
                 be = new BbhelperBeehive4jException();
@@ -251,7 +252,7 @@ class Session {
             invtCreateResponse = invtCreateInvoker.invoke();
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
-            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+            if (e instanceof BeehiveUnauthorizedException) {
                 be = new BbhelperUnauthorizedException();
             } else {
                 be = new BbhelperBeehive4jException();
@@ -268,7 +269,7 @@ class Session {
             invtReadResponse = invtReadInvoker.invoke();
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
-            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+            if (e instanceof BeehiveUnauthorizedException) {
                 be = new BbhelperUnauthorizedException();
             } else {
                 be = new BbhelperBeehive4jException();
@@ -299,12 +300,12 @@ class Session {
     private String getDefaultCalendar() throws BbhelperException {
         MyWorkspaceInvoker invoker = context.getInvoker(
                 BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
-        ResponseEntity<BeehiveResponse> response = null;
+        ResponseEntity<BeehiveResponse> response;
         try {
             response = invoker.invoke();
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be = null;
-            if (HttpStatus.UNAUTHORIZED.equals(e.getHttpStatus())) {
+            BbhelperException be;
+            if (e instanceof BeehiveUnauthorizedException) {
                 be = new BbhelperUnauthorizedException();
             } else {
                 be = new BbhelperBeehive4jException();
