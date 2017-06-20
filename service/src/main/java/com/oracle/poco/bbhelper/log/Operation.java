@@ -8,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Operation {
     LOGIN("LOGIN"),
-    REQUEST("REQUEST"),
-    RESPONSE("RESPONSE"),
+    FLUSH_INACTIVE_SESSIONS("FLUSH_INACTIVE_SESSIONS");
     ;
 
     private final String stringValue;

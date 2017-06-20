@@ -3,16 +3,20 @@ package com.oracle.poco.bbhelper;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.oracle.poco.bbhelper.log.BasicMessage;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.Operation;
+import com.oracle.poco.bbhelper.log.Result;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
 /**
  * 本アプリケーションのセッションを、セッションIDと紐付けて格納するためのプール
  */
-// TODO 使われなくなったままプールに残ったセッションを削除する必要あり
-// TODO 上記の処理の後、その処理ををログに残す
 @Component
 class SessionPool {
+
+    private final static BbhelperLogger logger = BbhelperLogger.getLogger(SessionPool.class);
 
     private final Map<String, Session> pool = new ConcurrentHashMap<>();
 
@@ -34,6 +38,7 @@ class SessionPool {
             session_id = RandomStringUtils.randomAlphanumeric(32);
         } while (pool.keySet().contains(session_id));
         pool.put(session_id, session);
+        flushInactiveSessions();
         return session_id;
     }
 
@@ -46,16 +51,30 @@ class SessionPool {
      *         目的のセッションオブジェクトが存在しないか、タイムアウトしている場合nullを返却
      */
     Session use(String session_id) {
+        flushInactiveSessions();
         Session session = pool.get(session_id);
         if (session == null) {
             return null;
         }
-        if (!session.isActive()) {
-            pool.remove(session_id);
-            return null;
-        }
         session.update();
         return session;
+    }
+
+    /**
+     * タイムアウトしたセッションオブジェクトを破棄します。
+     */
+    private void flushInactiveSessions() {
+        boolean flushedAny = false;
+        for (Map.Entry<String, Session> entry : pool.entrySet()) {
+            if (!entry.getValue().isActive()) {
+                pool.remove(entry.getKey());
+                flushedAny = true;
+            }
+        }
+        if (flushedAny) {
+            logger.info(new BasicMessage(Operation.FLUSH_INACTIVE_SESSIONS, Result.SUCCESS,
+                    "Inactive sessions are flushed."));
+        }
     }
 
 }
