@@ -2,7 +2,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+            <layout class="com.oracle.poco.bbhelper.log.BbhelperJsonLayout">
                 <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
                     <prettyPrint>false</prettyPrint>
                 </jsonFormatter>
@@ -13,10 +13,11 @@
                 <includeThreadName>true</includeThreadName>
                 <includeMDC>true</includeMDC>
                 <includeLoggerName>true</includeLoggerName>
-                <includeFormattedMessage>false</includeFormattedMessage>
-                <includeMessage>true</includeMessage>
+                <includeFormattedMessage>true</includeFormattedMessage>
+                <includeMessage>false</includeMessage>
                 <includeException>true</includeException>
                 <includeContextName>false</includeContextName>
+                <messageClass>com.oracle.poco.bbhelper.log.BasicMessage</messageClass>
             </layout>
             <charset>UTF-8</charset>
         </encoder>
