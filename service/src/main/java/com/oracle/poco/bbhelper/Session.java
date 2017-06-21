@@ -1,44 +1,26 @@
 package com.oracle.poco.bbhelper;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveUnauthorizedException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.Beehive4jInvocationMessage;
+import com.oracle.poco.bbhelper.log.Result;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
-
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveApiDefinitions;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveResponse;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtCreateInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtListByRangeInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtReadBatchInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.InvtReadInvoker;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.MyWorkspaceInvoker;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.*;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeId;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.BeeIdList;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.CalendarRange;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingCreator;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdater;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingParticipantUpdaterOperation;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.MeetingUpdater;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceParticipantStatus;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceStatus;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.OccurrenceType;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Priority;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveUnauthorizedException;
+import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * このアプリケーションのセッションの実態。
@@ -48,9 +30,10 @@ import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.Transparency;
  *
  * TODO 全体的に、BeehiveContextの生き死にに合わせたハンドリングを実装する
  * TODO スレッドセーフな実装になっていることを確認する
- * TODO ここにロギングを実装する
  */
 class Session {
+
+    private static final BbhelperLogger logger = BbhelperLogger.getLogger(Session.class);
 
     // TODO コンストラクタインジェクションに切り替えてfinalにする
     /**
@@ -122,27 +105,23 @@ class Session {
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
         List<BbhelperException> bbhe = new ArrayList<>();
-        // TODO ラムダ式内のエラーハンドリングを見直す
         calendar_ids.stream().parallel().forEach(c -> {
             CalendarRange range = new CalendarRange.Builder()
                     .beeId(new BeeId.Builder().id(c).build())
                     .start(start)
                     .end(end)
                     .build();
+            InvtListByRangeInvoker invoker = context.getInvoker(
+                    BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
+            invoker.setRequestPayload(range);
+            ResponseEntity<BeehiveResponse> response = null;
             try {
-                InvtListByRangeInvoker invoker = context.getInvoker(
-                        BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
-                invoker.setRequestPayload(range);
-                ResponseEntity<BeehiveResponse> response = invoker.invoke();
-                BeehiveResponse body = response.getBody();
-                if (body != null) {
-                    Iterable<JsonNode> elements = body.getJson().get("elements");
-                    if (elements != null) {
-                        for (JsonNode element : elements) {
-                            invitation_ids.add(getNodeAsText(element, "collabId", "id"));
-                        }
-                    }
-                }
+                long begin = System.currentTimeMillis();
+                response = invoker.invoke();
+                long finish = System.currentTimeMillis();
+                // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+                logger.info(new Beehive4jInvocationMessage(
+                        Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
             } catch (BeehiveApiFaultException e) {
                 // TODO エラーハンドリングを簡潔に書けるように工夫する
                 if (e instanceof BeehiveUnauthorizedException) {
@@ -150,7 +129,15 @@ class Session {
                 } else {
                     bbhe.add(new BbhelperBeehive4jException());
                 }
-
+            }
+            BeehiveResponse body;
+            if (response != null && (body = response.getBody()) != null) {
+                Iterable<JsonNode> elements = body.getJson().get("elements");
+                if (elements != null) {
+                    for (JsonNode element : elements) {
+                        invitation_ids.add(getNodeAsText(element, "collabId", "id"));
+                    }
+                }
             }
         });
         if (bbhe.size() > 0) { 
@@ -167,11 +154,16 @@ class Session {
 
         BeeIdList beeIdList = new BeeIdList(beeIds);
         ResponseEntity<BeehiveResponse> response;
+        InvtReadBatchInvoker invoker = context.getInvoker(
+                BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
+        invoker.setRequestPayload(beeIdList);
         try {
-            InvtReadBatchInvoker invoker = context.getInvoker(
-                    BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
-            invoker.setRequestPayload(beeIdList);
+            long begin = System.currentTimeMillis();
             response = invoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (e instanceof BeehiveUnauthorizedException) {
@@ -249,7 +241,12 @@ class Session {
         invtCreateInvoker.setRequestPayload(meetingCreator);
         ResponseEntity<BeehiveResponse> invtCreateResponse;
         try {
+            long begin = System.currentTimeMillis();
             invtCreateResponse = invtCreateInvoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invtCreateInvoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (e instanceof BeehiveUnauthorizedException) {
@@ -266,7 +263,12 @@ class Session {
         invtReadInvoker.setPathValue(invitation_id);
         ResponseEntity<BeehiveResponse> invtReadResponse;
         try {
+            long begin = System.currentTimeMillis();
             invtReadResponse = invtReadInvoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invtReadInvoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (e instanceof BeehiveUnauthorizedException) {
@@ -298,11 +300,15 @@ class Session {
     }
 
     private String getDefaultCalendar() throws BbhelperException {
-        MyWorkspaceInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        MyWorkspaceInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
         ResponseEntity<BeehiveResponse> response;
         try {
+            long begin = System.currentTimeMillis();
             response = invoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
             BbhelperException be;
             if (e instanceof BeehiveUnauthorizedException) {

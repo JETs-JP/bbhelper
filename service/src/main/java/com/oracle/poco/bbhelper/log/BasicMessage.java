@@ -18,6 +18,9 @@ public class BasicMessage extends BbhelperLogMessageBase {
     private final Result result;
     private final String message;
 
+    /*
+     * for BbhelperJsonLayout
+     */
     BasicMessage() {
         this.operation = null;
         this.result = null;

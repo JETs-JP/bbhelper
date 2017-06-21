@@ -8,7 +8,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Operation {
     LOGIN("LOGIN"),
-    FLUSH_INACTIVE_SESSIONS("FLUSH_INACTIVE_SESSIONS");
+    FLUSH_INACTIVE_SESSIONS("FLUSH_INACTIVE_SESSIONS"),
+    INVOKE_BEEHIVE4J("INVOKE_BEEHIVE4J"),
     ;
 
     private final String stringValue;
