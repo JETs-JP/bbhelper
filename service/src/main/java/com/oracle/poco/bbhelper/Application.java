@@ -1,6 +1,6 @@
 package com.oracle.poco.bbhelper;
 
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.*;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +60,13 @@ public class Application {
             context = BeehiveContext.getBeehiveContext(
                     s_properties.getBeehiveUrl(), id, password);
         } catch (Beehive4jException e) {
-            logger.fatal("Connection check failed.", e);
+            logger.error(new ErrorMessage(
+                    Operation.CHECK_CONNECTION, "Connection check failed.", e));
             System.exit(1);
         } finally {
             if (context == null) {
-                logger.fatal("unexpected error.");
+                logger.error(new BasicMessage(
+                        Operation.CHECK_CONNECTION, Result.FAIL, "unexpected error."));
                 System.exit(1);
             }
         }

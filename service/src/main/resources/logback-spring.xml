@@ -19,6 +19,7 @@
                 <includeContextName>false</includeContextName>
                 <messageClass>com.oracle.poco.bbhelper.log.BasicMessage</messageClass>
                 <messageClass>com.oracle.poco.bbhelper.log.Beehive4jInvocationMessage</messageClass>
+                <messageClass>com.oracle.poco.bbhelper.log.ErrorMessage</messageClass>
             </layout>
             <charset>UTF-8</charset>
         </encoder>

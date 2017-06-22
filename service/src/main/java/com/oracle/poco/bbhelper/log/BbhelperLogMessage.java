@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface BbhelperLogMessage {
 
-    Map<String, String> toMap();
+    Map<String, Object> toMap();
 
     Marker getMarker();
 

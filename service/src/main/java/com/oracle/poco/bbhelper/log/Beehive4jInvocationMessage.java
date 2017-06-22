@@ -36,8 +36,8 @@ public class Beehive4jInvocationMessage extends BasicMessage {
     }
 
     @Override
-    public Map<String, String> toMap() {
-        Map<String, String> map = super.toMap();
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = super.toMap();
         if (elapsedTime != null) {
             map.put("elapsedTime", elapsedTime.toString());
         }

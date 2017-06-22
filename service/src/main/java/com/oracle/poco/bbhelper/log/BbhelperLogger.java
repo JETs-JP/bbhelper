@@ -9,8 +9,6 @@ import org.slf4j.MarkerFactory;
 /**
  * Created by hhayakaw on 2017/06/13.
  */
-// TODO スタックトレースの出力
-// TODO 内包するメッセージのJSON化。Action,Result,message,cause,detail
 // TODO レスポンスを返すときに所要時間を記録
 public class BbhelperLogger {
 
@@ -47,16 +45,24 @@ public class BbhelperLogger {
         }
     }
 
+    public void warn(BbhelperLogMessage message) {
+        try {
+            this.logger.warn(message.getMarker(), objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            this.logger.warn(message.toString());
+        }
+    }
+
     public void warn(String msg) {
         this.logger.warn(msg);
     }
 
-    public void fatal(String msg) {
-        this.logger.error(msg);
-    }
-
-    public void fatal(String msg, Throwable t) {
-        this.logger.error(msg, t);
+    public void error(BbhelperLogMessage message) {
+        try {
+            this.logger.error(message.getMarker(), objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            this.logger.error(message.toString());
+        }
     }
 
 }

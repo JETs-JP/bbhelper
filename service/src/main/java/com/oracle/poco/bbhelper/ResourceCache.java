@@ -3,6 +3,8 @@ package com.oracle.poco.bbhelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.ErrorMessage;
+import com.oracle.poco.bbhelper.log.Operation;
 import com.oracle.poco.bbhelper.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,6 @@ class ResourceCache {
      * @throws IOException 会議室情報が記述されたファイルへのアクセスでエラーが発生した場合
      */
     @Autowired
-//    ResourceCache(BbhelperLogger logger) throws IOException {
     ResourceCache() throws IOException {
         try {
             Map<FloorCategory, Map<String, Resource>> tempMapByFloorAndResourceId = new HashMap<>();
@@ -53,7 +54,8 @@ class ResourceCache {
             cacheByFloorAndResourceId = Collections.unmodifiableMap(tempMapByFloorAndResourceId);
             cacheByResourceId = Collections.unmodifiableMap(tempMapByResourceId);
         } catch (IOException e) {
-            logger.fatal("Failed to load resource information.", e);
+            logger.error(new ErrorMessage(
+                    Operation.LOAD_RESOURCES, "Failed to load resource information.", e));
             throw e;
         }
     }

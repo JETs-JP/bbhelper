@@ -53,8 +53,8 @@ public class BasicMessage extends BbhelperLogMessageBase {
     }
 
     @Override
-    public Map<String, String> toMap() {
-        Map<String, String> map = new LinkedHashMap<>();
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new LinkedHashMap<>();
         if (this.operation != null) {
             map.put("operation", this.operation.getStringValue());
         }

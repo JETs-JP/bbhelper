@@ -1,6 +1,8 @@
 package com.oracle.poco.bbhelper;
 
 import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.ErrorMessage;
+import com.oracle.poco.bbhelper.log.Operation;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +28,8 @@ class ApplicationProperties {
         try {
             this.beehiveUrl = new URL(beehiveUrl);
         } catch (MalformedURLException e) {
-            logger.fatal("Failed to load application properties.", e);
+            logger.error(new ErrorMessage(
+                    Operation.LOAD_PROPERTIES, "Failed to load application properties.", e));
             throw e;
         }
     }
