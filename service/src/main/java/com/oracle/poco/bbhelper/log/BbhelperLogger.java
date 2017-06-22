@@ -41,6 +41,7 @@ public class BbhelperLogger {
         try {
             this.logger.info(message.getMarker(), objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
+            logger.warn("Failed to log a BbhelperLogMessage as a JSON object.");
             this.logger.info(message.toString());
         }
     }
@@ -49,6 +50,7 @@ public class BbhelperLogger {
         try {
             this.logger.warn(message.getMarker(), objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
+            logger.warn("Failed to log a BbhelperLogMessage as a JSON object.");
             this.logger.warn(message.toString());
         }
     }
@@ -61,6 +63,7 @@ public class BbhelperLogger {
         try {
             this.logger.error(message.getMarker(), objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
+            logger.warn("Failed to log a BbhelperLogMessage as a JSON object.");
             this.logger.error(message.toString());
         }
     }
