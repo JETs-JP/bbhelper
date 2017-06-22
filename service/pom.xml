@@ -24,7 +24,7 @@
     <repositories>
         <repository>
             <id>charlier-shoe.github.io</id>
-            <url>http://charlier-shoe.github.io/mvn-repo/</url>
+            <url>http://hhiroshell.github.io/mvn-repo/</url>
         </repository>
     </repositories>
 
