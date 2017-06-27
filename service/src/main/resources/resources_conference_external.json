@@ -3,7 +3,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB4DE7B",
     "capacity": 32,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13004_13S1",
+    "name": "JP-OAC-CONF-13004_13S1",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB351D0",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {
@@ -16,7 +16,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFA6D81E",
     "capacity": 50,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13008_13S4",
+    "name": "JP-OAC-CONF-13008_13S4",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB35129",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {
@@ -29,7 +29,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFAEFD16",
     "capacity": 40,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13010_13S3",
+    "name": "JP-OAC-CONF-13010_13S3",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB1D40B",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {
@@ -43,7 +43,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB6764E",
     "capacity": 50,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13012_13S5",
+    "name": "JP-OAC-CONF-13012_13S5",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB35195",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {
@@ -56,7 +56,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB061FF",
     "capacity": 40,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13014_13S6",
+    "name": "JP-OAC-CONF-13014_13S6",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFA8784D",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {
@@ -70,7 +70,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFA6D8CC",
     "capacity": 110,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-13016_13S7",
+    "name": "JP-OAC-CONF-13016_13S7",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAEFD5B",
     "link": "http://my.oracle.com/content/web/cnt437600",
     "facility": {

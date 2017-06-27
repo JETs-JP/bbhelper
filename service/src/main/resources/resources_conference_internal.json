@@ -102,7 +102,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFAC492F",
     "capacity": 22,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-15018_15S5",
+    "name": "JP-OAC-CONF-15018_15S5",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAEFDDE",
     "link": "http://my.oracle.com/content/web/cnt437602",
     "facility": {
@@ -116,7 +116,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFA87A2F",
     "capacity": 22,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-15020_15S6",
+    "name": "JP-OAC-CONF-15020_15S6",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAEFDEC",
     "link": "http://my.oracle.com/content/web/cnt437602",
     "facility": {
@@ -130,7 +130,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB95334",
     "capacity": 22,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-15022_15S7",
+    "name": "JP-OAC-CONF-15022_15S7",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFB4DEB7",
     "link": "http://my.oracle.com/content/web/cnt437602"
   },
@@ -138,7 +138,7 @@
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB3527A",
     "capacity": 22,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-DEMO-15024_15S8",
+    "name": "JP-OAC-CONF-15024_15S8",
     "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAAD1BB",
     "link": "http://my.oracle.com/content/web/cnt437602",
     "facility": {
