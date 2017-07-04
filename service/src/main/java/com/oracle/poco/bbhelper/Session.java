@@ -2,11 +2,10 @@ package com.oracle.poco.bbhelper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
+import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jParallelInvocationException;
+import com.oracle.poco.bbhelper.exception.BbhelperBeehiveContextExpiredException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperUnauthorizedException;
-import com.oracle.poco.bbhelper.log.BbhelperLogger;
-import com.oracle.poco.bbhelper.log.Beehive4jInvocationMessage;
-import com.oracle.poco.bbhelper.log.Result;
+import com.oracle.poco.bbhelper.log.*;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
@@ -104,7 +103,7 @@ class Session {
         // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
-        List<BbhelperException> bbhe = new ArrayList<>();
+        List<BbhelperBeehive4jException> bbhe = new ArrayList<>();
         calendar_ids.stream().parallel().forEach(c -> {
             CalendarRange range = new CalendarRange.Builder()
                     .beeId(new BeeId.Builder().id(c).build())
@@ -123,12 +122,7 @@ class Session {
                 logger.info(new Beehive4jInvocationMessage(
                         Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
             } catch (BeehiveApiFaultException e) {
-                // TODO エラーハンドリングを簡潔に書けるように工夫する
-                if (e instanceof BeehiveUnauthorizedException) {
-                    bbhe.add(new BbhelperUnauthorizedException());
-                } else {
-                    bbhe.add(new BbhelperBeehive4jException());
-                }
+                bbhe.add(handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger));
             }
             BeehiveResponse body;
             if (response != null && (body = response.getBody()) != null) {
@@ -140,14 +134,16 @@ class Session {
                 }
             }
         });
-        if (bbhe.size() > 0) { 
+        if (bbhe.size() == 1) {
             throw bbhe.get(0);
+        } else if (bbhe.size() >= 2) {
+            throw new BbhelperBeehive4jParallelInvocationException(bbhe);
         }
 
         if (invitation_ids.size() == 0) {
             return null;
         }
-        List<BeeId> beeIds = new ArrayList<BeeId>(invitation_ids.size());
+        List<BeeId> beeIds = new ArrayList<>(invitation_ids.size());
         invitation_ids.stream().forEach(i -> {
             beeIds.add(new BeeId.Builder().id(i).build());
         });
@@ -165,13 +161,7 @@ class Session {
             logger.info(new Beehive4jInvocationMessage(
                     Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be;
-            if (e instanceof BeehiveUnauthorizedException) {
-                be = new BbhelperUnauthorizedException();
-            } else {
-                be = new BbhelperBeehive4jException();
-            }
-            throw be;
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
         BeehiveResponse body = response.getBody();
         if (body == null) {
@@ -248,13 +238,7 @@ class Session {
             logger.info(new Beehive4jInvocationMessage(
                     Result.SUCCESS, invtCreateInvoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be;
-            if (e instanceof BeehiveUnauthorizedException) {
-                be = new BbhelperUnauthorizedException();
-            } else {
-                be = new BbhelperBeehive4jException();
-            }
-            throw be;
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
         String invitation_id = getNodeAsText(
                 invtCreateResponse.getBody().getJson(), "collabId", "id");
@@ -270,13 +254,7 @@ class Session {
             logger.info(new Beehive4jInvocationMessage(
                     Result.SUCCESS, invtReadInvoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be;
-            if (e instanceof BeehiveUnauthorizedException) {
-                be = new BbhelperUnauthorizedException();
-            } else {
-                be = new BbhelperBeehive4jException();
-            }
-            throw be;
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
         return parseInvitationJsonNode(invtReadResponse.getBody().getJson());
     }
@@ -310,13 +288,7 @@ class Session {
             logger.info(new Beehive4jInvocationMessage(
                     Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
         } catch (BeehiveApiFaultException e) {
-            BbhelperException be;
-            if (e instanceof BeehiveUnauthorizedException) {
-                be = new BbhelperUnauthorizedException();
-            } else {
-                be = new BbhelperBeehive4jException();
-            }
-            throw be;
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
         BeehiveResponse body = response.getBody();
         if (body == null) {
@@ -335,13 +307,26 @@ class Session {
         for (String name : names) {
             if (!node.has(name)) {
                 throw new IllegalArgumentException(
-                        "Json data and requird field names aren't consistent.");
+                        "Json data and required field names aren't consistent.");
             }
             if ((node = node.get(name)) == null) {
                 return null;
             }
         }
         return node.asText();
+    }
+
+    private static BbhelperBeehive4jException handleBeehiveApiFaultException(
+            Operation operation, BeehiveApiFaultException e, BbhelperLogger logger) {
+        BbhelperBeehive4jException bbhe;
+        if (e instanceof BeehiveUnauthorizedException) {
+            bbhe = new BbhelperBeehiveContextExpiredException(e);
+            logger.info(new ErrorMessage(operation, bbhe));
+        } else {
+            bbhe = new BbhelperBeehive4jException(e);
+            logger.error(new ErrorMessage(operation, bbhe));
+        }
+        return bbhe;
     }
 
 }

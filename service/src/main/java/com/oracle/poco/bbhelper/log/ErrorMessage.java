@@ -32,6 +32,11 @@ public class ErrorMessage extends BasicMessage {
         this.error = e;
     }
 
+    public ErrorMessage(Operation operation, Throwable cause) {
+        super(operation, Result.FAIL, cause.getLocalizedMessage());
+        this.error = new Error(cause);
+    }
+
     public ErrorMessage(Operation operation, String message, Throwable cause) {
         super(operation, Result.FAIL, message);
         this.error = new Error(cause);
