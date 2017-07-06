@@ -103,71 +103,79 @@ class Session {
         // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
-        List<BbhelperBeehive4jException> bbhe = new ArrayList<>();
+        List<BbhelperBeehive4jException> exceptions1 = new ArrayList<>();
         calendar_ids.stream().parallel().forEach(c -> {
-            CalendarRange range = new CalendarRange.Builder()
-                    .beeId(new BeeId.Builder().id(c).build())
-                    .start(start)
-                    .end(end)
-                    .build();
-            InvtListByRangeInvoker invoker = context.getInvoker(
-                    BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
-            invoker.setRequestPayload(range);
-            ResponseEntity<BeehiveResponse> response = null;
             try {
+                InvtListByRangeInvoker invoker =
+                        context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_LIST_BY_RANGE);
+                CalendarRange range = new CalendarRange.Builder()
+                        .beeId(new BeeId.Builder().id(c).build())
+                        .start(start)
+                        .end(end)
+                        .build();
+                invoker.setRequestPayload(range);
                 long begin = System.currentTimeMillis();
-                response = invoker.invoke();
+                ResponseEntity<BeehiveResponse> response = invoker.invoke();
                 long finish = System.currentTimeMillis();
                 // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
                 logger.info(new Beehive4jInvocationMessage(
-                        Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
-            } catch (BeehiveApiFaultException e) {
-                bbhe.add(handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger));
-            }
-            BeehiveResponse body;
-            if (response != null && (body = response.getBody()) != null) {
-                Iterable<JsonNode> elements = body.getJson().get("elements");
-                if (elements != null) {
-                    for (JsonNode element : elements) {
-                        invitation_ids.add(getNodeAsText(element, "collabId", "id"));
+                        Result.SUCCESS, invoker.getClass().getName(), finish - begin));
+                BeehiveResponse body = response.getBody();
+                if (response != null && body != null) {
+                    Iterable<JsonNode> elements = body.getJson().get("elements");
+                    if (elements != null) {
+                        for (JsonNode element : elements) {
+                            invitation_ids.add(getNodeAsText(element, "collabId", "id"));
+                        }
                     }
                 }
+            } catch (BeehiveApiFaultException e) {
+                exceptions1.add(handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger));
             }
         });
-        if (bbhe.size() == 1) {
-            throw bbhe.get(0);
-        } else if (bbhe.size() >= 2) {
-            throw new BbhelperBeehive4jParallelInvocationException(bbhe);
+        if (exceptions1.size() > 0) {
+            throw new BbhelperBeehive4jParallelInvocationException(exceptions1);
         }
-
         if (invitation_ids.size() == 0) {
             return null;
         }
-        List<BeeId> beeIds = new ArrayList<>(invitation_ids.size());
-        invitation_ids.stream().forEach(i -> {
-            beeIds.add(new BeeId.Builder().id(i).build());
-        });
 
-        BeeIdList beeIdList = new BeeIdList(beeIds);
-        ResponseEntity<BeehiveResponse> response;
-        InvtReadBatchInvoker invoker = context.getInvoker(
-                BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
-        invoker.setRequestPayload(beeIdList);
-        try {
-            long begin = System.currentTimeMillis();
-            response = invoker.invoke();
-            long finish = System.currentTimeMillis();
-            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
-            logger.info(new Beehive4jInvocationMessage(
-                    Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
-        } catch (BeehiveApiFaultException e) {
-            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
+        List<List<BeeId>> beeIdChunks = new ArrayList<>(1);
+        List<BeeId> beeIds = null;
+        for (int i = 0; i < invitation_ids.size(); i++) {
+            if (i % 100 == 0) {
+                beeIds = new ArrayList<>();
+                beeIdChunks.add(beeIds);
+            }
+            // beeIds must be initialized when i == 0.
+            beeIds.add(new BeeId.Builder().id(invitation_ids.get(i)).build());
         }
-        BeehiveResponse body = response.getBody();
-        if (body == null) {
-            return null;
+        List<Invitation> invitations = new ArrayList<>();
+        List<BbhelperBeehive4jException> exceptions2 = new ArrayList<>();
+        beeIdChunks.stream().parallel().forEach(b -> {
+            try {
+                InvtReadBatchInvoker invoker =
+                        context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ_BATCH);
+                BeeIdList beeIdList = new BeeIdList(b);
+                invoker.setRequestPayload(beeIdList);
+                long begin = System.currentTimeMillis();
+                ResponseEntity<BeehiveResponse> response = invoker.invoke();
+                long finish = System.currentTimeMillis();
+                // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+                logger.info(new Beehive4jInvocationMessage(
+                        Result.SUCCESS, invoker.getClass().getName(), finish - begin));
+                BeehiveResponse body = response.getBody();
+                if (body != null) {
+                    invitations.addAll(parseInvtReadBatchResult(body.getJson()));
+                }
+            } catch (BeehiveApiFaultException e) {
+                exceptions2.add(handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger));
+            }
+        });
+        if (exceptions2.size() > 0) {
+            throw new BbhelperBeehive4jParallelInvocationException(exceptions2);
         }
-        return parseInvtReadBatchResult(body.getJson());
+        return invitations;
     }
 
     private List<Invitation> parseInvtReadBatchResult(JsonNode node) {
@@ -175,7 +183,7 @@ class Session {
         if (elements == null) {
             return null;
         }
-        List<Invitation> retval = new ArrayList<Invitation>();
+        List<Invitation> retval = new ArrayList<>();
         for (JsonNode element : elements) {
             retval.add(parseInvitationJsonNode(element));
         }
@@ -236,7 +244,7 @@ class Session {
             long finish = System.currentTimeMillis();
             // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
             logger.info(new Beehive4jInvocationMessage(
-                    Result.SUCCESS, invtCreateInvoker.getClass().getName(), Long.valueOf(finish - begin)));
+                    Result.SUCCESS, invtCreateInvoker.getClass().getName(), finish - begin));
         } catch (BeehiveApiFaultException e) {
             throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
@@ -252,7 +260,7 @@ class Session {
             long finish = System.currentTimeMillis();
             // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
             logger.info(new Beehive4jInvocationMessage(
-                    Result.SUCCESS, invtReadInvoker.getClass().getName(), Long.valueOf(finish - begin)));
+                    Result.SUCCESS, invtReadInvoker.getClass().getName(), finish - begin));
         } catch (BeehiveApiFaultException e) {
             throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
@@ -286,7 +294,7 @@ class Session {
             long finish = System.currentTimeMillis();
             // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
             logger.info(new Beehive4jInvocationMessage(
-                    Result.SUCCESS, invoker.getClass().getName(), Long.valueOf(finish - begin)));
+                    Result.SUCCESS, invoker.getClass().getName(), finish - begin));
         } catch (BeehiveApiFaultException e) {
             throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
