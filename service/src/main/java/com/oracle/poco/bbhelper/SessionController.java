@@ -1,9 +1,6 @@
 package com.oracle.poco.bbhelper;
 
-import com.oracle.poco.bbhelper.exception.BbhelperBadRequestException;
-import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
-import com.oracle.poco.bbhelper.exception.BbhelperException;
-import com.oracle.poco.bbhelper.exception.BbhelperInvalidCredentialsException;
+import com.oracle.poco.bbhelper.exception.*;
 import com.oracle.poco.bbhelper.log.*;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
@@ -39,9 +36,9 @@ public class SessionController {
     public ResponseEntity<String> login(HttpServletRequest request) throws BbhelperException {
         final String basicAuthHeader = request.getHeader("Authorization");
         if (basicAuthHeader == null || basicAuthHeader.length() == 0) {
-            this.logger.info(new BasicMessage(Operation.LOGIN, Result.FAIL, "no credential."));
-            // TODO これはBad requestなのだろうか？
-            throw new BbhelperBadRequestException();
+            BbhelperException e = new BbhelperNoCredentialsException();
+            this.logger.info(new ErrorMessage(Operation.LOGIN, e));
+            throw e;
         }
         String session_id;
         try {

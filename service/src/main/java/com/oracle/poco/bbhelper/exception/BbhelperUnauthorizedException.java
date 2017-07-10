@@ -10,12 +10,8 @@ public class BbhelperUnauthorizedException extends BbhelperException {
 
     private static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
 
-    public BbhelperUnauthorizedException() {
+    BbhelperUnauthorizedException() {
         super();
-    }
-
-    public BbhelperUnauthorizedException(Throwable cause) {
-        super(cause);
     }
 
     @Override
