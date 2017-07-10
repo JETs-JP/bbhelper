@@ -1,31 +1,31 @@
 package com.oracle.poco.bbhelper.exception;
 
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Component
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Unauthorized.")
 public class BbhelperUnauthorizedException extends BbhelperException {
 
     private static final String DEFAULT_MESSAGE = "Unauthorized.";
 
-    private final MessageSourceResolvable messageSourceResolvable =
-            new DefaultMessageSourceResolvable(new String[]{getClass().getName()}, DEFAULT_MESSAGE);
+    private static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
 
     public BbhelperUnauthorizedException() {
-        super(HttpStatus.UNAUTHORIZED);
+        super();
     }
 
     public BbhelperUnauthorizedException(Throwable cause) {
-        super(cause, HttpStatus.UNAUTHORIZED);
+        super(cause);
     }
 
     @Override
-    MessageSourceResolvable getMessageSourceResolvable() {
-        return messageSourceResolvable;
+    public HttpStatus getStatus() {
+        return STATUS;
+    }
+
+    @Override
+    String getDefaultMessage() {
+        return DEFAULT_MESSAGE;
     }
 
     /**
