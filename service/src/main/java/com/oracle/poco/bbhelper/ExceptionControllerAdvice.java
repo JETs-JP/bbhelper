@@ -1,6 +1,5 @@
 package com.oracle.poco.bbhelper;
 
-import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
 import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jParallelInvocationException;
 import com.oracle.poco.bbhelper.exception.BbhelperException;
 import com.oracle.poco.bbhelper.exception.BbhelperValidationFailureException;
@@ -30,7 +29,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleBbhelperBeehive4jParallelInvocationException(
             BbhelperBeehive4jParallelInvocationException ex,
             WebRequest request) {
-        List<BbhelperBeehive4jException> causes = ex.getCauses();
+        List<BbhelperException> causes = ex.getCauses();
         if (causes.size() == 1) {
             return handleExceptionInternal(
                     causes.get(0), null, null, causes.get(0).getStatus(), request);

@@ -14,6 +14,10 @@ public class BbhelperUnauthorizedException extends BbhelperException {
         super();
     }
 
+    BbhelperUnauthorizedException(Throwable cause) {
+        super(cause);
+    }
+
     @Override
     public HttpStatus getStatus() {
         return STATUS;

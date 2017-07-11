@@ -1,6 +1,9 @@
 package com.oracle.poco.bbhelper;
 
-import com.oracle.poco.bbhelper.exception.*;
+import com.oracle.poco.bbhelper.exception.BbhelperBeehive4jException;
+import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.BbhelperInvalidCredentialsException;
+import com.oracle.poco.bbhelper.exception.BbhelperNoCredentialsException;
 import com.oracle.poco.bbhelper.log.*;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
 import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
@@ -49,7 +52,7 @@ public class SessionController {
             session_id = sessionPool.put(session);
             this.logger.info(new BasicMessage(Operation.LOGIN, Result.SUCCESS, "login"));
         } catch (BeehiveApiFaultException e) {
-            BbhelperBeehive4jException bbhe;
+            BbhelperException bbhe;
             if (e instanceof BeehiveUnauthorizedException) {
                 bbhe = new BbhelperInvalidCredentialsException(e);
                 logger.info(new ErrorMessage(Operation.LOGIN, bbhe));

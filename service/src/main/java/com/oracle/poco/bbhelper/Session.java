@@ -103,7 +103,7 @@ class Session {
         // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
-        List<BbhelperBeehive4jException> exceptions1 = new ArrayList<>();
+        List<BbhelperException> exceptions1 = new ArrayList<>();
         calendar_ids.stream().parallel().forEach(c -> {
             try {
                 InvtListByRangeInvoker invoker =
@@ -151,7 +151,7 @@ class Session {
             beeIds.add(new BeeId.Builder().id(invitation_ids.get(i)).build());
         }
         List<Invitation> invitations = new ArrayList<>();
-        List<BbhelperBeehive4jException> exceptions2 = new ArrayList<>();
+        List<BbhelperException> exceptions2 = new ArrayList<>();
         beeIdChunks.stream().parallel().forEach(b -> {
             try {
                 InvtReadBatchInvoker invoker =
@@ -324,9 +324,9 @@ class Session {
         return node.asText();
     }
 
-    private static BbhelperBeehive4jException handleBeehiveApiFaultException(
+    private static BbhelperException handleBeehiveApiFaultException(
             Operation operation, BeehiveApiFaultException e, BbhelperLogger logger) {
-        BbhelperBeehive4jException bbhe;
+        BbhelperException bbhe;
         if (e instanceof BeehiveUnauthorizedException) {
             bbhe = new BbhelperBeehiveContextExpiredException(e);
             logger.info(new ErrorMessage(operation, bbhe));

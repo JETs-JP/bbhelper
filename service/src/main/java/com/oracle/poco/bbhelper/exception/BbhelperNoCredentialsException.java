@@ -3,7 +3,7 @@ package com.oracle.poco.bbhelper.exception;
 /**
  * Created by hhayakaw on 2017/07/10.
  */
-public class BbhelperNoCredentialsException extends BbhelperUnauthorizedException {
+public final class BbhelperNoCredentialsException extends BbhelperUnauthorizedException {
 
     private static final String DEFAULT_MESSAGE = "No credentials.";
 

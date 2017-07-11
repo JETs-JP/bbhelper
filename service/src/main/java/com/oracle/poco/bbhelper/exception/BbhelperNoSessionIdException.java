@@ -3,7 +3,7 @@ package com.oracle.poco.bbhelper.exception;
 /**
  * Created by hhayakaw on 2017/07/10.
  */
-public class BbhelperNoSessionIdException extends BbhelperUnauthorizedException {
+public final class BbhelperNoSessionIdException extends BbhelperUnauthorizedException {
 
     private static final String DEFAULT_MESSAGE = "No session id.";
 

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BbhelperInvalidCredentialsException extends BbhelperBeehive4jException {
+public final class BbhelperInvalidCredentialsException extends BbhelperUnauthorizedException {
 
     private static final String DEFAULT_MESSAGE = "Incorrect username or password.";
 

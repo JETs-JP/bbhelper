@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
  * Created by hhayakaw on 2017/06/27.
  */
 @Component
-public class BbhelperBeehiveContextExpiredException extends BbhelperBeehive4jException {
+public final class BbhelperBeehiveContextExpiredException extends BbhelperUnauthorizedException {
 
     private static final String DEFAULT_MESSAGE = "Beehive context has expired.";
 

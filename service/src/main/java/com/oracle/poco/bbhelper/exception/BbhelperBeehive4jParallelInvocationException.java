@@ -6,14 +6,14 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class BbhelperBeehive4jParallelInvocationException extends BbhelperException {
+public final class BbhelperBeehive4jParallelInvocationException extends BbhelperException {
 
     private static final String DEFAULT_MESSAGE =
             "Some exception raised from beehive4j in parallel invocations.";
 
     private static final HttpStatus STATUS = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    private final List<BbhelperBeehive4jException> causes;
+    private final List<BbhelperException> causes;
 
     /*
      * For DI container.
@@ -23,7 +23,7 @@ public class BbhelperBeehive4jParallelInvocationException extends BbhelperExcept
         this.causes = null;
     }
 
-    public BbhelperBeehive4jParallelInvocationException(List<BbhelperBeehive4jException> causes) {
+    public BbhelperBeehive4jParallelInvocationException(List<BbhelperException> causes) {
         super();
         this.causes = causes;
     }
@@ -38,7 +38,7 @@ public class BbhelperBeehive4jParallelInvocationException extends BbhelperExcept
         return DEFAULT_MESSAGE;
     }
 
-    public List<BbhelperBeehive4jException> getCauses() {
+    public List<BbhelperException> getCauses() {
         return causes;
     }
 

@@ -3,9 +3,8 @@ package com.oracle.poco.bbhelper.exception;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
-// TODO 複数のエラーがちゃんと記録に残るようにする
 @Component
-public class BbhelperValidationFailureException extends BbhelperBadRequestException {
+public final class BbhelperValidationFailureException extends BbhelperBadRequestException {
 
     private static final String DEFAULT_MESSAGE = "Invalid request body or parameter(s).";
 
