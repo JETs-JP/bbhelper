@@ -20,6 +20,7 @@ public class InvitationCommitter {
      */
     @NotNull
     @Size(min = 1)
+    @EffectiveResourceId
     private String resource_id;
     /**
      * 会議の開始日時
