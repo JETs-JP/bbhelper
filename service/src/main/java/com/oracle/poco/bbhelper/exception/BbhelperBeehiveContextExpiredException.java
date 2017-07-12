@@ -1,6 +1,5 @@
 package com.oracle.poco.bbhelper.exception;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,8 +10,6 @@ public final class BbhelperBeehiveContextExpiredException extends BbhelperUnauth
 
     private static final String DEFAULT_MESSAGE = "Beehive context has expired.";
 
-    private static final HttpStatus STATUS = HttpStatus.UNAUTHORIZED;
-
     /*
      * For DI container.
      */
@@ -22,11 +19,6 @@ public final class BbhelperBeehiveContextExpiredException extends BbhelperUnauth
 
     public BbhelperBeehiveContextExpiredException(Throwable cause) {
         super(cause);
-    }
-
-    @Override
-    public HttpStatus getStatus() {
-        return STATUS;
     }
 
     @Override
