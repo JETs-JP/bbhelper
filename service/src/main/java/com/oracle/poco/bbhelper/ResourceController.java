@@ -1,6 +1,10 @@
 package com.oracle.poco.bbhelper;
 
 import com.oracle.poco.bbhelper.exception.BbhelperException;
+import com.oracle.poco.bbhelper.exception.BbhelperResourceNotFoundException;
+import com.oracle.poco.bbhelper.log.BbhelperLogger;
+import com.oracle.poco.bbhelper.log.ErrorMessage;
+import com.oracle.poco.bbhelper.log.Operation;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,8 @@ public class ResourceController {
     @Autowired
     private ResourceCache resourceCache;
 
+    BbhelperLogger logger = BbhelperLogger.getLogger(ResourceController.class);
+
     /**
      * BBHelperが取り扱う全ての会議室の情報を返却します。会議の情報は含まれません。
      *
@@ -46,8 +52,14 @@ public class ResourceController {
     @RequestMapping(value = "/{resource_id}",
                     method = RequestMethod.GET)
     public Resource getBookableResource(
-            @PathVariable("resource_id") String resource_id) {
-        return resourceCache.getResource(resource_id);
+            @PathVariable("resource_id") String resource_id) throws BbhelperException {
+        Resource resource = resourceCache.getResource(resource_id);
+        if (resource == null) {
+            BbhelperException e = new BbhelperResourceNotFoundException();
+            logger.info(new ErrorMessage(Operation.PULL_RESOURCES_FROM_CACHE, e));
+            throw e;
+        }
+        return resource;
     }
 
     /**
