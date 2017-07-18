@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {Application.class})
@@ -34,6 +34,7 @@ public class SystemOperationControllerIT {
     public void testEcho() throws Exception {
         mockMvc.perform(get("/api/system/echo"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentType("text/plain;charset=UTF-8"))
                 .andExpect(content().string("I'm working..."));
     }
 
