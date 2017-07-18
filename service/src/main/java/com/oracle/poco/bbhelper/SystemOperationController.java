@@ -13,7 +13,6 @@ public class SystemOperationController {
      * 
      * @return 文字列 "I'm working..."
      */
-    //TODO beehiveとの接続もチェックする
     @RequestMapping(value = "/echo",
                     method = RequestMethod.GET)
     public String ping() {

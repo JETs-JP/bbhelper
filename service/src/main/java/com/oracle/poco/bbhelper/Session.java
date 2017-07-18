@@ -27,7 +27,6 @@ import java.util.List;
  * 生成し、このアプリケーション固有のセッションIDに紐づけてメモリに保存する。
  * Beehiveに対する操作はこのオブジェクトの責務。
  *
- * TODO 全体的に、BeehiveContextの生き死にに合わせたハンドリングを実装する
  * TODO スレッドセーフな実装になっていることを確認する
  */
 class Session {
@@ -100,7 +99,6 @@ class Session {
     List<Invitation> listConflictedInvitations(
             ZonedDateTime start, ZonedDateTime end, FloorCategory floorCategory)
                     throws BbhelperException {
-        // TODO 入力値チェック
         List<String> calendar_ids = resourceCache.getCalendarIds(floorCategory);
         List<String> invitation_ids = new ArrayList<>();
         List<BbhelperException> exceptions1 = new ArrayList<>();
