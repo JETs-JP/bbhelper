@@ -19,6 +19,8 @@
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <test.beehive.username>hhiroshell@example.com</test.beehive.username>
+        <test.beehive.password>Hhir03he11</test.beehive.password>
     </properties>
 
     <repositories>
@@ -122,6 +124,12 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <test.beehive.username>${test.beehive.username}</test.beehive.username>
+                        <test.beehive.password>${test.beehive.password}</test.beehive.password>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
