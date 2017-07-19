@@ -192,7 +192,6 @@ class Session {
      * 会議を登録する
      *
      * @param committer 登録する会議の情報を保持するオブジェクト
-     *
      * @return 登録された会議を表すInvitationオブジェクト
      * @throws BbhelperException Beehive APIの呼び出しに失敗した場合
      */
@@ -251,6 +250,33 @@ class Session {
         return getInvitation(invitation_id);
     }
 
+    private String getDefaultCalendar() throws BbhelperException {
+        MyWorkspaceInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
+        ResponseEntity<BeehiveResponse> response;
+        try {
+            long begin = System.currentTimeMillis();
+            response = invoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invoker.getClass().getName(), finish - begin));
+        } catch (BeehiveApiFaultException e) {
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
+        }
+        BeehiveResponse body = response.getBody();
+        if (body == null) {
+            return null;
+        }
+        return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
+    }
+
+    /**
+     * 指定したIDの会議の情報を取得する
+     *
+     * @param invitation_id 会議ID
+     * @return 会議IDで指定した会議の情報
+     * @throws BbhelperException Beehive APIの呼出しに失敗した場合
+     */
     Invitation getInvitation(String invitation_id) throws BbhelperException {
         InvtReadInvoker invtReadInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
@@ -295,26 +321,6 @@ class Session {
         return invitation;
     }
 
-    private String getDefaultCalendar() throws BbhelperException {
-        MyWorkspaceInvoker invoker = context.getInvoker(BeehiveApiDefinitions.TYPEDEF_MY_WORKSPACE);
-        ResponseEntity<BeehiveResponse> response;
-        try {
-            long begin = System.currentTimeMillis();
-            response = invoker.invoke();
-            long finish = System.currentTimeMillis();
-            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
-            logger.info(new Beehive4jInvocationMessage(
-                    Result.SUCCESS, invoker.getClass().getName(), finish - begin));
-        } catch (BeehiveApiFaultException e) {
-            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
-        }
-        BeehiveResponse body = response.getBody();
-        if (body == null) {
-            return null;
-        }
-        return getNodeAsText(body.getJson(), "defaultCalendar", "collabId", "id");
-    }
-
     private String getNodeAsText(JsonNode node, String... names) {
         if (node == null) {
             throw new NullPointerException();
@@ -328,6 +334,29 @@ class Session {
             }
         }
         return node.asText();
+    }
+
+    /**
+     * 指定したIDの会議の情報を削除する
+     *
+     * @param invitation_id 会議ID
+     * @throws BbhelperException Beehive APIの呼出しに失敗した場合
+     */
+    void deleteInvitation(String invitation_id) throws BbhelperException {
+        InvtDeleteInvoker invtDeleteInvoker =
+                context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_DELETE);
+        invtDeleteInvoker.setPathValue(invitation_id);
+        ResponseEntity<BeehiveResponse> invtDeleteResponse;
+        try {
+            long begin = System.currentTimeMillis();
+            invtDeleteResponse = invtDeleteInvoker.invoke();
+            long finish = System.currentTimeMillis();
+            // beehive4jがExceptionを上げないときは、正常な結果が返ったときとみなしてよい
+            logger.info(new Beehive4jInvocationMessage(
+                    Result.SUCCESS, invtDeleteInvoker.getClass().getName(), finish - begin));
+        } catch (BeehiveApiFaultException e) {
+            throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
+        }
     }
 
     private static BbhelperException handleBeehiveApiFaultException(
