@@ -40,7 +40,8 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "System Error", "System error is occurred.");
-        return super.handleExceptionInternal(ex, error, null, null, request);
+        return super.handleExceptionInternal(
+                ex, error, null, INTERNAL_SERVER_ERROR, request);
     }
 
     /**
