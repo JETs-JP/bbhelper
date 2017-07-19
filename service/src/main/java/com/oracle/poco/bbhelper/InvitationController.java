@@ -41,6 +41,27 @@ public class InvitationController {
     }
 
     /**
+     *
+     * 指定したIDの会議の情報を取得します
+     *
+     * @param request リクエスト
+     * @param invitation_id 会議のID
+     * @return 会議の情報
+     * @throws BbhelperException
+     *          会議が存在しない、会議IDの形式が不正などの理由で、会議情報を見つけられない場合<br>
+     *          通信失敗など、BeehiveのREST API呼出しで障害が発生した場合
+     */
+    @RequestMapping(value = "/{invitation_id}",
+                    method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Invitation getInvitation(
+            HttpServletRequest request, @PathVariable("invitation_id") String invitation_id)
+            throws BbhelperException {
+        Session session = (Session)request.getAttribute(Constants.REQUEST_ATTR_KEY_BBH_SESSION);
+        return session.getInvitation(invitation_id);
+    }
+
+    /**
      * 
      * 指定した時間帯に被る会議の一覧を取得します
      * 

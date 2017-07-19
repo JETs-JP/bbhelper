@@ -183,7 +183,7 @@ class Session {
         }
         List<Invitation> retval = new ArrayList<>();
         for (JsonNode element : elements) {
-            retval.add(parseInvitationJsonNode(element));
+            retval.add(parseInvtReadResponse(element));
         }
         return retval;
     }
@@ -248,6 +248,10 @@ class Session {
         }
         String invitation_id = getNodeAsText(
                 invtCreateResponse.getBody().getJson(), "collabId", "id");
+        return getInvitation(invitation_id);
+    }
+
+    Invitation getInvitation(String invitation_id) throws BbhelperException {
         InvtReadInvoker invtReadInvoker =
                 context.getInvoker(BeehiveApiDefinitions.TYPEDEF_INVT_READ);
         invtReadInvoker.setPathValue(invitation_id);
@@ -262,13 +266,21 @@ class Session {
         } catch (BeehiveApiFaultException e) {
             throw handleBeehiveApiFaultException(Operation.INVOKE_BEEHIVE4J, e, logger);
         }
-        return parseInvitationJsonNode(invtReadResponse.getBody().getJson());
+        return parseInvtReadResponse(invtReadResponse.getBody().getJson());
     }
 
-    private Invitation parseInvitationJsonNode(JsonNode node) {
-        Person organizer = new Person(
-                getNodeAsText(node, "organizer", "name"),
-                getNodeAsText(node, "organizer", "address"));
+    private Invitation parseInvtReadResponse(JsonNode node) {
+        if (!"meeting".equals(getNodeAsText(node, "beeType"))) {
+            throw new IllegalStateException("Beehive returned an unexpected data type object.");
+        }
+        String organizerName = getNodeAsText(node, "organizer", "name");
+        String organizerAddress = getNodeAsText(node, "organizer", "address");
+        Person organizer;
+        if (organizerName == null || organizerName.isEmpty()) {
+            organizer = null;
+        } else {
+            organizer = new Person(organizerName, organizerAddress);
+        }
         Invitation invitation = new Invitation(
                 node.get("name").asText(),
                 node.get("collabId").get("id").asText(),
@@ -311,10 +323,6 @@ class Session {
             return node.asText();
         }
         for (String name : names) {
-            if (!node.has(name)) {
-                throw new IllegalArgumentException(
-                        "Json data and required field names aren't consistent.");
-            }
             if ((node = node.get(name)) == null) {
                 return null;
             }

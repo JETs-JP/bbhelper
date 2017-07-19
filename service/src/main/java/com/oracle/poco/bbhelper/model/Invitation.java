@@ -1,5 +1,7 @@
 package com.oracle.poco.bbhelper.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;
@@ -46,6 +48,7 @@ public final class Invitation {
         this.end = end;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getName() {
         return name;
     }
@@ -58,6 +61,7 @@ public final class Invitation {
         return resource_id;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Person getOrganizer() {
         return organizer;
     }
