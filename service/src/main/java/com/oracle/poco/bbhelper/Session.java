@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * このアプリケーションのセッションの実態。
@@ -308,25 +309,30 @@ class Session {
         } else {
             organizer = new Person(organizerName, organizerAddress);
         }
-        Iterator<JsonNode> invteeIterator = node.get("participants").iterator();
         String resourceId = null;
-        while (invteeIterator.hasNext()) {
-            JsonNode n = invteeIterator.next();
-            String beeType = getNodeAsText(n, "participant", "beeType");
-            if ("bookableResource".equals(beeType)) {
-                resourceId = getNodeAsText(n, "participant", "collabId", "id");
+        if ("bookableResource".equals(getNodeAsText(node, "invitee", "participant", "beeType"))) {
+            resourceId = getNodeAsText(node, "invitee", "participant", "collabId", "id");
+        } else if (node.get("participants") != null) {
+            Iterator<JsonNode> participants = node.get("participants").iterator();
+            while (participants.hasNext()) {
+                JsonNode participant = participants.next();
+                if ("bookableResource".equals(
+                        getNodeAsText(participant, "participant", "beeType"))) {
+                    resourceId = getNodeAsText(participant, "participant", "collabId", "id");
+                    break;
+                }
             }
         }
         Invitation invitation = new Invitation(
-                node.get("name").asText(),
-                node.get("collabId").get("id").asText(),
+                getNodeAsText(node, "name"),
+                getNodeAsText(node, "collabId", "id"),
                 resourceId,
                 organizer,
                 ZonedDateTime.parse(
-                        node.get("start").asText(),
+                        getNodeAsText(node, "start"),
                         DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                 ZonedDateTime.parse(
-                        node.get("end").asText(),
+                        getNodeAsText(node, "end"),
                         DateTimeFormatter.ISO_OFFSET_DATE_TIME));
         return invitation;
     }
