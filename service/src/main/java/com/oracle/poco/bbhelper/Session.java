@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -307,10 +308,19 @@ class Session {
         } else {
             organizer = new Person(organizerName, organizerAddress);
         }
+        Iterator<JsonNode> invteeIterator = node.get("participants").iterator();
+        String resourceId = null;
+        while (invteeIterator.hasNext()) {
+            JsonNode n = invteeIterator.next();
+            String beeType = getNodeAsText(n, "participant", "beeType");
+            if ("bookableResource".equals(beeType)) {
+                resourceId = getNodeAsText(n, "participant", "collabId", "id");
+            }
+        }
         Invitation invitation = new Invitation(
                 node.get("name").asText(),
                 node.get("collabId").get("id").asText(),
-                node.get("invitee").get("participant").get("collabId").get("id").asText(),
+                resourceId,
                 organizer,
                 ZonedDateTime.parse(
                         node.get("start").asText(),
