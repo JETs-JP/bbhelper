@@ -109,7 +109,7 @@ public class ResourceController {
         List<Invitation> invitations = session.listConflictedInvitations(
                 duration.getFromdate(), duration.getTodate(), floor);
         Set<String> bookedResourceIds = new HashSet<>(invitations.size());
-        invitations.forEach(i -> bookedResourceIds.add(i.getResource_id()));
+        invitations.forEach(i -> bookedResourceIds.add(i.getResourceId()));
         Collection<Resource> resources = resourceCache.getCache(floor).values();
         Set<Resource> availableResources = new HashSet<>(resources.size());
         for (Resource resource : resources) {

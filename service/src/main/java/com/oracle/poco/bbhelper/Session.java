@@ -206,7 +206,7 @@ class Session {
         // BeeId of user's calendar
         BeeId calendar = new BeeId.Builder().id(calendar_id).build();
         // MeetingUpdater
-        Resource resource = resourceCache.getResource(committer.getResource_id());
+        Resource resource = resourceCache.getResource(committer.getResourceId());
         List<MeetingParticipantUpdater> participantUpdaters = new ArrayList<>(1);
         BeeId resourceId = new BeeId.Builder()
                 .id(resource.getResourceId())

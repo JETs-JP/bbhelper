@@ -24,7 +24,7 @@ public class InvitationCommitter {
     @NotNull
     @Size(min = 1)
     @EffectiveResourceId
-    private final String resource_id;
+    private final String resourceId;
     /**
      * 会議の開始日時
      */
@@ -39,12 +39,12 @@ public class InvitationCommitter {
     @JsonCreator
     public InvitationCommitter(
             @JsonProperty("name") String name,
-            @JsonProperty("resource_id") String resource_id,
+            @JsonProperty("resource_id") String resourceId,
             @JsonProperty("start") ZonedDateTime start,
             @JsonProperty("end") ZonedDateTime end) {
         super();
         this.name = name;
-        this.resource_id = resource_id;
+        this.resourceId = resourceId;
         this.start = start;
         this.end = end;
     }
@@ -53,8 +53,9 @@ public class InvitationCommitter {
         return name;
     }
 
-    public String getResource_id() {
-        return resource_id;
+    @JsonProperty("resource_id")
+    public String getResourceId() {
+        return resourceId;
     }
 
     public ZonedDateTime getStart() {

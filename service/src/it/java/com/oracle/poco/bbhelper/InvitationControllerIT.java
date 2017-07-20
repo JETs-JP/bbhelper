@@ -94,7 +94,7 @@ public class InvitationControllerIT {
         InvitationCommitter expected =
                 objectMapper.readValue(requestBody, InvitationCommitter.class);
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getResource_id(), actual.getResource_id());
+        assertEquals(expected.getResourceId(), actual.getResourceId());
         assertEquals(expected.getStart(), actual.getStart());
         assertEquals(expected.getEnd(), actual.getEnd());
         return actual;
@@ -102,7 +102,7 @@ public class InvitationControllerIT {
 
     private void getInvitation(String sessionId, Invitation expected) throws Exception {
         MvcResult mvcResult =
-                mockMvc.perform(get("/api/invitations/" + expected.getInvitation_id())
+                mockMvc.perform(get("/api/invitations/" + expected.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -113,11 +113,11 @@ public class InvitationControllerIT {
     }
 
     private void deleteInvitation(String sessionId, Invitation target) throws Exception {
-        mockMvc.perform(delete("/api/invitations/" + target.getInvitation_id())
+        mockMvc.perform(delete("/api/invitations/" + target.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isNoContent())
                 .andReturn();
-        mockMvc.perform(get("/api/invitations/" + target.getInvitation_id())
+        mockMvc.perform(get("/api/invitations/" + target.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isNotFound());
     }

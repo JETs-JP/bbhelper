@@ -17,12 +17,12 @@ public class Invitation {
     /**
      * 会議のId。beehive上の識別子
      */
-    private final String invitation_id;
+    private final String invitationId;
     /**
      * 会議室のId。beehive上の識別子
      */
     @NotNull
-    private final String resource_id;
+    private final String resourceId;
     /**
      * 会議の主催者
      */
@@ -40,15 +40,15 @@ public class Invitation {
 
     @JsonCreator
     public Invitation(@JsonProperty("name") String name,
-                      @JsonProperty("invitation_id") String invitation_id,
-                      @JsonProperty("resource_id") String resource_id,
+                      @JsonProperty("invitation_id") String invitationId,
+                      @JsonProperty("resource_id") String resourceId,
                       @JsonProperty("organizer") Person organizer,
                       @JsonProperty("start") ZonedDateTime start,
                       @JsonProperty("end") ZonedDateTime end) {
         super();
         this.name = name;
-        this.invitation_id = invitation_id;
-        this.resource_id = resource_id;
+        this.invitationId = invitationId;
+        this.resourceId = resourceId;
         this.organizer = organizer;
         this.start = start;
         this.end = end;
@@ -59,13 +59,15 @@ public class Invitation {
         return name;
     }
 
-    public String getInvitation_id() {
-        return invitation_id;
+    @JsonProperty("invitation_id")
+    public String getInvitationId() {
+        return invitationId;
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public String getResource_id() {
-        return resource_id;
+    @JsonProperty("resource_id")
+    public String getResourceId() {
+        return resourceId;
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -90,8 +92,8 @@ public class Invitation {
 
         if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
             return false;
-        if (!getInvitation_id().equals(that.getInvitation_id())) return false;
-        if (getResource_id() != null ? !getResource_id().equals(that.getResource_id()) : that.getResource_id() != null)
+        if (!getInvitationId().equals(that.getInvitationId())) return false;
+        if (getResourceId() != null ? !getResourceId().equals(that.getResourceId()) : that.getResourceId() != null)
             return false;
         if (getOrganizer() != null ? !getOrganizer().equals(that.getOrganizer()) : that.getOrganizer() != null)
             return false;
@@ -102,8 +104,8 @@ public class Invitation {
     @Override
     public int hashCode() {
         int result = getName() != null ? getName().hashCode() : 0;
-        result = 31 * result + getInvitation_id().hashCode();
-        result = 31 * result + (getResource_id() != null ? getResource_id().hashCode() : 0);
+        result = 31 * result + getInvitationId().hashCode();
+        result = 31 * result + (getResourceId() != null ? getResourceId().hashCode() : 0);
         result = 31 * result + (getOrganizer() != null ? getOrganizer().hashCode() : 0);
         result = 31 * result + getStart().hashCode();
         result = 31 * result + getEnd().hashCode();
@@ -114,8 +116,8 @@ public class Invitation {
     public String toString() {
         return "Invitation{" +
                 "name='" + name + '\'' +
-                ", invitation_id='" + invitation_id + '\'' +
-                ", resource_id='" + resource_id + '\'' +
+                ", invitation_id='" + invitationId + '\'' +
+                ", resourceId='" + resourceId + '\'' +
                 ", organizer=" + organizer +
                 ", start=" + start +
                 ", end=" + end +

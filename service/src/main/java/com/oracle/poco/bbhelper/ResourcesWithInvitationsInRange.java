@@ -80,7 +80,7 @@ public class ResourcesWithInvitationsInRange {
      * @param invitation 予約済み会議室情報
      */
     void addInvitation(Invitation invitation) throws BbhelperException {
-        String resource_id = invitation.getResource_id();
+        String resource_id = invitation.getResourceId();
         if (resource_id == null || resource_id.length() == 0) {
             throw new IllegalArgumentException("Specified invitation has no resource id.");
         }
