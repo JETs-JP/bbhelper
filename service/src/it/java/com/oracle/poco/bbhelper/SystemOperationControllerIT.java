@@ -23,21 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SystemOperationControllerIT {
 
     @Autowired
-    WebApplicationContext context;
+    private WebApplicationContext context;
 
-    MockMvc mockMvc;
-
-    private String username, password;
+    private MockMvc mockMvc;
 
     @Before
     public void setupMockMvc() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
-
-    @Before
-    public void prepareCredentials() {
-        this.username = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_USERNAME);
-        this.password = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_PASSWORD);
     }
 
     @Test

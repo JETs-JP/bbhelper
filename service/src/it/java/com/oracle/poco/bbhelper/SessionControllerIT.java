@@ -30,11 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SessionControllerIT {
 
     @Autowired
-    WebApplicationContext context;
+    private WebApplicationContext context;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-    String username, password;
+    private String username, password;
 
     @Before
     public void setup() {
