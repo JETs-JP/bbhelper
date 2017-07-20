@@ -13,11 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Base64;
-
 import static com.oracle.poco.bbhelper.Constants.HEADER_KEY_BBH_AUTHORIZED_SESSION;
-import static com.oracle.poco.bbhelper.TestConstants.PROPERTY_KEY_TEST_BEEHIVE_PASSWORD;
-import static com.oracle.poco.bbhelper.TestConstants.PROPERTY_KEY_TEST_BEEHIVE_USERNAME;
+import static com.oracle.poco.bbhelper.ItConstants.PROPERTY_KEY_TEST_BEEHIVE_PASSWORD;
+import static com.oracle.poco.bbhelper.ItConstants.PROPERTY_KEY_TEST_BEEHIVE_USERNAME;
+import static com.oracle.poco.bbhelper.ItUtils.makeBasicAuthString;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,12 +37,8 @@ public class SessionControllerIT {
     String username, password;
 
     @Before
-    public void setupMockMvc() {
+    public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
-
-    @Before
-    public void prepareCredentials() {
         this.username = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_USERNAME);
         this.password = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_PASSWORD);
     }
@@ -55,7 +50,6 @@ public class SessionControllerIT {
             "   \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperNoCredentialsException\"," +
             "   \"message\": \"No credentials.\"" +
             "}";
-
 
     private static final String RESPONSE_INVALID_CREDENTIALS =
             "{" +
@@ -100,16 +94,6 @@ public class SessionControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(header().string(
                         HEADER_KEY_BBH_AUTHORIZED_SESSION, not(isEmptyOrNullString())));
-    }
-
-    private static String makeBasicAuthString(String user, String password) {
-        if (user.contains(":")) {
-            throw new IllegalArgumentException(
-                    "User name must not contain \":\".");
-        }
-        String src = user.trim() + ":" + password;
-        byte[] encoded = Base64.getEncoder().encode(src.getBytes());
-        return "Basic " + new String(encoded);
     }
 
 }

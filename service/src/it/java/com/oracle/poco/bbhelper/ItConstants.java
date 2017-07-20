@@ -1,6 +1,6 @@
 package com.oracle.poco.bbhelper;
 
-public class TestConstants {
+public class ItConstants {
 
     public static final String PROPERTY_KEY_TEST_BEEHIVE_USERNAME = "test.beehive.username";
 

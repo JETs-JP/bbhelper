@@ -1,12 +1,13 @@
 package com.oracle.poco.bbhelper.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.time.ZonedDateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 
-public final class Invitation {
+public class Invitation {
 
     /**
      * 会議の名前
@@ -37,8 +38,13 @@ public final class Invitation {
     @NotNull
     private final ZonedDateTime end;
 
-    public Invitation(String name, String invitation_id, String resource_id,
-            Person organizer, ZonedDateTime start, ZonedDateTime end) {
+    @JsonCreator
+    public Invitation(@JsonProperty("name") String name,
+                      @JsonProperty("invitation_id") String invitation_id,
+                      @JsonProperty("resource_id") String resource_id,
+                      @JsonProperty("organizer") Person organizer,
+                      @JsonProperty("start") ZonedDateTime start,
+                      @JsonProperty("end") ZonedDateTime end) {
         super();
         this.name = name;
         this.invitation_id = invitation_id;
@@ -57,6 +63,7 @@ public final class Invitation {
         return invitation_id;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public String getResource_id() {
         return resource_id;
     }
@@ -75,34 +82,44 @@ public final class Invitation {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Invitation that = (Invitation) o;
+
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
+            return false;
+        if (!getInvitation_id().equals(that.getInvitation_id())) return false;
+        if (getResource_id() != null ? !getResource_id().equals(that.getResource_id()) : that.getResource_id() != null)
+            return false;
+        if (getOrganizer() != null ? !getOrganizer().equals(that.getOrganizer()) : that.getOrganizer() != null)
+            return false;
+        if (!getStart().equals(that.getStart())) return false;
+        return getEnd().equals(that.getEnd());
+    }
+
+    @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((invitation_id == null) ? 0 : invitation_id.hashCode());
+        int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + getInvitation_id().hashCode();
+        result = 31 * result + (getResource_id() != null ? getResource_id().hashCode() : 0);
+        result = 31 * result + (getOrganizer() != null ? getOrganizer().hashCode() : 0);
+        result = 31 * result + getStart().hashCode();
+        result = 31 * result + getEnd().hashCode();
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Invitation other = (Invitation) obj;
-        if (invitation_id == null) {
-            if (other.invitation_id != null)
-                return false;
-        } else if (!invitation_id.equals(other.invitation_id))
-            return false;
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "Invitation [name=" + name + ", invitation_id=" + invitation_id + ", resource_id=" + resource_id
-                + ", organizer=" + organizer + ", start=" + start + ", end=" + end + "]";
+        return "Invitation{" +
+                "name='" + name + '\'' +
+                ", invitation_id='" + invitation_id + '\'' +
+                ", resource_id='" + resource_id + '\'' +
+                ", organizer=" + organizer +
+                ", start=" + start +
+                ", end=" + end +
+                '}';
     }
 
 }

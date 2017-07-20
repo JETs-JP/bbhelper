@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.oracle.poco.bbhelper.ItConstants.PROPERTY_KEY_TEST_BEEHIVE_PASSWORD;
+import static com.oracle.poco.bbhelper.ItConstants.PROPERTY_KEY_TEST_BEEHIVE_USERNAME;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,9 +27,17 @@ public class SystemOperationControllerIT {
 
     MockMvc mockMvc;
 
+    private String username, password;
+
     @Before
     public void setupMockMvc() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
+
+    @Before
+    public void prepareCredentials() {
+        this.username = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_USERNAME);
+        this.password = System.getProperty(PROPERTY_KEY_TEST_BEEHIVE_PASSWORD);
     }
 
     @Test

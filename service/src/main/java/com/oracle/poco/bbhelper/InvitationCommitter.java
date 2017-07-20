@@ -1,5 +1,8 @@
 package com.oracle.poco.bbhelper;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
@@ -14,31 +17,31 @@ public class InvitationCommitter {
      */
     @NotNull
     @Size(min = 1)
-    private String name;
+    private final String name;
     /**
      * 会議室のId。beehive上の識別子
      */
     @NotNull
     @Size(min = 1)
     @EffectiveResourceId
-    private String resource_id;
+    private final String resource_id;
     /**
      * 会議の開始日時
      */
     @NotNull
-    private ZonedDateTime start;
+    private final ZonedDateTime start;
     /**
      * 会議の終了日時
      */
     @NotNull
-    private ZonedDateTime end;
+    private final ZonedDateTime end;
 
-    public InvitationCommitter() {
-        super();
-    }
-
+    @JsonCreator
     public InvitationCommitter(
-            String name, String resource_id, ZonedDateTime start, ZonedDateTime end) {
+            @JsonProperty("name") String name,
+            @JsonProperty("resource_id") String resource_id,
+            @JsonProperty("start") ZonedDateTime start,
+            @JsonProperty("end") ZonedDateTime end) {
         super();
         this.name = name;
         this.resource_id = resource_id;
@@ -50,32 +53,16 @@ public class InvitationCommitter {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getResource_id() {
         return resource_id;
-    }
-
-    public void setResource_id(String resource_id) {
-        this.resource_id = resource_id;
     }
 
     public ZonedDateTime getStart() {
         return start;
     }
 
-    public void setStart(ZonedDateTime start) {
-        this.start = start;
-    }
-
     public ZonedDateTime getEnd() {
         return end;
-    }
-
-    public void setEnd(ZonedDateTime end) {
-        this.end = end;
     }
 
 }
