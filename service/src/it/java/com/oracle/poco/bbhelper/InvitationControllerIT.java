@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.oracle.poco.bbhelper.model.Invitation;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = {Application.class},
         initializers = {ConfigFileApplicationContextInitializer.class})
 @WebAppConfiguration
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class InvitationControllerIT {
 
     @Autowired
@@ -50,6 +47,8 @@ public class InvitationControllerIT {
 
     private ObjectMapper objectMapper;
 
+    private String INVITATION_ID_DUMMY =
+            "334B:3BF0:invt:A8E58561C9AD4E0F9818AEE271C7F530000000000096";
     @Before
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -120,6 +119,77 @@ public class InvitationControllerIT {
         mockMvc.perform(get("/api/invitations/" + target.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isNotFound());
+    }
+
+    private static final String RESPONSE_NO_SESSION_ID =
+            "{" +
+            "    \"status\": 401," +
+            "    \"error\": \"Unauthorized\"," +
+            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperNoSessionIdException\"," +
+            "    \"message\": \"No session id.\"" +
+            "}";
+
+    @Test
+    public void createInvitationWithNoSessionId() throws Exception {
+        mockMvc.perform(post("/api/invitations")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
+                .content(REQUEST_BODY_CREATE_INVITATION))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+    }
+
+    @Test
+    public void getInvitationWithNoSessionId() throws Exception {
+        mockMvc.perform(delete("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+    }
+
+    @Test
+    public void deleteInvitationWithNoSessionId() throws Exception {
+        mockMvc.perform(delete("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+    }
+
+    private static final String RESPONSE_INVALID_SESSION_ID =
+            "{" +
+            "    \"status\": 401," +
+            "    \"error\": \"Unauthorized\"," +
+            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperInvalidSessionIdException\"," +
+            "    \"message\": \"The Session has been expired or didn't exist.\"" +
+            "}";
+
+    @Test
+    public void createInvitationWithInvalidSessionId() throws Exception {
+        mockMvc.perform(post("/api/invitations")
+                .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
+                .content(REQUEST_BODY_CREATE_INVITATION))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
+    }
+
+    @Test
+    public void getInvitationWithInvalidSessionId() throws Exception {
+        mockMvc.perform(get("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY)
+                .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
+    }
+
+    @Test
+    public void deleteInvitationWithInvalidSessionId() throws Exception {
+        mockMvc.perform(delete("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY)
+                .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
     }
 
 }
