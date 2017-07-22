@@ -101,7 +101,7 @@ public class InvitationControllerIT {
 
     private void getInvitation(String sessionId, Invitation expected) throws Exception {
         MvcResult mvcResult =
-                mockMvc.perform(get("/api/invitations/" + expected.getInvitationId())
+                mockMvc.perform(get("/api/invitations/{invitation_id}", expected.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -112,7 +112,7 @@ public class InvitationControllerIT {
     }
 
     private void deleteInvitation(String sessionId, Invitation target) throws Exception {
-        mockMvc.perform(delete("/api/invitations/" + target.getInvitationId())
+        mockMvc.perform(delete("/api/invitations/{invitation_id}", target.getInvitationId())
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, sessionId))
                 .andExpect(status().isNoContent())
                 .andReturn();
