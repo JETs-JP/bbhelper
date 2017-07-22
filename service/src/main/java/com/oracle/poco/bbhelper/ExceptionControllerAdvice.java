@@ -37,6 +37,11 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleSystemException(Exception ex, WebRequest request) {
+        /*
+         * システム例外の処理はこの例外ハンドラにに集約するので、ロギングもここで行う。
+         * ここ以外ではログ出力しない。
+         */
+        logger.error(new ErrorMessage(Operation.NON_IDENTIFIABLE, ex));
         ErrorResponse error = new ErrorResponse(
                 INTERNAL_SERVER_ERROR.value(), INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 "System Error", "System error is occurred.");
@@ -107,7 +112,7 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
                 new BbhelperValidationFailureException(cause, bindingResult);
         /*
          * バリデーション時の例外の処理はこの例外ハンドラにに集約するので、ロギングもここで行う。
-         * 個別のControllerメソッドではバリデーションのロギングは記述しない。
+         * 個別のControllerメソッドではログ出力しない。
          */
         logger.info(new ErrorMessage(Operation.VALIDATION, bbhe));
         ErrorResponse error = new ErrorResponse(status.value(), status.getReasonPhrase(),
