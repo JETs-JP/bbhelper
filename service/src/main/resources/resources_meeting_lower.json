@@ -14,6 +14,21 @@
     }
   },
   {
+    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0001DDF9882A",
+    "capacity": 8,
+    "location": "Tokyo - Oracle Aoyama Center, Japan",
+    "name": "JP-OAC-CONF-16008_16M2",
+    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0001DDF97F07",
+    "link": "http://my.oracle.com/content/web/cnt437603",
+    "facility": {
+      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
+      "door": "全面透明ガラス",
+      "projector": "プロジェクタ常設",
+      "phone": "IP-ConferenceStation常設",
+      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
+    }
+  },
+  {
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0001DDF52B00",
     "capacity": 12,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
