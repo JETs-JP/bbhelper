@@ -125,7 +125,7 @@ public class ResourcesWithInvitationsInRange {
          * @return 予約済み会議情報のセット
          */
         @JsonInclude(JsonInclude.Include.NON_EMPTY)
-        final Set<Invitation> getInvitations() {
+        public final Set<Invitation> getInvitations() {
             return invitations;
         }
     }
