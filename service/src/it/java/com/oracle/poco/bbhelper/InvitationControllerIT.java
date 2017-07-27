@@ -65,17 +65,9 @@ public class InvitationControllerIT {
                         ZonedDateTime.class, new ZonedDateTimeDeserializer()));
     }
 
-    private static final String REQUEST_CREATE_INVITATION =
-            "{" +
-            "    \"name\": \"テスト会議\"," +
-            "    \"resource_id\": \"334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAF005A\"," +
-            "    \"start\": \"2017-07-19T22:00:00.000+09:00\"," +
-            "    \"end\": \"2017-07-19T23:00:00.000+09:00\"" +
-            "}";
-
     @Test
     public void Success() throws Exception {
-        Invitation created = createInvitation(this.sessionId, REQUEST_CREATE_INVITATION);
+        Invitation created = createInvitation(this.sessionId, InvitationControllerItConstants.REQUEST_CREATE_INVITATION);
         getInvitation(this.sessionId, created);
         deleteInvitation(this.sessionId, created);
     }
@@ -121,111 +113,55 @@ public class InvitationControllerIT {
                 .andExpect(status().isNotFound());
     }
 
-    private static final String REQUEST_CREATE_INVITATION_WITHOUT_NAME =
-            "{" +
-            "    \"resource_id\": \"334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAF005A\"," +
-            "    \"start\": \"2017-07-19T22:00:00.000+09:00\"," +
-            "    \"end\": \"2017-07-19T23:00:00.000+09:00\"" +
-            "}";
-
-    private static final String RESPONSE_CREATE_INVITATION_WITHOUT_NAME =
-            "{" +
-            "    \"status\": 400," +
-            "    \"error\": \"Bad Request\"," +
-            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperValidationFailureException\"," +
-            "    \"message\": \"Invalid request body or parameter(s).\"," +
-            "    \"details\": [" +
-            "        \"may not be null\"" +
-            "    ]\n" +
-            "}";
+    /*
+     * Bad Request
+     */
 
     @Test
     public void createInvitationWithRequestWithoutName() throws Exception {
         mockMvc.perform(post("/api/invitations")
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .content(REQUEST_CREATE_INVITATION_WITHOUT_NAME))
+                .content(InvitationControllerItConstants.REQUEST_CREATE_INVITATION_WITHOUT_NAME))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_CREATE_INVITATION_WITHOUT_NAME, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_CREATE_INVITATION_WITHOUT_NAME, true));
     }
-
-    private static final String REQUEST_CREATE_INVITATION_WITHOUT_RESOURCE_ID =
-            "{" +
-            "    \"name\": \"テスト会議\"," +
-            "    \"start\": \"2017-07-19T22:00:00.000+09:00\"," +
-            "    \"end\": \"2017-07-19T23:00:00.000+09:00\"" +
-            "}";
-
-    private static final String RESPONSE_CREATE_INVITATION_WITHOUT_RESOURCE_ID =
-            "{" +
-            "    \"status\": 400," +
-            "    \"error\": \"Bad Request\"," +
-            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperValidationFailureException\"," +
-            "    \"message\": \"Invalid request body or parameter(s).\"," +
-            "    \"details\": [" +
-            "        \"Resource doesn't exist.\"," +
-            "        \"may not be null\"" +
-            "    ]" +
-            "}";
 
     @Test
     public void createInvitationWithRequestWithoutResourceId() throws Exception {
         mockMvc.perform(post("/api/invitations")
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .content(REQUEST_CREATE_INVITATION_WITHOUT_RESOURCE_ID))
+                .content(InvitationControllerItConstants.REQUEST_CREATE_INVITATION_WITHOUT_RESOURCE_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_CREATE_INVITATION_WITHOUT_RESOURCE_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_CREATE_INVITATION_WITHOUT_RESOURCE_ID, true));
     }
-
-    private static final String REQUEST_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID =
-            "{" +
-            "    \"name\": \"テスト会議\"," +
-            "    \"resource_id\": \"334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFAF005A_\"," +
-            "    \"start\": \"2017-07-19T22:00:00.000+09:00\"," +
-            "    \"end\": \"2017-07-19T23:00:00.000+09:00\"" +
-            "}";
-
-    private static final String RESPONSE_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID =
-            "{" +
-            "    \"status\": 400," +
-            "    \"error\": \"Bad Request\"," +
-            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperValidationFailureException\"," +
-            "    \"message\": \"Invalid request body or parameter(s).\"," +
-            "    \"details\": [" +
-            "        \"Resource doesn't exist.\"" +
-            "    ]" +
-            "}";
 
     @Test
     public void createInvitationWithRequestWithInvalidResourceId() throws Exception {
         mockMvc.perform(post("/api/invitations")
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .content(REQUEST_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID))
+                .content(InvitationControllerItConstants.REQUEST_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_CREATE_INVITATION_WITH_INVALID_RESOURCE_ID, true));
     }
 
-    private static final String RESPONSE_NO_SESSION_ID =
-            "{" +
-            "    \"status\": 401," +
-            "    \"error\": \"Unauthorized\"," +
-            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperNoSessionIdException\"," +
-            "    \"message\": \"No session id.\"" +
-            "}";
+    /*
+     * Unauthorized
+     */
 
     @Test
     public void createInvitationWithNoSessionId() throws Exception {
         mockMvc.perform(post("/api/invitations")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .content(REQUEST_CREATE_INVITATION))
+                .content(InvitationControllerItConstants.REQUEST_CREATE_INVITATION))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_NO_SESSION_ID, true));
     }
 
     @Test
@@ -233,7 +169,7 @@ public class InvitationControllerIT {
         mockMvc.perform(delete("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_NO_SESSION_ID, true));
     }
 
     @Test
@@ -241,26 +177,18 @@ public class InvitationControllerIT {
         mockMvc.perform(delete("/api/invitations/{invitation_id}", INVITATION_ID_DUMMY))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_NO_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_NO_SESSION_ID, true));
     }
-
-    private static final String RESPONSE_INVALID_SESSION_ID =
-            "{" +
-            "    \"status\": 401," +
-            "    \"error\": \"Unauthorized\"," +
-            "    \"code\": \"com.oracle.poco.bbhelper.exception.BbhelperInvalidSessionIdException\"," +
-            "    \"message\": \"The Session has been expired or didn't exist.\"" +
-            "}";
 
     @Test
     public void createInvitationWithInvalidSessionId() throws Exception {
         mockMvc.perform(post("/api/invitations")
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
-                .content(REQUEST_CREATE_INVITATION))
+                .content(InvitationControllerItConstants.REQUEST_CREATE_INVITATION))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_INVALID_SESSION_ID, true));
     }
 
     @Test
@@ -269,7 +197,7 @@ public class InvitationControllerIT {
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_INVALID_SESSION_ID, true));
     }
 
     @Test
@@ -278,7 +206,7 @@ public class InvitationControllerIT {
                 .header(HEADER_KEY_BBH_AUTHORIZED_SESSION, this.sessionId + "_"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json(RESPONSE_INVALID_SESSION_ID, true));
+                .andExpect(content().json(InvitationControllerItConstants.RESPONSE_INVALID_SESSION_ID, true));
     }
 
 }
