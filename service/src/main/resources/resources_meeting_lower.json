@@ -234,21 +234,6 @@
     }
   },
   {
-    "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFA9528C",
-    "capacity": 4,
-    "location": "Tokyo - Oracle Aoyama Center, Japan",
-    "name": "JP-OAC-CONF-18016_18M5",
-    "resource_id": "334B:3BF0:bkrs:38893C00F42F38A1E0404498C8A6612B0000BFA6DEF9",
-    "link": "http://my.oracle.com/content/web/cnt437605",
-    "facility": {
-      "wall": "上下透明ガラス、中央すりガラス、コーナー部分全面透明ガラス",
-      "door": "全面透明ガラス",
-      "projector": "プロジェクタ常設",
-      "phone": "IP-Phone常設",
-      "whiteboard": "ホワイトボード/プロジェクター投影スクリーン兼用パネル有"
-    }
-  },
-  {
     "calendar_id": "334B:3BF0:clnd:38893C00F42F38A1E0404498C8A6612B0000BFB958B3",
     "capacity": 8,
     "location": "Tokyo - Oracle Aoyama Center, Japan",
