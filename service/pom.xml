@@ -24,9 +24,13 @@
     </properties>
 
     <repositories>
+        <!--<repository>-->
+            <!--<id>charlier-shoe.github.io</id>-->
+            <!--<url>http://hhiroshell.github.io/mvn-repo/</url>-->
+        <!--</repository>-->
         <repository>
-            <id>charlier-shoe.github.io</id>
-            <url>http://hhiroshell.github.io/mvn-repo/</url>
+            <id>beehive4j</id>
+            <url>https://raw.github.com/hhiroshell/beehive4j/mvn-repo/</url>
         </repository>
     </repositories>
 
@@ -57,9 +61,9 @@
             <version>3.5</version>
         </dependency>
         <dependency>
-            <groupId>jp.gr.java_conf.hhayakawa_jp</groupId>
+            <groupId>jp.gr.java_conf.hhiroshell</groupId>
             <artifactId>beehive4j</artifactId>
-            <version>0.1</version>
+            <version>v0.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

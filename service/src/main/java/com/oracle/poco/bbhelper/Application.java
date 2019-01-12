@@ -1,8 +1,8 @@
 package com.oracle.poco.bbhelper;
 
 import com.oracle.poco.bbhelper.log.*;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.BeehiveContext;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
+import jp.gr.java_conf.hhiroshell.beehive4j.BeehiveContext;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.Beehive4jException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
