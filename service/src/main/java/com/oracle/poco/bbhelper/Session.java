@@ -9,10 +9,10 @@ import com.oracle.poco.bbhelper.log.*;
 import com.oracle.poco.bbhelper.model.Invitation;
 import com.oracle.poco.bbhelper.model.Person;
 import com.oracle.poco.bbhelper.model.Resource;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.*;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveApiFaultException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveUnauthorizedException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.model.*;
+import jp.gr.java_conf.hhiroshell.beehive4j.*;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.BeehiveApiFaultException;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.BeehiveUnauthorizedException;
+import jp.gr.java_conf.hhiroshell.beehive4j.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 

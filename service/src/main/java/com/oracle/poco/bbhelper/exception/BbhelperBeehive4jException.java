@@ -1,8 +1,8 @@
 package com.oracle.poco.bbhelper.exception;
 
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.Beehive4jException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveHttpClientErrorException;
-import jp.gr.java_conf.hhayakawa_jp.beehive4j.exception.BeehiveHttpErrorException;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.Beehive4jException;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.BeehiveHttpClientErrorException;
+import jp.gr.java_conf.hhiroshell.beehive4j.exception.BeehiveHttpErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
